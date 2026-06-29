@@ -1,14 +1,13 @@
 package com.finance.lumora.data.local.dao
 
-
-
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
-import com.lumora.data.local.entity.CategoryEntity
+import com.finance.lumora.data.local.entity.CategoryEntity
+
 import kotlinx.coroutines.flow.Flow
 
 @Dao

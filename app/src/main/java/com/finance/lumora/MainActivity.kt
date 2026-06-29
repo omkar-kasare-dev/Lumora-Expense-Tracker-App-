@@ -1,4 +1,5 @@
 package com.finance.lumora
+/*
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -30,18 +31,42 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
+ */
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    LumoraTheme {
-        Greeting("Android")
+import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.ui.Modifier
+import androidx.navigation.compose.rememberNavController
+import com.finance.lumora.navigation.LumoraNavGraph
+import com.finance.lumora.ui.theme.LumoraTheme
+import dagger.hilt.android.AndroidEntryPoint
+
+/**
+ * Main entry point of the Lumora application.
+ */
+@AndroidEntryPoint
+class MainActivity : ComponentActivity() {
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        enableEdgeToEdge()
+
+        setContent {
+
+            LumoraTheme {
+
+                val navController = rememberNavController()
+
+                LumoraNavGraph(
+                    navController = navController,
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
+        }
     }
 }
+
