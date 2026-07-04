@@ -7,7 +7,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.finance.lumora.presentation.budget.BudgetScreen
-import com.finance.lumora.presentation.category.CategoryScreen
+
+import com.finance.lumora.presentation.category.screen.CategoryScreen
 import com.finance.lumora.presentation.expense.AddExpenseScreen
 import com.finance.lumora.presentation.home.HomeScreen
 import com.finance.lumora.presentation.report.ReportScreen

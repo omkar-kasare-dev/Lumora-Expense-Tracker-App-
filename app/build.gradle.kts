@@ -48,6 +48,7 @@ dependencies {
     // Dagger Hilt & ksp
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
+    implementation("androidx.hilt:hilt-navigation-compose:1.3.0")
 
     // Room
     implementation("androidx.room:room-runtime:2.8.0")
@@ -58,6 +59,10 @@ dependencies {
     implementation("androidx.datastore:datastore-preferences:1.1.7")
     // navigation
     implementation("androidx.navigation:navigation-compose:2.9.3")
+
+    // Material3
+    implementation("androidx.compose.material:material-icons-extended")
+
 
     testImplementation(libs.junit)
     androidTestImplementation(platform(libs.androidx.compose.bom))
