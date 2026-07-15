@@ -11,6 +11,7 @@ import com.finance.lumora.presentation.budget.BudgetScreen
 import com.finance.lumora.presentation.category.screen.CategoryScreen
 import com.finance.lumora.presentation.expense.AddExpenseScreen
 import com.finance.lumora.presentation.home.HomeScreen
+import com.finance.lumora.presentation.profile.ProfileScreen
 import com.finance.lumora.presentation.report.ReportScreen
 import com.finance.lumora.presentation.settings.SettingsScreen
 
@@ -51,6 +52,11 @@ fun LumoraNavGraph(
 
         composable(Screen.Settings.route) {
             SettingsScreen(navController)
+        }
+
+
+        composable(Screen.Profile.route){
+            ProfileScreen(navController)
         }
     }
 }

@@ -39,4 +39,6 @@ sealed class Screen(
      * Application Settings Screen
      */
     data object Settings : Screen("settings")
+
+    data object Profile:Screen("profile")
 }

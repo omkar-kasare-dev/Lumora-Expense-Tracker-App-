@@ -1,4 +1,5 @@
-package com.finance.lumora.presentation.home.components
+package com.finance.lumora.presentation.drawer.components
+
 
 
 import androidx.compose.foundation.background
@@ -8,45 +9,39 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ElevatedCard
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.finance.lumora.presentation.home.model.QuickAction
 
 @Composable
-fun QuickActionCard(
-
-    action: QuickAction,
+fun DrawerHeader(
 
     modifier: Modifier = Modifier,
 
-    onClick: () -> Unit = {}
+    userName: String = "Guest",
+
+    userTagLine: String = "Track every rupee wisely"
 
 ) {
 
-    ElevatedCard(
+    Surface(
 
-        modifier = modifier,
+        modifier = modifier.fillMaxWidth(),
 
-        onClick = onClick,
-
-        elevation = CardDefaults.elevatedCardElevation(
-            defaultElevation = 3.dp
-        ),
-
-        colors = CardDefaults.elevatedCardColors(
-            containerColor = MaterialTheme.colorScheme.surface
-        )
+        color = MaterialTheme.colorScheme.primaryContainer
 
     ) {
 
@@ -54,7 +49,10 @@ fun QuickActionCard(
 
             modifier = Modifier
                 .fillMaxWidth()
-                .height(130.dp),
+                .padding(
+                    horizontal = 20.dp,
+                    vertical = 28.dp
+                ),
 
             horizontalAlignment = Alignment.CenterHorizontally,
 
@@ -65,9 +63,11 @@ fun QuickActionCard(
             Box(
 
                 modifier = Modifier
-                    .size(52.dp)
+                    .size(72.dp)
                     .clip(CircleShape)
-                    .background(action.backgroundColor),
+                    .background(
+                        MaterialTheme.colorScheme.primary
+                    ),
 
                 contentAlignment = Alignment.Center
 
@@ -75,13 +75,13 @@ fun QuickActionCard(
 
                 Icon(
 
-                    imageVector = action.icon,
+                    imageVector = Icons.Default.Person,
 
-                    contentDescription = action.title,
+                    contentDescription = "Profile",
 
-                    tint = action.iconTint,
+                    tint = Color.White,
 
-                    modifier = Modifier.size(28.dp)
+                    modifier = Modifier.size(36.dp)
 
                 )
 
@@ -93,11 +93,25 @@ fun QuickActionCard(
 
             Text(
 
-                text = action.title,
+                text = userName,
 
-                style = MaterialTheme.typography.titleSmall,
+                style = MaterialTheme.typography.titleLarge,
 
-                fontWeight = FontWeight.SemiBold
+                fontWeight = FontWeight.Bold
+
+            )
+
+            Spacer(
+                modifier = Modifier.height(4.dp)
+            )
+
+            Text(
+
+                text = userTagLine,
+
+                style = MaterialTheme.typography.bodyMedium,
+
+                color = MaterialTheme.colorScheme.onSurfaceVariant
 
             )
 
