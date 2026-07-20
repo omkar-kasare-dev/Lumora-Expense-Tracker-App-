@@ -68,4 +68,13 @@ class CategoryRepositoryImpl(
 
         categoryDao.deleteCategoryById(id)
     }
+// Get CateGory By Name for when user selects the Default Category it will get The categories by there names:
+    override suspend fun getCategoryByName(
+        name: String
+    ): Category? {
+
+        return categoryDao
+            .getCategoryByName(name)
+            ?.toDomain()
+    }
 }

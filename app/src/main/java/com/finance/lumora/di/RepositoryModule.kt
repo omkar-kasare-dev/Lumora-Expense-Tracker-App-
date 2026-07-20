@@ -1,6 +1,6 @@
 package com.finance.lumora.di
 
-
+/*
 import com.finance.lumora.data.datastore.SettingsPreferences
 import com.finance.lumora.data.local.dao.CategoryDao
 import com.finance.lumora.data.local.dao.ExpenseDao
@@ -58,4 +58,77 @@ object RepositoryModule {
 
         return SettingsRepositoryImpl(settingsPreferences)
     }
+}
+
+*/
+
+
+
+import com.finance.lumora.data.local.dao.CategoryDao
+import com.finance.lumora.data.local.dao.TransactionDao
+import com.finance.lumora.data.repository.CategoryRepositoryImpl
+import com.finance.lumora.data.repository.DashboardRepositoryImpl
+import com.finance.lumora.data.repository.TransactionRepositoryImpl
+import com.finance.lumora.domain.repository.CategoryRepository
+import com.finance.lumora.domain.repository.DashboardRepository
+import com.finance.lumora.domain.repository.TransactionRepository
+import dagger.Binds
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
+
+
+@Module
+@InstallIn(SingletonComponent::class)
+object RepositoryModule {
+
+
+    @Provides
+    @Singleton
+    fun provideCategoryRepository(
+        categoryDao: CategoryDao
+    ): CategoryRepository {
+
+        return CategoryRepositoryImpl(
+            categoryDao
+        )
+    }
+
+
+    @Provides
+    @Singleton
+    fun provideTransactionRepository(
+        transactionDao: TransactionDao
+    ): TransactionRepository {
+
+        return TransactionRepositoryImpl(
+            transactionDao
+        )
+    }
+
+    /**
+     * Dashboard Repository
+     */
+    @Provides
+    @Singleton
+    fun provideDashboardRepository(
+
+        transactionDao: TransactionDao,
+
+        categoryDao: CategoryDao
+
+    ): DashboardRepository {
+
+        return DashboardRepositoryImpl(
+
+            transactionDao = transactionDao,
+
+            categoryDao = categoryDao
+
+        )
+
+    }
+
 }

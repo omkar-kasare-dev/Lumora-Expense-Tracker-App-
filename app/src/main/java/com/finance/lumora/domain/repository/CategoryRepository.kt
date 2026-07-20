@@ -20,4 +20,8 @@ interface CategoryRepository {
     suspend fun deleteCategory(category: Category)
 
     suspend fun deleteCategoryById(id: Long)
+
+    suspend fun getCategoryByName(
+        name: String
+    ): Category?
 }

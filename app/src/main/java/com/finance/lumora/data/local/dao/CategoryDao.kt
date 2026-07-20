@@ -61,11 +61,11 @@ interface CategoryDao {
     ): CategoryEntity?
 
     @Query("""
-        SELECT *
-        FROM categories
-        WHERE name = :name
-        LIMIT 1
-    """)
+     SELECT *
+     FROM categories
+     WHERE LOWER(name) = LOWER(:name)
+     LIMIT 1
+""")
     suspend fun getCategoryByName(
         name: String
     ): CategoryEntity?
@@ -75,4 +75,25 @@ interface CategoryDao {
         FROM categories
     """)
     suspend fun getCategoryCount(): Int
+
+
+    @Query("""
+    SELECT COUNT(*)
+    FROM categories
+""")
+    fun observeCategoryCount(): Flow<Int>
+
+    // Future Implementation:  To get custom categories. Which are already Implemented in the Category section:
+    @Query("""
+      SELECT *
+      FROM categories
+      WHERE is_default = 0
+      ORDER BY name
+""")
+    fun getCustomCategories(): Flow<List<CategoryEntity>>
+
+
+
+
+
 }

@@ -1,5 +1,6 @@
 package com.finance.lumora.presentation.category.components
 
+import android.util.Log
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
@@ -88,6 +89,10 @@ fun AddCategoryDialog(
                 enabled = isNameValid,
 
                 onClick = {
+                    Log.d(
+                        "CATEGORY_SAVE",
+                        "Dialog Save Clicked: $name"
+                    )
 
                     onSave(
 

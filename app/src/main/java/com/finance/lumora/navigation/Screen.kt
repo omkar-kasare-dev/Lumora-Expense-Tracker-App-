@@ -1,6 +1,6 @@
 package com.finance.lumora.navigation
 
-
+/*
 /**
  * Represents all navigation destinations in Lumora.
  *
@@ -14,6 +14,10 @@ sealed class Screen(
      * Home Dashboard
      */
     data object Home : Screen("home")
+
+    data object Dashboard : Screen(
+        route = "dashboard"
+    )
 
     /**
      * Add Expense Screen
@@ -41,4 +45,37 @@ sealed class Screen(
     data object Settings : Screen("settings")
 
     data object Profile:Screen("profile")
+
+    data object Transaction:Screen(route="transaction")
+}
+
+ */
+
+
+
+sealed class Screen(val route: String) {
+
+    object Dashboard : Screen("dashboard")
+
+    object Transactions : Screen("transactions")
+
+    object AddTransaction : Screen("add_transaction")
+
+    object TransactionDetails :
+        Screen("transaction_details/{transactionId}") {
+
+        fun createRoute(transactionId: Long): String {
+
+            return "transaction_details/$transactionId"
+
+        }
+
+    }
+
+    object Categories : Screen("categories")
+
+    object Reports : Screen("reports")
+
+    object Settings : Screen("settings")
+
 }

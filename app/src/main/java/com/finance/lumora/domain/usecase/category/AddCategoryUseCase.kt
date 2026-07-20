@@ -10,7 +10,9 @@ class AddCategoryUseCase @Inject constructor(
 
     suspend operator fun invoke(category: Category) {
 
-        require(category.name.isNotBlank()) {
+        val normalizedName = category.name.trim()
+
+        require(normalizedName.isNotBlank()) {
             "Category name cannot be empty."
         }
 
@@ -18,6 +20,17 @@ class AddCategoryUseCase @Inject constructor(
             "Category icon cannot be empty."
         }
 
-        repository.addCategory(category)
+        val existingCategory =
+            repository.getCategoryByName(normalizedName)
+
+        require(existingCategory == null) {
+            "Category already exists."
+        }
+
+        repository.addCategory(
+            category.copy(
+                name = normalizedName
+            )
+        )
     }
 }

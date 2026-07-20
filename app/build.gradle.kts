@@ -62,6 +62,7 @@ dependencies {
 
     // Material3
     implementation("androidx.compose.material:material-icons-extended")
+    implementation("androidx.compose.ui:ui-text")
 
 
     testImplementation(libs.junit)

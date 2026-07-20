@@ -1,6 +1,6 @@
 package com.finance.lumora.presentation.home
 
-
+/*
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -30,7 +30,6 @@ import com.finance.lumora.presentation.drawer.LumoraNavigationDrawer
 
 @Composable
 fun HomeScreen(
-
     navController: NavHostController
 
 ) {
@@ -122,8 +121,11 @@ fun HomeScreen(
                     },
 
                     onReportClick = {
+                        navController.navigate(
+                            Screen.Transaction.route
+                        )
 
-                        // TODO
+
 
                     },
 
@@ -155,7 +157,6 @@ fun HomeScreen(
 
             //--------------------------------------------------
             // Greeting
-            //--------------------------------------------------
 
             GreetingSection(
 
@@ -243,7 +244,7 @@ fun HomeScreen(
             )
 
             // Recent Transactions
-
+/*
             RecentTransactionSection(
 
                 onSeeAllClick = {
@@ -258,7 +259,8 @@ fun HomeScreen(
 
                 }
 
-            )
+            )  */
+
 
             Spacer(
                 modifier = Modifier.height(12.dp)
@@ -270,3 +272,5 @@ fun HomeScreen(
 
 }
 }
+
+ */

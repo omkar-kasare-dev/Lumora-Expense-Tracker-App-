@@ -1,15 +1,29 @@
 package com.finance.lumora.di
 
-
+/*
 import com.finance.lumora.domain.usecase.category.AddCategoryUseCase
 import com.finance.lumora.domain.usecase.category.CategoryUseCases
 import com.finance.lumora.domain.usecase.category.DeleteCategoryUseCase
 import com.finance.lumora.domain.usecase.category.GetCategoriesUseCase
 import com.finance.lumora.domain.usecase.category.UpdateCategoryUseCase
+import com.finance.lumora.domain.usecase.transaction.AddTransactionUseCase
+import com.finance.lumora.domain.usecase.transaction.DeleteTransactionByIdUseCase
+import com.finance.lumora.domain.usecase.transaction.DeleteTransactionUseCase
+import com.finance.lumora.domain.usecase.transaction.GetAllTransactionsUseCase
+import com.finance.lumora.domain.usecase.transaction.GetTotalExpenseUseCase
+import com.finance.lumora.domain.usecase.transaction.GetTotalIncomeUseCase
+import com.finance.lumora.domain.usecase.transaction.GetTransactionByIdUseCase
+import com.finance.lumora.domain.usecase.transaction.GetTransactionCountUseCase
+import com.finance.lumora.domain.usecase.transaction.GetTransactionsBetweenDatesUseCase
+import com.finance.lumora.domain.usecase.transaction.GetTransactionsByCategoryUseCase
+import com.finance.lumora.domain.usecase.transaction.GetTransactionsByTypeUseCase
+import com.finance.lumora.domain.usecase.transaction.TransactionUseCases
+import com.finance.lumora.domain.usecase.transaction.UpdateTransactionUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import jakarta.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -29,5 +43,149 @@ object UseCaseModule {
             deleteCategory = deleteCategory,
             getCategories = getCategories
         )
+    }
+
+    //===========
+    @Provides
+    @Singleton
+    fun provideTransactionUseCases(
+        addTransaction: AddTransactionUseCase,
+        updateTransaction: UpdateTransactionUseCase,
+        deleteTransaction: DeleteTransactionUseCase,
+        deleteTransactionById: DeleteTransactionByIdUseCase,
+        getAllTransactions: GetAllTransactionsUseCase,
+        getTransactionById: GetTransactionByIdUseCase,
+        getTransactionsByType: GetTransactionsByTypeUseCase,
+        getTransactionsByCategory: GetTransactionsByCategoryUseCase,
+        getTransactionsBetweenDates: GetTransactionsBetweenDatesUseCase,
+        getTotalIncome: GetTotalIncomeUseCase,
+        getTotalExpense: GetTotalExpenseUseCase,
+        getTransactionCount: GetTransactionCountUseCase
+    ): TransactionUseCases {
+
+        return TransactionUseCases(
+            addTransaction = addTransaction,
+            updateTransaction = updateTransaction,
+            deleteTransaction = deleteTransaction,
+            deleteTransactionById = deleteTransactionById,
+            getAllTransactions = getAllTransactions,
+            getTransactionById = getTransactionById,
+            getTransactionsByType = getTransactionsByType,
+            getTransactionsByCategory = getTransactionsByCategory,
+            getTransactionsBetweenDates = getTransactionsBetweenDates,
+            getTotalIncome = getTotalIncome,
+            getTotalExpense = getTotalExpense,
+            getTransactionCount = getTransactionCount
+        )
+    }
+}
+
+ */
+
+
+import com.finance.lumora.domain.repository.DashboardRepository
+import com.finance.lumora.domain.usecase.category.AddCategoryUseCase
+import com.finance.lumora.domain.usecase.category.CategoryUseCases
+import com.finance.lumora.domain.usecase.category.DeleteCategoryUseCase
+import com.finance.lumora.domain.usecase.category.GetCategoriesUseCase
+import com.finance.lumora.domain.usecase.category.UpdateCategoryUseCase
+import com.finance.lumora.domain.usecase.dashboard.DashboardUseCases
+import com.finance.lumora.domain.usecase.dashboard.GetDashboardSummaryUseCase
+import com.finance.lumora.domain.usecase.transaction.AddTransactionUseCase
+import com.finance.lumora.domain.usecase.transaction.DeleteTransactionByIdUseCase
+import com.finance.lumora.domain.usecase.transaction.DeleteTransactionUseCase
+import com.finance.lumora.domain.usecase.transaction.GetAllTransactionsUseCase
+import com.finance.lumora.domain.usecase.transaction.GetTotalExpenseUseCase
+import com.finance.lumora.domain.usecase.transaction.GetTotalIncomeUseCase
+import com.finance.lumora.domain.usecase.transaction.GetTransactionByIdUseCase
+import com.finance.lumora.domain.usecase.transaction.GetTransactionCountUseCase
+import com.finance.lumora.domain.usecase.transaction.GetTransactionsBetweenDatesUseCase
+import com.finance.lumora.domain.usecase.transaction.GetTransactionsByCategoryUseCase
+import com.finance.lumora.domain.usecase.transaction.GetTransactionsByTypeUseCase
+import com.finance.lumora.domain.usecase.transaction.TransactionUseCases
+import com.finance.lumora.domain.usecase.transaction.UpdateTransactionUseCase
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
+
+@Module
+@InstallIn(SingletonComponent::class)
+object UseCaseModule {
+
+    /**
+     * Provides Category UseCases.
+     */
+    @Provides
+    @Singleton
+    fun provideCategoryUseCases(
+        addCategory: AddCategoryUseCase,
+        updateCategory: UpdateCategoryUseCase,
+        deleteCategory: DeleteCategoryUseCase,
+        getCategories: GetCategoriesUseCase
+    ): CategoryUseCases {
+
+        return CategoryUseCases(
+            addCategory = addCategory,
+            updateCategory = updateCategory,
+            deleteCategory = deleteCategory,
+            getCategories = getCategories
+        )
+    }
+
+    /**
+     * Provides Transaction UseCases.
+     */
+    @Provides
+    @Singleton
+    fun provideTransactionUseCases(
+        addTransaction: AddTransactionUseCase,
+        updateTransaction: UpdateTransactionUseCase,
+        deleteTransaction: DeleteTransactionUseCase,
+        deleteTransactionById: DeleteTransactionByIdUseCase,
+        getAllTransactions: GetAllTransactionsUseCase,
+        getTransactionById: GetTransactionByIdUseCase,
+        getTransactionsByType: GetTransactionsByTypeUseCase,
+        getTransactionsByCategory: GetTransactionsByCategoryUseCase,
+        getTransactionsBetweenDates: GetTransactionsBetweenDatesUseCase,
+        getTotalIncome: GetTotalIncomeUseCase,
+        getTotalExpense: GetTotalExpenseUseCase,
+        getTransactionCount: GetTransactionCountUseCase
+    ): TransactionUseCases {
+
+        return TransactionUseCases(
+            addTransaction = addTransaction,
+            updateTransaction = updateTransaction,
+            deleteTransaction = deleteTransaction,
+            deleteTransactionById = deleteTransactionById,
+            getAllTransactions = getAllTransactions,
+            getTransactionById = getTransactionById,
+            getTransactionsByType = getTransactionsByType,
+            getTransactionsByCategory = getTransactionsByCategory,
+            getTransactionsBetweenDates = getTransactionsBetweenDates,
+            getTotalIncome = getTotalIncome,
+            getTotalExpense = getTotalExpense,
+            getTransactionCount = getTransactionCount
+        )
+    }
+
+    //--------------------------------------
+    @Provides
+    @Singleton
+    fun provideDashboardUseCases(
+
+        repository: DashboardRepository
+
+    ): DashboardUseCases {
+
+        return DashboardUseCases(
+
+            getDashboardSummary = GetDashboardSummaryUseCase(
+                repository
+            )
+
+        )
+
     }
 }

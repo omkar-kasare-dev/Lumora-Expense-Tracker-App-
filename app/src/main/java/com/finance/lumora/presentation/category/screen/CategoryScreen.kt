@@ -5,7 +5,9 @@ package com.finance.lumora.presentation.category.screen
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
@@ -27,14 +29,18 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 //import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.finance.lumora.navigation.BottomNavigationBar
 import com.finance.lumora.presentation.category.viewmodel.CategoryViewModel
 import com.finance.lumora.presentation.category.components.AddCategoryDialog
 import com.finance.lumora.presentation.category.components.CategoryItem
 import com.finance.lumora.presentation.category.components.EditCategoryDialog
 import com.finance.lumora.presentation.category.components.DeleteCategoryDialog
+import com.finance.lumora.presentation.dashboard.components.DashboardTopBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -63,13 +69,25 @@ fun CategoryScreen(
     Scaffold(
 
         topBar = {
-
-            TopAppBar(
-                title = {
-                    Text("Categories")
+            // FIX 1: Wrap in a solid Surface window layer.
+            // This blocks scrolled list elements from being visible underneath your padding zones.
+            Surface(
+                color = MaterialTheme.colorScheme.background,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .statusBarsPadding()
+                        .padding(top = 10.dp, bottom = 10.dp) // Added bottom padding to cleanly frame the bar
+                ) {
+                    DashboardTopBar(
+                        userName = "Transactions Section",
+                        onNotificationClick = { /* Handle notification tap */ },
+                        onProfileClick = { /* Handle profile tap */ }
+                    )
                 }
-            )
-
+            }
         },
 
         snackbarHost = {
@@ -80,8 +98,11 @@ fun CategoryScreen(
 
         },
 
-        //===========
-                floatingActionButton = {
+        bottomBar = {
+            BottomNavigationBar(navController = navController)
+        },
+
+        floatingActionButton = {
 
             FloatingActionButton(
 
