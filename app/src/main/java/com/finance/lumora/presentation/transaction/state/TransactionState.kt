@@ -151,6 +151,12 @@ data class TransactionState(
     /**
      * Transaction selected for deletion.
      */
-val transactionToDelete: Transaction? = null
+    val transactionToDelete: Transaction? = null
+
+    //----------------------------------------
+
+
+
+//----------------------------------------
 
 )

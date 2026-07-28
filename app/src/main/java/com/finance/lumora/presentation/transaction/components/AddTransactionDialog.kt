@@ -10,6 +10,7 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.finance.lumora.data.local.enums.TransactionType
 import com.finance.lumora.domain.model.Category
+import com.finance.lumora.domain.model.SubCategory
 import com.finance.lumora.presentation.transaction.event.TransactionEvent
 import com.finance.lumora.presentation.transaction.state.TransactionState
 import com.finance.lumora.presentation.transaction.viewmodel.TransactionViewModel
@@ -22,10 +23,12 @@ fun AddTransactionDialog(
     onAmountChanged: (String) -> Unit,
     onTypeChanged: (TransactionType) -> Unit,
     onCategoryChanged: (Category) -> Unit,
+    onSubCategoryChanged: (SubCategory) -> Unit,
     onDateChanged: (Long) -> Unit,
     onNoteChanged: (String) -> Unit,
     onSaveClicked: () -> Unit,
     onAddCategoryClick: () -> Unit,
+    onAddSubCategoryClick: () -> Unit,
     onDismissRequest: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -41,6 +44,7 @@ fun AddTransactionDialog(
             ),
             modifier = modifier.fillMaxWidth()
         ) {
+            /*
             TransactionForm(
                 state = state,
                 onAmountChanged = onAmountChanged,
@@ -56,6 +60,35 @@ fun AddTransactionDialog(
                     onSaveClicked()
                     onDismissRequest() // Closes the dialog after hitting save
                 }
+            )
+
+             */
+
+            TransactionForm(
+
+                state = state,
+
+                onAmountChanged = onAmountChanged,
+
+                onTypeChanged = onTypeChanged,
+
+                onCategoryChanged = onCategoryChanged,
+
+                onSubCategoryChanged = onSubCategoryChanged,
+
+                onAddCategoryClick = onAddCategoryClick,
+
+                onAddSubCategoryClick = onAddSubCategoryClick,
+
+                onDateChanged = onDateChanged,
+
+                onNoteChanged = onNoteChanged,
+
+                onSaveClicked = {
+                    onSaveClicked()
+                    onDismissRequest()
+                }
+
             )
         }
     }

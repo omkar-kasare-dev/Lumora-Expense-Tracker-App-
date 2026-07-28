@@ -4,6 +4,7 @@ package com.finance.lumora.presentation.transaction.event
 
 import com.finance.lumora.data.local.enums.TransactionType
 import com.finance.lumora.domain.model.Category
+import com.finance.lumora.domain.model.SubCategory
 import com.finance.lumora.domain.model.Transaction
 
 /**
@@ -132,5 +133,31 @@ sealed interface TransactionEvent {
 
     data class SaveCustomCategory(
         val category: Category
+    ) : TransactionEvent
+
+    //----------------------------------
+
+    /**
+     * User selected a subcategory.
+     */
+    data class SubCategoryChanged(
+        val subCategory: SubCategory
+    ) : TransactionEvent
+
+    /**
+     * Opens the Add SubCategory dialog.
+     */
+    data object ShowAddSubCategoryDialog : TransactionEvent
+
+    /**
+     * Closes the Add SubCategory dialog.
+     */
+    data object DismissAddSubCategoryDialog : TransactionEvent
+
+    /**
+     * Saves a custom subcategory.
+     */
+    data class SaveCustomSubCategory(
+        val subCategory: SubCategory
     ) : TransactionEvent
 }

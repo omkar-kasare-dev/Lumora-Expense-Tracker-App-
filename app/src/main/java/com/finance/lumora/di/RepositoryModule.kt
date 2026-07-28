@@ -65,12 +65,15 @@ object RepositoryModule {
 
 
 import com.finance.lumora.data.local.dao.CategoryDao
+import com.finance.lumora.data.local.dao.SubCategoryDao
 import com.finance.lumora.data.local.dao.TransactionDao
 import com.finance.lumora.data.repository.CategoryRepositoryImpl
 import com.finance.lumora.data.repository.DashboardRepositoryImpl
+import com.finance.lumora.data.repository.SubCategoryRepositoryImpl
 import com.finance.lumora.data.repository.TransactionRepositoryImpl
 import com.finance.lumora.domain.repository.CategoryRepository
 import com.finance.lumora.domain.repository.DashboardRepository
+import com.finance.lumora.domain.repository.SubCategoryRepository
 import com.finance.lumora.domain.repository.TransactionRepository
 import dagger.Binds
 import dagger.Module
@@ -119,16 +122,26 @@ object RepositoryModule {
 
         categoryDao: CategoryDao
 
+
     ): DashboardRepository {
 
         return DashboardRepositoryImpl(
 
             transactionDao = transactionDao,
 
-            categoryDao = categoryDao
+            categoryDao = categoryDao,
 
         )
 
+    }
+
+    @Provides
+    @Singleton
+    fun provideSubCategoryRepository(
+        dao: SubCategoryDao
+    ): SubCategoryRepository {
+
+        return SubCategoryRepositoryImpl(dao)
     }
 
 }

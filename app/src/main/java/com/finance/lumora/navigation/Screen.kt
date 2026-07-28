@@ -55,6 +55,12 @@ sealed class Screen(
 
 sealed class Screen(val route: String) {
 
+    object Login : Screen("login")
+
+    object Register : Screen("register")
+
+    object ForgotPassword : Screen("forgot_password")
+
     object Dashboard : Screen("dashboard")
 
     object Transactions : Screen("transactions")
@@ -74,8 +80,18 @@ sealed class Screen(val route: String) {
 
     object Categories : Screen("categories")
 
+
+    object Profile : Screen("profile")
+    object EditProfile : Screen("edit_profile")
+
+    object Notifications : Screen("notifications")
+
     object Reports : Screen("reports")
 
     object Settings : Screen("settings")
+
+    object PrivacyPolicy : Screen("privacy_policy")
+
+    object Splash : Screen("splash")
 
 }

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "698242988796",
+    "project_id": "lumora-expense-tracker",
+    "storage_bucket": "lumora-expense-tracker.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:698242988796:android:2221005f90af39d51cb579",
+        "android_client_info": {
+          "package_name": "com.finance.lumora"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDYIRZQcuJLooAz2m1k4dVM2ggm44Jc118"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

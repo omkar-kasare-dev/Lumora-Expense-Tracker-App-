@@ -20,6 +20,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 
 /**
  * Reusable form for creating and editing categories.
@@ -44,7 +46,13 @@ fun CategoryForm(
 
     val isNameValid = name.trim().isNotEmpty()
 
-    Column {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .verticalScroll(
+                rememberScrollState()
+            )
+    ) {
         // Preview
 
         Row(

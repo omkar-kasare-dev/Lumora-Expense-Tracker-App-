@@ -372,8 +372,12 @@ fun DashboardScreen(
             ){
                 DashboardTopBar(
                     userName = "Omkar",
-                    onNotificationClick = { /* Handle notification tap */ },
-                    onProfileClick = { /* Handle profile tap */ }
+                    onNotificationClick = {
+                        navController.navigate("Notifications")
+                    },
+                    onProfileClick = {
+                        navController.navigate("Profile")
+                    }
                 )
             }
 

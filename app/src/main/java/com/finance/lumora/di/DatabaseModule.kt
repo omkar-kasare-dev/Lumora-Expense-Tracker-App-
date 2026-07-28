@@ -161,6 +161,7 @@ object DatabaseModule {
 import android.content.Context
 import androidx.room.Room
 import com.finance.lumora.data.local.dao.CategoryDao
+import com.finance.lumora.data.local.dao.SubCategoryDao
 import com.finance.lumora.data.local.dao.TransactionDao
 import com.finance.lumora.data.local.database.LumoraDatabase
 import dagger.Module
@@ -210,5 +211,10 @@ object DatabaseModule {
 
         return database.transactionDao()
     }
+
+    @Provides
+    fun provideSubCategoryDao(
+        database: LumoraDatabase
+    ): SubCategoryDao = database.subCategoryDao()
 
 }

@@ -358,6 +358,7 @@ import androidx.navigation.NavHostController
 import com.finance.lumora.navigation.BottomNavigationBar
 import com.finance.lumora.presentation.category.components.AddCategoryDialog
 import com.finance.lumora.presentation.dashboard.components.DashboardTopBar
+import com.finance.lumora.presentation.subcategory.components.AddSubCategoryDialog
 import com.finance.lumora.presentation.transaction.components.AddTransactionDialog
 import com.finance.lumora.presentation.transaction.components.DashboardSection
 import com.finance.lumora.presentation.transaction.components.EmptyTransactionState
@@ -451,6 +452,25 @@ fun TransactionScreen(
             onTypeChanged = { viewModel.onEvent(TransactionEvent.TypeChanged(it)) },
             onCategoryChanged = { viewModel.onEvent(TransactionEvent.CategoryChanged(it)) },
             onDateChanged = { viewModel.onEvent(TransactionEvent.DateChanged(it)) },
+            onSubCategoryChanged = {
+
+                viewModel.onEvent(
+
+                    TransactionEvent.SubCategoryChanged(it)
+
+                )
+
+            },
+
+            onAddSubCategoryClick = {
+
+                viewModel.onEvent(
+
+                    TransactionEvent.ShowAddSubCategoryDialog
+
+                )
+
+            },
             onNoteChanged = { viewModel.onEvent(TransactionEvent.NoteChanged(it)) },
             onSaveClicked = { viewModel.onEvent(TransactionEvent.SaveTransaction) },
             onAddCategoryClick = {
@@ -489,6 +509,38 @@ fun TransactionScreen(
                 }
 
             )
+        }
+
+        if (state.showAddSubCategoryDialog) {
+
+            AddSubCategoryDialog(
+
+                onDismiss = {
+
+                    viewModel.onEvent(
+
+                        TransactionEvent.DismissAddSubCategoryDialog
+
+                    )
+
+                },
+
+                onSave = { subCategory ->
+
+                    viewModel.onEvent(
+
+                        TransactionEvent.SaveCustomSubCategory(
+
+                            subCategory
+
+                        )
+
+                    )
+
+                }
+
+            )
+
         }
 
         // ---------------------------------------------------------

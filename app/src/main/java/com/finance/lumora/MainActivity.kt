@@ -34,6 +34,7 @@ class MainActivity : ComponentActivity() {
  */
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -42,6 +43,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
 import com.finance.lumora.navigation.LumoraNavGraph
 import com.finance.lumora.ui.theme.LumoraTheme
+
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
@@ -56,7 +58,6 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         setContent {
-
             LumoraTheme {
 
                 val navController = rememberNavController()

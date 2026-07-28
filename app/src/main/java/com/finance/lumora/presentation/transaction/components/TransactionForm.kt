@@ -11,11 +11,13 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.finance.lumora.data.local.enums.TransactionType
 import com.finance.lumora.domain.model.Category
+import com.finance.lumora.domain.model.SubCategory
 import com.finance.lumora.presentation.transaction.state.TransactionState
 
 /**
@@ -33,6 +35,8 @@ fun TransactionForm(
     onTypeChanged: (TransactionType) -> Unit,
     onCategoryChanged: (Category) -> Unit,
     onAddCategoryClick: () -> Unit,
+    onSubCategoryChanged: (SubCategory) -> Unit,
+    onAddSubCategoryClick: () -> Unit,
     onDateChanged: (Long) -> Unit,
     onNoteChanged: (String) -> Unit,
     onSaveClicked: () -> Unit,
@@ -74,6 +78,25 @@ fun TransactionForm(
                 onCategorySelected = onCategoryChanged,
                 onAddCategoryClick = onAddCategoryClick
             )
+
+            HorizontalDivider()
+
+           // if (state.transactionType == TransactionType.EXPENSE)
+
+            SubCategoryDropDown(
+
+                    subCategories = state.subCategories,
+
+                    selectedSubCategory = state.selectedSubCategory,
+                    enabled = state.selectedCategory != null,
+
+                    onSubCategorySelected = onSubCategoryChanged,
+
+                    onAddSubCategoryClick = onAddSubCategoryClick
+
+            )
+
+
 
             DatePickerField(
                 selectedDate = state.selectedDate,

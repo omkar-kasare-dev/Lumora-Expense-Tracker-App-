@@ -17,12 +17,15 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import com.finance.lumora.data.local.enums.TransactionType
 import com.finance.lumora.domain.model.Category
+import com.finance.lumora.domain.model.SubCategory
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 import com.finance.lumora.domain.model.Transaction
 import com.finance.lumora.domain.usecase.category.CategoryUseCases
+import com.finance.lumora.domain.usecase.subcategory.SubCategoryUseCases
 import com.finance.lumora.domain.validation.ValidationResult
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
 
 /**
@@ -32,7 +35,8 @@ import kotlinx.coroutines.flow.collectLatest
 @HiltViewModel
 class TransactionViewModel @Inject constructor(
     private val transactionUseCases: TransactionUseCases,
-    private val categoryUseCases: CategoryUseCases
+    private val categoryUseCases: CategoryUseCases,
+    private val subCategoryUseCases: SubCategoryUseCases
 ) : ViewModel() {
 
     // UI State
@@ -52,6 +56,8 @@ class TransactionViewModel @Inject constructor(
 
     val uiEffect: SharedFlow<TransactionUiEffect> =
         _uiEffect.asSharedFlow()
+
+    private var loadSubCategoriesJob: Job? = null
 
     // ----------------------------------------------------
     // Initialization
@@ -97,6 +103,10 @@ class TransactionViewModel @Inject constructor(
 
             is TransactionEvent.CategoryChanged -> {
                 updateCategory(event.category)
+                // Subcategory Loaders calling.
+                loadSubCategories(
+                    event.category.id
+                )
             }
 //==
             is TransactionEvent.TypeChanged -> {
@@ -221,13 +231,59 @@ class TransactionViewModel @Inject constructor(
             }
             // Custom category Events: END
 
+            // Subcategory event section :Start:
+            is TransactionEvent.SubCategoryChanged -> {
+
+                _state.update {
+
+                    it.copy(
+                        selectedSubCategory = event.subCategory
+                    )
+
+                }
+
+            }
+
+            TransactionEvent.ShowAddSubCategoryDialog -> {
+
+                _state.update {
+
+                    it.copy(
+                        showAddSubCategoryDialog = true
+                    )
+
+                }
+
+            }
+
+            TransactionEvent.DismissAddSubCategoryDialog -> {
+
+                _state.update {
+
+                    it.copy(
+                        showAddSubCategoryDialog = false
+                    )
+
+                }
+
+            }
+
+            is TransactionEvent.SaveCustomSubCategory -> {
+
+                saveCustomSubCategory(
+                    event.subCategory
+                )
+
+            }
+
+            // Subcategory event section : END
+
             else -> {}
         }
     }
 
 
 // Input Handlers
-
 
 
 // Input Handlers
@@ -303,78 +359,6 @@ class TransactionViewModel @Inject constructor(
 
 
      //Saves a new transaction.
-/*
-    private fun saveTransaction() {
-
-        viewModelScope.launch {
-
-            val currentState = state.value
-
-            val category = currentState.selectedCategory
-
-            if (category == null) {
-
-                _uiEffect.emit(
-                    TransactionUiEffect.ShowSnackbar(
-                        "Please select a category."
-                    )
-                )
-
-                return@launch
-            }
-
-            val amount = currentState.amount.toDoubleOrNull()
-
-            if (amount == null) {
-
-                _uiEffect.emit(
-                    TransactionUiEffect.ShowSnackbar(
-                        "Please enter a valid amount."
-                    )
-                )
-
-                return@launch
-            }
-
-            val transaction = Transaction(
-                amount = amount,
-                type = currentState.transactionType,
-                categoryId = category.id,
-                note = currentState.note.ifBlank { null },
-                transactionDate = currentState.selectedDate
-            )
-
-            when (
-                val result = transactionUseCases
-                    .addTransaction(transaction)
-            ) {
-
-                ValidationResult.Success -> {
-
-                    _uiEffect.emit(
-                        TransactionUiEffect.ShowSnackbar(
-                            "Transaction saved successfully."
-                        )
-                    )
-
-                    _uiEffect.emit(
-                        TransactionUiEffect.NavigateBack
-                    )
-                }
-
-                is ValidationResult.Error -> {
-
-                    _uiEffect.emit(
-                        TransactionUiEffect.ShowSnackbar(
-                            result.message
-                        )
-                    )
-                }
-            }
-        }
-    }
-
- */
     /**
      * Saves a new transaction or updates an existing one.
      */
@@ -933,10 +917,85 @@ class TransactionViewModel @Inject constructor(
         }
     }
 
+    //* Add custom category helper function: END ------------------------------------------------------
 
-    /**
-     * Add custom category helper function: END
+    /*
+    ** LoadSubCategories Helper Function:
      */
+    private fun loadSubCategories(
+        categoryId: Long
+    ) {
+
+        loadSubCategoriesJob?.cancel()
+
+        loadSubCategoriesJob = viewModelScope.launch {
+
+            subCategoryUseCases
+                .getSubCategories(categoryId)
+                .collect { subCategories ->
+
+                    _state.update {
+
+                        it.copy(
+                            subCategories = subCategories,
+                            selectedSubCategory = null
+                        )
+
+                    }
+
+                }
+
+        }
+
+    }
+/*
+* Save Custom Sub Category:
+ */
+    private fun saveCustomSubCategory(
+        subCategory: SubCategory
+    ) {
+
+        viewModelScope.launch {
+
+            try {
+
+                val selectedCategory =
+                    _state.value.selectedCategory
+
+                require(selectedCategory != null) {
+                    "Please select a category first."
+                }
+
+                val newSubCategory = subCategory.copy(
+                    categoryId = selectedCategory.id
+                )
 
 
+                subCategoryUseCases
+                    .addSubCategory(newSubCategory)
+
+                _state.update {
+
+                    it.copy(
+                        selectedSubCategory = newSubCategory,
+                        showAddSubCategoryDialog = false
+                    )
+
+                }
+
+            } catch (e: Exception) {
+
+                Log.e(
+                    "SUBCATEGORY_SAVE",
+                    "Failed to save subcategory",
+                    e
+                )
+
+            }
+
+        }
+
+    }
+
+    // Dialog Functions:
 }

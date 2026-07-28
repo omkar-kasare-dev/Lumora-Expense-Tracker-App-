@@ -1,9 +1,9 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
-
     alias(libs.plugins.hilt)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.google.services)
 }
 
 android {
@@ -39,12 +39,15 @@ android {
 dependencies {
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.compose.foundation.layout)
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.compose.ui)
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(libs.androidx.tv.material)
+
     // Dagger Hilt & ksp
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
@@ -63,6 +66,14 @@ dependencies {
     // Material3
     implementation("androidx.compose.material:material-icons-extended")
     implementation("androidx.compose.ui:ui-text")
+
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.10.2")
+
+    implementation(platform(libs.firebase.bom))
+
+    implementation(libs.firebase.auth)
+
+    implementation(libs.firebase.firestore)
 
 
     testImplementation(libs.junit)

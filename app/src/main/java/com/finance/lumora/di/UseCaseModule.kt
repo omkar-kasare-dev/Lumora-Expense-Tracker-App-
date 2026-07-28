@@ -84,6 +84,7 @@ object UseCaseModule {
 
 
 import com.finance.lumora.domain.repository.DashboardRepository
+import com.finance.lumora.domain.repository.SubCategoryRepository
 import com.finance.lumora.domain.usecase.category.AddCategoryUseCase
 import com.finance.lumora.domain.usecase.category.CategoryUseCases
 import com.finance.lumora.domain.usecase.category.DeleteCategoryUseCase
@@ -91,6 +92,9 @@ import com.finance.lumora.domain.usecase.category.GetCategoriesUseCase
 import com.finance.lumora.domain.usecase.category.UpdateCategoryUseCase
 import com.finance.lumora.domain.usecase.dashboard.DashboardUseCases
 import com.finance.lumora.domain.usecase.dashboard.GetDashboardSummaryUseCase
+import com.finance.lumora.domain.usecase.subcategory.AddSubCategoryUseCase
+import com.finance.lumora.domain.usecase.subcategory.GetSubCategoriesUseCase
+import com.finance.lumora.domain.usecase.subcategory.SubCategoryUseCases
 import com.finance.lumora.domain.usecase.transaction.AddTransactionUseCase
 import com.finance.lumora.domain.usecase.transaction.DeleteTransactionByIdUseCase
 import com.finance.lumora.domain.usecase.transaction.DeleteTransactionUseCase
@@ -187,5 +191,17 @@ object UseCaseModule {
 
         )
 
+    }
+
+    @Provides
+    @Singleton
+    fun provideSubCategoryUseCases(
+        repository: SubCategoryRepository
+    ): SubCategoryUseCases {
+
+        return SubCategoryUseCases(
+            addSubCategory = AddSubCategoryUseCase(repository),
+            getSubCategories = GetSubCategoriesUseCase(repository)
+        )
     }
 }
