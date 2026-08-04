@@ -83,6 +83,11 @@ object UseCaseModule {
  */
 
 
+import com.finance.lumora.domain.analytics.repository.AnalyticsRepository
+import com.finance.lumora.domain.analytics.usecase.AnalyticsUseCases
+import com.finance.lumora.domain.analytics.usecase.GetCategorySummaryUseCase
+import com.finance.lumora.domain.analytics.usecase.GetIncomeExpenseSummaryUseCase
+import com.finance.lumora.domain.analytics.usecase.GetMonthlySummaryUseCase
 import com.finance.lumora.domain.repository.DashboardRepository
 import com.finance.lumora.domain.repository.SubCategoryRepository
 import com.finance.lumora.domain.usecase.category.AddCategoryUseCase
@@ -202,6 +207,19 @@ object UseCaseModule {
         return SubCategoryUseCases(
             addSubCategory = AddSubCategoryUseCase(repository),
             getSubCategories = GetSubCategoriesUseCase(repository)
+        )
+    }
+
+    @Provides
+    @Singleton
+    fun provideAnalyticsUseCases(
+        repository: AnalyticsRepository
+    ): AnalyticsUseCases {
+
+        return AnalyticsUseCases(
+            getMonthlySummary = GetMonthlySummaryUseCase(repository),
+            getCategorySummary = GetCategorySummaryUseCase(repository),
+            getIncomeExpenseSummary = GetIncomeExpenseSummaryUseCase(repository)
         )
     }
 }

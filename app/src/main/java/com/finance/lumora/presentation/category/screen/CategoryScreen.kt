@@ -25,11 +25,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.ui.text.font.FontWeight
 //import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -44,6 +49,7 @@ import com.finance.lumora.presentation.dashboard.components.DashboardTopBar
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CategoryScreen(
+    onBackClick: () -> Unit,
     navController: NavHostController,
     viewModel: CategoryViewModel = hiltViewModel()
 
@@ -68,25 +74,58 @@ fun CategoryScreen(
     Scaffold(
 
         topBar = {
-            // FIX 1: Wrap in a solid Surface window layer.
-            // This blocks scrolled list elements from being visible underneath your padding zones.
-            Surface(
-                color = MaterialTheme.colorScheme.background,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .statusBarsPadding()
-                        .padding(top = 10.dp, bottom = 10.dp) // Added bottom padding to cleanly frame the bar
-                ) {
-                    DashboardTopBar(
-                        userName = "Transactions Section",
-                        onNotificationClick = { /* Handle notification tap */ },
-                        onProfileClick = { /* Handle profile tap */ }
+
+            CenterAlignedTopAppBar(
+
+                title = {
+
+                    Text(
+
+                        text = "Categories",
+
+                        style = MaterialTheme.typography.titleLarge,
+
+                        fontWeight = FontWeight.SemiBold
+
                     )
-                }
-            }
+
+                },
+
+                navigationIcon = {
+
+                    IconButton(
+
+                        onClick = onBackClick
+
+                    ) {
+
+                        Icon(
+
+                            imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
+
+                            contentDescription = "Back"
+
+                        )
+
+                    }
+
+                },
+
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+
+                    containerColor =
+                        MaterialTheme.colorScheme.surface,
+
+                    titleContentColor =
+                        MaterialTheme.colorScheme.onSurface,
+
+                    navigationIconContentColor =
+                        MaterialTheme.colorScheme.onSurface
+
+                )
+
+            )
+
         },
 
         snackbarHost = {

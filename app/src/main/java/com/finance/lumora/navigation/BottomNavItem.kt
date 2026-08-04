@@ -1,9 +1,8 @@
 package com.finance.lumora.navigation
 
-
-
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AccountBalanceWallet
+import androidx.compose.material.icons.outlined.Analytics
 import androidx.compose.material.icons.outlined.Category
 import androidx.compose.material.icons.outlined.ReceiptLong
 import androidx.compose.material.icons.outlined.Settings
@@ -29,11 +28,11 @@ sealed class BottomNavItem(
 
     )
 
-    data object Transactions : BottomNavItem(
+    data object Transaction : BottomNavItem(
 
         route = Screen.Transactions.route,
 
-        title = "Transactions",
+        title = "Transaction",
 
         icon = Icons.Outlined.ReceiptLong
 
@@ -46,6 +45,16 @@ sealed class BottomNavItem(
         title = "Categories",
 
         icon = Icons.Outlined.Category
+
+    )
+
+    data object Analytics : BottomNavItem(
+
+        route = Screen.Analytics.route,
+
+        title = "Analytics",
+
+        icon = Icons.Outlined.Analytics
 
     )
 
@@ -65,9 +74,11 @@ sealed class BottomNavItem(
 
             Dashboard,
 
-            Transactions,
+            Transaction,
 
             Categories,
+
+            Analytics,
 
             Settings
 

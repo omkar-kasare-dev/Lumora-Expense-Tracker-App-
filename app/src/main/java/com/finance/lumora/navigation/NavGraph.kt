@@ -1,81 +1,5 @@
 package com.finance.lumora.navigation
 
-/*
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import com.finance.lumora.presentation.budget.BudgetScreen
-
-import com.finance.lumora.presentation.category.screen.CategoryScreen
-import com.finance.lumora.presentation.expense.AddExpenseScreen
-import com.finance.lumora.presentation.home.HomeScreen
-import com.finance.lumora.presentation.profile.ProfileScreen
-import com.finance.lumora.presentation.report.ReportScreen
-import com.finance.lumora.presentation.settings.SettingsScreen
-import com.finance.lumora.presentation.transaction.screen.TransactionScreen
-
-/**
- * Main Navigation Graph of Lumora.
- */
-@Composable
-fun LumoraNavGraph(
-    navController: NavHostController,
-    modifier: Modifier = Modifier
-) {
-
-    NavHost(
-        navController = navController,
-        startDestination = Screen.Home.route,
-        modifier = modifier
-    ) {
-
-        composable(Screen.Home.route) {
-            HomeScreen(navController)
-        }
-
-        composable(Screen.AddExpense.route) {
-            AddExpenseScreen(navController)
-        }
-
-        composable(Screen.Categories.route) {
-            CategoryScreen(navController)
-        }
-
-        composable(Screen.Reports.route) {
-            ReportScreen(navController)
-        }
-
-        composable(Screen.Budget.route) {
-            BudgetScreen(navController)
-        }
-
-        composable(Screen.Settings.route) {
-            SettingsScreen(navController)
-        }
-
-
-        composable(Screen.Profile.route){
-            ProfileScreen(navController)
-        }
-
-        composable(
-            route = Screen.Transaction.route
-        ) {
-
-            TransactionScreen(
-                navController = navController
-            )
-
-        }
-    }
-}
-
- */
-
-
-
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -87,6 +11,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.finance.lumora.domain.model.NotificationItem
 import com.finance.lumora.domain.model.NotificationType
+import com.finance.lumora.presentation.analytics.screen.AnalyticsScreen
 import com.finance.lumora.presentation.auth.screen.ForgotPasswordScreen
 import com.finance.lumora.presentation.auth.screen.LoginScreen
 import com.finance.lumora.presentation.auth.screen.RegisterScreen
@@ -276,6 +201,11 @@ fun LumoraNavGraph(
         ) {
 
             TransactionScreen(
+                onBackClick = {
+
+                    navController.popBackStack()
+
+                },
                 navController = navController
             )
 
@@ -305,7 +235,6 @@ fun LumoraNavGraph(
             arguments = listOf(
 
                 navArgument("transactionId") {
-
                     type = NavType.LongType
 
                 }
@@ -330,21 +259,31 @@ fun LumoraNavGraph(
         //--------------------------------------------------
 
         composable(Screen.Categories.route) {
-            CategoryScreen(navController)
+            CategoryScreen(onBackClick = {
+
+                navController.popBackStack()
+
+            },navController)
         }
 
         //--------------------------------------------------
-        // Reports
+        // Analytics route setup
         //--------------------------------------------------
 
         composable(
-            route = Screen.Reports.route
+
+            route = Screen.Analytics.route
+
         ) {
 
-            // TODO
-            // ReportsScreen(navController)
+            AnalyticsScreen( onBackClick = {
+
+                navController.popBackStack()
+
+            }, navController = navController)
 
         }
+
 
         //--------------------------------------------------
         // Settings
@@ -460,6 +399,8 @@ fun LumoraNavGraph(
                 }
             )
         }
+
+
 
     }
 

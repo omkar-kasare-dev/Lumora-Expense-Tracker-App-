@@ -9,6 +9,8 @@ import com.finance.lumora.data.local.entity.TransactionEntity
 import com.finance.lumora.data.local.enums.TransactionType
 import kotlinx.coroutines.flow.Flow
 import androidx.room.Transaction
+import com.finance.lumora.data.local.projection.CategoryTotalProjection
+import com.finance.lumora.data.local.projection.MonthlyIncomeExpenseProjection
 import com.finance.lumora.data.local.relation.TransactionWithCategory
 import com.finance.lumora.data.local.projection.TopExpenseCategoryProjection
 
@@ -337,5 +339,130 @@ interface TransactionDao {
 """)
     fun getTopExpenseCategory():
             Flow<TopExpenseCategoryProjection?>
+
+    //---------------------------------------------------------------------
+    /*
+      ** Analytics Dao section Start
+
+     */
+    @Query(
+        """
+    SELECT COALESCE(SUM(amount), 0)
+    FROM transactions
+    WHERE type = :incomeType
+      AND transaction_date BETWEEN :startDate AND :endDate
+    """
+    )
+    fun getTotalIncome(
+        incomeType: TransactionType,
+        startDate: Long,
+        endDate: Long
+    ): Flow<Double>
+
+    //---------------------------------------------------------------
+    @Query(
+        """
+    SELECT COALESCE(SUM(amount), 0)
+    FROM transactions
+    WHERE type = :expenseType
+      AND transaction_date BETWEEN :startDate AND :endDate
+    """
+    )
+    fun getTotalExpense(
+        expenseType: TransactionType,
+        startDate: Long,
+        endDate: Long
+    ): Flow<Double>
+
+    //------------------------------------------------------------------
+    @Query(
+        """
+    SELECT COUNT(*)
+    FROM transactions
+    WHERE transaction_date BETWEEN :startDate AND :endDate
+    """
+    )
+    fun getTransactionCount(
+        startDate: Long,
+        endDate: Long
+    ): Flow<Int>
+
+    //-----------------------------------------------------------------------
+    @Query(
+        """
+    SELECT
+        c.id AS categoryId,
+        c.name AS categoryName,
+        c.icon AS icon,
+        c.color AS color,
+        COALESCE(SUM(t.amount), 0) AS totalAmount
+    FROM transactions t
+    INNER JOIN categories c
+        ON t.category_id = c.id
+    WHERE t.type = :type
+      AND t.transaction_date BETWEEN :startDate AND :endDate
+    GROUP BY c.id, c.name ,c.icon,c.color
+    ORDER BY totalAmount DESC
+    """
+    )
+    fun getCategoryTotals(
+        type: TransactionType,
+        startDate: Long,
+        endDate: Long
+    ): Flow<List<CategoryTotalProjection>>
+
+    //--------------------------------------------------------------------------
+
+    @Query(
+        """
+    SELECT
+        CAST(strftime('%Y', transaction_date / 1000, 'unixepoch') AS INTEGER) AS year,
+        CAST(strftime('%m', transaction_date / 1000, 'unixepoch') AS INTEGER) AS month,
+
+        COALESCE(
+            SUM(
+                CASE
+                    WHEN type = 'INCOME'
+                    THEN amount
+                    ELSE 0
+                END
+            ),
+            0
+        ) AS income,
+
+        COALESCE(
+            SUM(
+                CASE
+                    WHEN type = 'EXPENSE'
+                    THEN amount
+                    ELSE 0
+                END
+            ),
+            0
+        ) AS expense
+
+    FROM transactions
+
+    WHERE transaction_date BETWEEN :startDate
+                              AND :endDate
+
+    GROUP BY year, month
+
+    ORDER BY year, month
+    """
+    )
+    fun getMonthlyIncomeExpense(
+        startDate: Long,
+        endDate: Long
+    ): Flow<List<MonthlyIncomeExpenseProjection>>
+
+    //------------------------------------------------------------------------
+
+    //---------------------------------------------------------------------
+    /*
+      * Analytics Dao section END:
+     */
+
+
 
 }

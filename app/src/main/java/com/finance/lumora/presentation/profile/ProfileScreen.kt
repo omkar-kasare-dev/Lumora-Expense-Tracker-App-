@@ -27,21 +27,6 @@ import java.util.Date
 import java.util.Locale
 import androidx.compose.ui.platform.LocalLocale
 
-/*
-// Data Class Matching Your Model
-data class UserProfile(
-    val uid: String,
-    val name: String,
-    val email: String,
-    val photoUrl: String,
-    val createdAtMillis: Long,
-    val lastLoginMillis: Long,
-    val currency: String,
-    val theme: String,
-    val notificationsEnabled: Boolean
-)
-
- */
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
