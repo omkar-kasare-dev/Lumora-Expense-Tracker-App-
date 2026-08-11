@@ -72,11 +72,13 @@ import com.finance.lumora.data.repository.CategoryRepositoryImpl
 import com.finance.lumora.data.repository.DashboardRepositoryImpl
 import com.finance.lumora.data.repository.SubCategoryRepositoryImpl
 import com.finance.lumora.data.repository.TransactionRepositoryImpl
+import com.finance.lumora.data.search.SearchRepositoryImpl
 import com.finance.lumora.domain.analytics.repository.AnalyticsRepository
 import com.finance.lumora.domain.repository.CategoryRepository
 import com.finance.lumora.domain.repository.DashboardRepository
 import com.finance.lumora.domain.repository.SubCategoryRepository
 import com.finance.lumora.domain.repository.TransactionRepository
+import com.finance.lumora.domain.search.repository.SearchRepository
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -159,6 +161,22 @@ object RepositoryModule {
             transactionDao = transactionDao
         )
     }
+
+    /**
+     * Search Repository
+     */
+    @Provides
+    @Singleton
+    fun provideSearchRepository(
+        transactionDao: TransactionDao
+    ): SearchRepository {
+
+        return SearchRepositoryImpl(
+            transactionDao = transactionDao
+        )
+    }
+
+
 
 
 

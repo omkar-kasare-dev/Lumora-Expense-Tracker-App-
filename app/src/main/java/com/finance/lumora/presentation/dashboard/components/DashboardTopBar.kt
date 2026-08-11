@@ -24,16 +24,14 @@ import androidx.compose.ui.unit.dp
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import androidx.compose.material.icons.outlined.Search
 
 @Composable
 fun DashboardTopBar(
-
     userName: String = "User",
-
     modifier: Modifier = Modifier,
-
+    onSearchClick: () -> Unit,
     onNotificationClick: () -> Unit = {},
-
     onProfileClick: () -> Unit = {}
 
 ) {
@@ -107,40 +105,37 @@ fun DashboardTopBar(
             // Actions
             //--------------------------------------------------
 
-            Row {
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
 
                 IconButton(
+                    onClick = onSearchClick
+                ) {
+                    Icon(
+                        imageVector = Icons.Outlined.Search,
+                        contentDescription = "Search"
+                    )
+                }
 
+                IconButton(
                     onClick = onNotificationClick
-
                 ) {
-
                     Icon(
-
                         imageVector = Icons.Outlined.Notifications,
-
                         contentDescription = "Notifications"
-
                     )
-
                 }
 
                 IconButton(
-
                     onClick = onProfileClick
-
                 ) {
-
                     Icon(
-
                         imageVector = Icons.Outlined.Person,
-
                         contentDescription = "Profile"
-
                     )
-
                 }
-
             }
 
         }

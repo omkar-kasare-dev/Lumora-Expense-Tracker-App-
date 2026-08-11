@@ -45,5 +45,6 @@ sealed class Screen(val route: String) {
     data object Analytics : Screen("analytics")
 
     object Splash : Screen("splash")
+    object Search : Screen("search")
 
 }

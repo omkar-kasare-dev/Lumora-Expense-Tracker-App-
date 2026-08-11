@@ -244,6 +244,7 @@ import kotlinx.coroutines.flow.collectLatest
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.finance.lumora.navigation.BottomNavigationBar
+import com.finance.lumora.navigation.Screen
 import com.finance.lumora.presentation.dashboard.components.DashboardTopBar
 import com.finance.lumora.presentation.transaction.components.AddTransactionDialog
 import com.finance.lumora.presentation.transaction.event.TransactionEvent
@@ -372,6 +373,11 @@ fun DashboardScreen(
             ){
                 DashboardTopBar(
                     userName = "Omkar",
+                    onSearchClick = {
+                        if (navController.currentDestination?.route != Screen.Search.route) {
+                            navController.navigate(Screen.Search.route)
+                        }
+                    },
                     onNotificationClick = {
                         navController.navigate("Notifications")
                     },

@@ -10,13 +10,7 @@ package com.finance.lumora.data.local.enums
  */
 enum class TransactionType {
 
-    /**
-     * Money received.
-     */
     INCOME,
 
-    /**
-     * Money spent.
-     */
     EXPENSE
 }

@@ -462,7 +462,122 @@ interface TransactionDao {
     /*
       * Analytics Dao section END:
      */
+    /*
+    * Search DAO Start
+     */
+    // ================================================================ // SEARCH : ADVANCED FILTERING // ================================================================ /** * Searches transactions using optional search text and filters. * * Supported: * * - Note * - Category name * - Amount * - Transaction type * - Category * - Date range * - Minimum amount * - Maximum amount * * Every filter is optional. * * When a filter is NULL, that filter is ignored. */
+@Transaction @Query(""" SELECT t.* FROM transactions t INNER JOIN categories c ON t.category_id = c.id WHERE ( :query = '' OR LOWER(IFNULL(t.note, '')) LIKE '%' || LOWER(:query) || '%' OR LOWER(IFNULL(c.name, '')) LIKE '%' || LOWER(:query) || '%' OR CAST(t.amount AS TEXT) LIKE '%' || :query || '%' OR LOWER(t.type) LIKE '%' || LOWER(:query) || '%' ) AND ( :transactionType IS NULL OR t.type = :transactionType ) AND ( :categoryId IS NULL OR t.category_id = :categoryId ) AND ( :startDate IS NULL OR t.transaction_date >= :startDate ) AND ( :endDate IS NULL OR t.transaction_date <= :endDate ) AND ( :minAmount IS NULL OR t.amount >= :minAmount ) AND ( :maxAmount IS NULL OR t.amount <= :maxAmount ) ORDER BY t.transaction_date DESC, t.id DESC """) fun searchTransactions( query: String, transactionType: TransactionType?, categoryId: Long?, startDate: Long?, endDate: Long?, minAmount: Double?, maxAmount: Double? ): Flow<List<TransactionWithCategory>>
 
+    /*
+* Search DAO END:
+ */
+
+/*
+    @Query(
+        """
+    SELECT t.*
+    FROM transactions t
+    INNER JOIN categories c
+        ON t.category_id = c.id
+    WHERE
+
+        LOWER(IFNULL(t.note,'')) LIKE '%' || LOWER(:query) || '%'
+
+        OR
+
+        LOWER(c.name) LIKE '%' || LOWER(:query) || '%'
+
+        OR
+
+        CAST(t.amount AS TEXT)
+            LIKE '%' || :query || '%'
+
+        OR
+
+        LOWER(t.type)
+            LIKE '%' || LOWER(:query) || '%'
+
+    ORDER BY t.transaction_date DESC
+    """
+    )
+    fun searchTransactions(
+        query: String
+    ): Flow<List<TransactionEntity>>
+ */
+
+  /*
+
+    @Transaction
+    @Query(
+        """
+    SELECT *
+    FROM transactions
+    WHERE
+        LOWER(IFNULL(note, ''))
+            LIKE '%' || LOWER(:query) || '%'
+
+        OR
+
+        CAST(amount AS TEXT)
+            LIKE '%' || :query || '%'
+
+        OR
+
+        LOWER(type)
+            LIKE '%' || LOWER(:query) || '%'
+
+    ORDER BY
+        transaction_date DESC,
+        id DESC
+    """
+    )
+    fun searchTransactions(
+        query: String
+    ): Flow<List<TransactionWithCategory>>
+
+   */
+
+    /*
+    @Transaction
+    @Query(
+        """
+    SELECT *
+    FROM transactions
+    WHERE
+        LOWER(IFNULL(note, '')) LIKE '%' || LOWER(:query) || '%'
+        OR CAST(amount AS TEXT) LIKE '%' || :query || '%'
+        OR LOWER(type) LIKE '%' || LOWER(:query) || '%'
+    ORDER BY transaction_date DESC
+    """
+    )
+    fun searchTransactions(
+        query: String
+    ): Flow<List<TransactionWithCategory>>
+
+     */
+
+/*
+    @Transaction
+    @Query(
+        """
+    SELECT *
+    FROM transactions
+    WHERE
+        LOWER(IFNULL(note,'')) LIKE '%' || LOWER(:query) || '%'
+        OR CAST(amount AS TEXT) LIKE '%' || :query || '%'
+        OR LOWER(type) LIKE '%' || LOWER(:query) || '%'
+    ORDER BY transaction_date DESC
+    """
+    )
+    fun searchTransactions(
+        query: String
+    ): Flow<List<TransactionWithCategory>>
+
+
+ */
+    /*
+        * Search DAO END
+     */
 
 
 }

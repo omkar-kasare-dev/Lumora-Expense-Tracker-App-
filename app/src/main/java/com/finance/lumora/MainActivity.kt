@@ -59,9 +59,6 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             LumoraTheme {
-
-                val navController = rememberNavController()
-
                 LumoraNavGraph(
                     modifier = Modifier.fillMaxSize()
                 )
