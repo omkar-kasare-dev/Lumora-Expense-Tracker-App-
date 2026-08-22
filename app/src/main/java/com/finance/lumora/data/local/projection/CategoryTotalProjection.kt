@@ -1,7 +1,5 @@
 package com.finance.lumora.data.local.projection
 
-
-
 data class CategoryTotalProjection(
     val categoryId: Long,
     val categoryName: String,

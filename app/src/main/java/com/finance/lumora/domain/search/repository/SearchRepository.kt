@@ -1,20 +1,3 @@
-/*
-package com.finance.lumora.domain.search.repository
-
-import com.finance.lumora.data.local.relation.TransactionWithCategory
-
-import kotlinx.coroutines.flow.Flow
-
-interface SearchRepository {
-
-    fun searchTransactions(
-        query: String
-    ): Flow<List<TransactionWithCategory>>
-
-}
-
- */
-
 package com.finance.lumora.domain.search.repository
 
 import com.finance.lumora.data.local.relation.TransactionWithCategory

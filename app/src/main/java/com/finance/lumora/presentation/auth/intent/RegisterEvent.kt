@@ -1,8 +1,12 @@
 package com.finance.lumora.presentation.auth.intent
 
+import android.net.Uri
 
 
 sealed interface RegisterEvent {
+    data class ProfileImageSelected(
+        val uri: Uri
+    ) : RegisterEvent
 
     data class NameChanged(
         val name: String

@@ -12,11 +12,7 @@ import com.finance.lumora.domain.repository.TransactionRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-/**
- * Repository implementation for Transaction operations.
- *
- * Converts Room entities to domain models and vice versa.
- */
+
 class TransactionRepositoryImpl(
     private val transactionDao: TransactionDao
 ) : TransactionRepository {

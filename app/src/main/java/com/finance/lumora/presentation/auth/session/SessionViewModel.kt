@@ -17,7 +17,6 @@ import kotlinx.coroutines.launch
 /**
  * ViewModel responsible for monitoring the application's
  * authentication session.
- *
  * It listens to Firebase Authentication state changes and
  * exposes a simple SessionState for the UI.
  */
@@ -30,7 +29,6 @@ class SessionViewModel @Inject constructor(
 
     /**
      * Internal mutable session state.
-     *
      * Default state is Loading until Firebase
      * emits the current authentication status.
      */
@@ -38,9 +36,6 @@ class SessionViewModel @Inject constructor(
         SessionState.Loading
     )
 
-    /**
-     * Public immutable session state.
-     */
     val sessionState: StateFlow<SessionState> =
         _sessionState.asStateFlow()
 
@@ -51,7 +46,6 @@ class SessionViewModel @Inject constructor(
 
     /**
      * Observe Firebase authentication state.
-     *
      * Whenever Firebase signs a user in or out,
      * this Flow emits a new value.
      */

@@ -4,9 +4,6 @@ import androidx.compose.ui.graphics.Color
 
 /**
  * Represents a selectable category color.
- *
- * @property color Color object used for UI rendering.
- * @property colorLong ARGB color value stored in Room Database.
  */
 data class CategoryColorItem(
     val color: Color,
@@ -15,7 +12,6 @@ data class CategoryColorItem(
 
 /**
  * Centralized list of colors used throughout the application.
- *
  * The same list is used by:
  * - Add Category
  * - Edit Category

@@ -15,10 +15,6 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-/**
- * ViewModel responsible for managing Category UI state
- * and coordinating Category-related business logic.
- */
 @HiltViewModel
 class CategoryViewModel @Inject constructor(
     private val categoryUseCases: CategoryUseCases
@@ -26,8 +22,6 @@ class CategoryViewModel @Inject constructor(
 
     private val _uiState = MutableStateFlow(CategoryUiState())
 
-   // val uiState: StateFlow<CategoryUiState> =
-      //  _uiState.asStateFlow()
 
     val uiState = _uiState.asStateFlow()
 
@@ -35,9 +29,6 @@ class CategoryViewModel @Inject constructor(
         loadCategories()
     }
 
-    /**
-     * Loads all categories from Room.
-     */
     private fun loadCategories() {
 
         viewModelScope.launch {

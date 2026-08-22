@@ -1,7 +1,5 @@
 package com.finance.lumora.domain.usecase.subcategory
 
-
-
 /**
  * Container class for all SubCategory use cases.
  *

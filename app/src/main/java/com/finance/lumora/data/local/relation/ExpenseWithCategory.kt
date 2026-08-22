@@ -9,7 +9,6 @@ import com.finance.lumora.data.local.entity.ExpenseEntity
 
 /**
  * Represents an Expense along with its associated Category.
- *
  * Used only inside the data layer.
  */
 data class ExpenseWithCategory(

@@ -1,6 +1,5 @@
 package com.finance.lumora.core.constants
 
-
 object DatabaseConstants {
 
     const val DATABASE_NAME = "lumora.db"

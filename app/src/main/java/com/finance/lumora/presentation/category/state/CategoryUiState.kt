@@ -2,19 +2,10 @@ package com.finance.lumora.presentation.category.state
 
 import com.finance.lumora.domain.model.Category
 
-/**
- * Represents the complete UI state of the Category screen.
- */
 data class CategoryUiState(
 
-    /**
-     * Categories displayed on the screen.
-     */
     val categories: List<Category> = emptyList(),
 
-    /**
-     * Indicates whether data is currently loading.
-     */
     val isLoading: Boolean = false,
 
     /**

@@ -10,19 +10,10 @@ package com.finance.lumora.domain.model
  */
 data class DashboardStatistics(
 
-    /**
-     * Total number of transactions.
-     */
     val transactionCount: Int,
 
-    /**
-     * Largest income transaction.
-     */
     val largestIncome: Double,
 
-    /**
-     * Largest expense transaction.
-     */
     val largestExpense: Double
 
 )

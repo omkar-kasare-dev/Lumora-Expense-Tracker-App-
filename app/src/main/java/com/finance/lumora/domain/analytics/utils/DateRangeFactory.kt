@@ -6,8 +6,6 @@ import java.util.Calendar
 
 
 object DateRangeFactory {
-
-
     fun create(
         filter: AnalyticsFilter
     ): DateRange {

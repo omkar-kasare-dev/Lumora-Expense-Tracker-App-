@@ -26,8 +26,6 @@ class LoginViewModel @Inject constructor(
 
     // -------------------------------
     // UI State
-    // -------------------------------
-
     private val _uiState = MutableStateFlow(LoginUiState())
 
     val uiState: StateFlow<LoginUiState> =
@@ -35,8 +33,6 @@ class LoginViewModel @Inject constructor(
 
     // -------------------------------
     // Event Handler
-    // -------------------------------
-
     fun onEvent(event: LoginEvent) {
 
         when (event) {
@@ -118,8 +114,6 @@ class LoginViewModel @Inject constructor(
 
     // -------------------------------
     // Login
-    // -------------------------------
-
     private fun login() {
 
         if (!validateInputs()) return
@@ -203,8 +197,6 @@ class LoginViewModel @Inject constructor(
 
     // -------------------------------
     // Validation
-    // -------------------------------
-
     private fun validateInputs(): Boolean {
 
         val email =

@@ -1,7 +1,6 @@
 package com.finance.lumora.domain.usecase.transaction
 
 
-
 data class TransactionUseCases(
 
     val addTransaction: AddTransactionUseCase,
@@ -26,5 +25,6 @@ data class TransactionUseCases(
 
     val getTotalExpense: GetTotalExpenseUseCase,
 
-    val getTransactionCount: GetTransactionCountUseCase
+    val getTransactionCount: GetTransactionCountUseCase,
+    val getMonthlyExpense: GetMonthlyExpenseUseCase
 )

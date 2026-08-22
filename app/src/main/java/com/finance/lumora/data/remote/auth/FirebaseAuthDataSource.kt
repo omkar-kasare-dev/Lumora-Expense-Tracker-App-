@@ -21,50 +21,6 @@ class FirebaseAuthDataSource @Inject constructor(
     private val firestore: FirebaseFirestore
 
 ) {
-/*
-    /**
-     * Register new user
-     */
-    suspend fun register(
-
-        name: String,
-
-        email: String,
-
-        password: String
-
-    ): UserDto {
-
-        val authResult = firebaseAuth
-            .createUserWithEmailAndPassword(
-                email,
-                password
-            )
-            .await()
-
-        val firebaseUser = authResult.user
-            ?: throw Exception("Registration failed.")
-
-        val userDto = UserDto(
-
-            uid = firebaseUser.uid,
-
-            name = name,
-
-            email = email
-
-        )
-
-        firestore
-            .collection("users")
-            .document(firebaseUser.uid)
-            .set(userDto)
-            .await()
-
-        return userDto
-    }
-
- */
     /**
      * Register new user
      */

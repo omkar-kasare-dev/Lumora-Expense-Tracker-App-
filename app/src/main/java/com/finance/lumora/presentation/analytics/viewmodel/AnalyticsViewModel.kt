@@ -31,7 +31,6 @@ class AnalyticsViewModel @Inject constructor(
      * ----------------------------------------------------
      * Selected Analytics Filter
      * ----------------------------------------------------
-     *
      * Single source of truth for the currently
      * selected filter.
      */
@@ -43,7 +42,6 @@ class AnalyticsViewModel @Inject constructor(
      * ----------------------------------------------------
      * Custom Date Range
      * ----------------------------------------------------
-     *
      * Used only when the selected filter is CUSTOM.
      */
     private val customDateRange =
@@ -53,7 +51,6 @@ class AnalyticsViewModel @Inject constructor(
      * ----------------------------------------------------
      * Analytics UI State
      * ----------------------------------------------------
-     *
      * This StateFlow is observed directly by
      * AnalyticsScreen.
      */

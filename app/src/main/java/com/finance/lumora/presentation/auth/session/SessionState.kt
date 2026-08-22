@@ -10,6 +10,4 @@ sealed interface SessionState {
 
     data object Unauthenticated : SessionState
 
-
-
 }

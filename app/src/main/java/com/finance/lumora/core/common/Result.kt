@@ -1,7 +1,5 @@
 package com.finance.lumora.core.common
 
-
-
 sealed class Result<out T> {
 
     data class Success<T>(

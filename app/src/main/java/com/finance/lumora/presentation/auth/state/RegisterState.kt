@@ -1,8 +1,10 @@
 package com.finance.lumora.presentation.auth.state
 
+import android.net.Uri
 
 
 data class RegisterState(
+    val profileImageUri: Uri? = null,
 
     val name: String = "",
 

@@ -121,32 +121,6 @@ class AuthRepositoryImpl @Inject constructor(
             }
 
     }
-/*
-    override suspend fun sendPasswordReset(
-        email: String
-    ): Result<Unit> {
-
-        return try {
-
-            firebaseAuth
-                .sendPasswordResetEmail(email)
-                .await()
-
-            Result.success(Unit)
-
-        } catch (e: Exception) {
-
-            Result.failure(
-                Exception(
-                    mapFirebaseAuthError(e)
-                )
-            )
-
-        }
-
-    }
-
- */
 
     override suspend fun sendPasswordReset(
         email: String

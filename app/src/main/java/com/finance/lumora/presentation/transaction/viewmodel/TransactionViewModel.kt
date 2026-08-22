@@ -28,6 +28,8 @@ import com.finance.lumora.domain.validation.ValidationResult
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
 
+import com.finance.lumora.notifications.BudgetAlertCoordinator
+
 /**
  * ViewModel responsible for handling
  * Transaction UI state and user interactions.
@@ -36,7 +38,8 @@ import kotlinx.coroutines.flow.collectLatest
 class TransactionViewModel @Inject constructor(
     private val transactionUseCases: TransactionUseCases,
     private val categoryUseCases: CategoryUseCases,
-    private val subCategoryUseCases: SubCategoryUseCases
+    private val subCategoryUseCases: SubCategoryUseCases,
+    private val budgetAlertCoordinator: BudgetAlertCoordinator
 ) : ViewModel() {
 
     // UI State
@@ -362,6 +365,9 @@ class TransactionViewModel @Inject constructor(
     /**
      * Saves a new transaction or updates an existing one.
      */
+    /*
+    // Original Save Transaction
+
     private fun saveTransaction() {
 
         viewModelScope.launch {
@@ -417,6 +423,147 @@ class TransactionViewModel @Inject constructor(
             when (result) {
 
                 ValidationResult.Success -> {
+
+                    _uiEffect.emit(
+                        TransactionUiEffect.ShowSnackbar(
+                            if (currentState.isEditMode)
+                                "Transaction updated successfully."
+                            else
+                                "Transaction saved successfully."
+                        )
+                    )
+
+                    resetForm()
+
+                    _uiEffect.emit(
+                        TransactionUiEffect.NavigateBack
+                    )
+                }
+
+                is ValidationResult.Error -> {
+
+                    _uiEffect.emit(
+                        TransactionUiEffect.ShowSnackbar(
+                            result.message
+                        )
+                    )
+                }
+            }
+        }
+    }
+
+     */
+    private fun saveTransaction() {
+
+        viewModelScope.launch {
+
+            val currentState = state.value
+
+            val category = currentState.selectedCategory
+
+            if (category == null) {
+
+                _uiEffect.emit(
+                    TransactionUiEffect.ShowSnackbar(
+                        "Please select a category."
+                    )
+                )
+
+                return@launch
+            }
+
+            val amount =
+                currentState.amount.toDoubleOrNull()
+
+            if (amount == null) {
+
+                _uiEffect.emit(
+                    TransactionUiEffect.ShowSnackbar(
+                        "Please enter a valid amount."
+                    )
+                )
+
+                return@launch
+            }
+
+            val transaction = Transaction(
+
+                id = currentState.editingTransactionId ?: 0L,
+
+                amount = amount,
+
+                type = currentState.transactionType,
+
+                categoryId = category.id,
+
+                note = currentState.note.ifBlank {
+                    null
+                },
+
+                transactionDate = currentState.selectedDate,
+
+                updatedAt = System.currentTimeMillis()
+            )
+
+            val result =
+                if (currentState.isEditMode) {
+
+                    transactionUseCases.updateTransaction(
+                        transaction
+                    )
+
+                } else {
+
+                    transactionUseCases.addTransaction(
+                        transaction
+                    )
+                }
+
+            when (result) {
+
+                ValidationResult.Success -> {
+
+                    // ---------------------------------------------------------
+                    // Budget Alert Evaluation
+                    // ---------------------------------------------------------
+                    //
+                    // Only expense transactions can affect the
+                    // monthly budget.
+                    //
+                    // The coordinator itself checks:
+                    //
+                    // 1. Notifications enabled
+                    // 2. Budget alerts enabled
+                    // 3. Valid monthly budget
+                    // 4. Current monthly expense
+                    // 5. Previous alert level
+                    //
+                    // Therefore we don't duplicate that logic here.
+                    // ---------------------------------------------------------
+
+                    if (
+                        currentState.transactionType ==
+                        TransactionType.EXPENSE
+                    ) {
+
+                        try {
+
+                            budgetAlertCoordinator.evaluate()
+
+                        } catch (e: Exception) {
+
+                            Log.e(
+                                "BUDGET_ALERT",
+                                "Failed to evaluate budget alert",
+                                e
+                            )
+
+                        }
+                    }
+
+                    // ---------------------------------------------------------
+                    // Success UI
+                    // ---------------------------------------------------------
 
                     _uiEffect.emit(
                         TransactionUiEffect.ShowSnackbar(

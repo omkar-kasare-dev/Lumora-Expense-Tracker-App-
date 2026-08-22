@@ -1,6 +1,5 @@
 package com.finance.lumora.data.repository
 
-
 import com.finance.lumora.data.local.dao.CategoryDao
 import com.finance.lumora.data.mapper.toDomain
 import com.finance.lumora.data.mapper.toDomainList
@@ -10,11 +9,6 @@ import com.finance.lumora.domain.repository.CategoryRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-/**
- * Repository implementation for Category operations.
- *
- * Converts Room entities to Domain models and vice versa.
- */
 class CategoryRepositoryImpl(
     private val categoryDao: CategoryDao
 ) : CategoryRepository {

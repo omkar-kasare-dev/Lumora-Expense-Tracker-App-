@@ -7,10 +7,6 @@ package com.finance.lumora.presentation.splash.state
  */
 data class SplashUiState(
 
-    /**
-     * True while the splash screen is visible.
-     */
-
     val isLoading: Boolean = true,
 
     val isLoggedIn: Boolean = false

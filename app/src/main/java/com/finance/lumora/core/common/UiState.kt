@@ -1,7 +1,5 @@
 package com.finance.lumora.core.common
 
-
-
 data class UiState<T>(
 
     val isLoading: Boolean = false,

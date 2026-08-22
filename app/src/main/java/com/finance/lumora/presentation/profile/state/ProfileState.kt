@@ -9,6 +9,9 @@ data class ProfileState(
 
     val isLoading: Boolean = false,
 
-    val errorMessage: String? = null
+    val isUpdating: Boolean = false,
 
+    val errorMessage: String? = null,
+
+    val updateSuccess: Boolean = false
 )

@@ -92,8 +92,4 @@ interface CategoryDao {
 """)
     fun getCustomCategories(): Flow<List<CategoryEntity>>
 
-
-
-
-
 }

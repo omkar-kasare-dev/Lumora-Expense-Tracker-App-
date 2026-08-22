@@ -16,9 +16,7 @@ data class AnalyticsUiState(
             AnalyticsFilter.THIS_MONTH
         ),
 
-    /*
-     * Summary Card
-     */
+
     val monthlySummary: MonthlySummary? = null,
 
     /*
@@ -34,14 +32,9 @@ data class AnalyticsUiState(
     List<IncomeExpenseSummary> =
         emptyList(),
 
-    /*
-     * Loading
-     */
+
     val isLoading: Boolean = false,
 
-    /*
-     * Error
-     */
     val error: String? = null
 
 )

@@ -32,7 +32,7 @@ class MainActivity : ComponentActivity() {
 }
 
  */
-
+/*
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -67,3 +67,55 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+
+ */
+
+
+import android.os.Bundle
+import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
+import androidx.fragment.app.FragmentActivity
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.finance.lumora.navigation.LumoraNavGraph
+import com.finance.lumora.presentation.security.biometric.BiometricLockGate
+import com.finance.lumora.presentation.theme.viewmodel.ThemeViewModel
+import com.finance.lumora.ui.theme.LumoraTheme
+import dagger.hilt.android.AndroidEntryPoint
+
+/**
+ * Main entry point of the Lumora application.
+ */
+@AndroidEntryPoint
+class MainActivity : FragmentActivity() {
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        enableEdgeToEdge()
+
+        setContent {
+
+            val themeViewModel: ThemeViewModel = hiltViewModel()
+
+            val themeState by themeViewModel.uiState
+                .collectAsStateWithLifecycle()
+
+            LumoraTheme(
+                appTheme = themeState.theme
+            ) {
+
+                // Root biometric gate protects the entire app navigation
+                BiometricLockGate {
+                    LumoraNavGraph(
+                        modifier = Modifier.fillMaxSize()
+                    )
+                }
+
+            }
+        }
+    }
+}

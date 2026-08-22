@@ -39,6 +39,7 @@ import com.finance.lumora.domain.model.Transaction
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import androidx.compose.ui.platform.LocalLocale
 
 /**
  * Professional Material 3 Transaction Item
@@ -81,7 +82,7 @@ fun TransactionItem(
 
     val formattedDate = SimpleDateFormat(
         "dd MMM yyyy",
-        Locale.getDefault()
+        LocalLocale.current.platformLocale
     ).format(
         Date(transaction.transactionDate)
     )
@@ -221,7 +222,7 @@ fun TransactionItem(
             //--------------------------------------------------
             // Action Buttons
             //--------------------------------------------------
-/*
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.End
@@ -276,7 +277,7 @@ fun TransactionItem(
 
             }
 
- */
+
 
         }
 

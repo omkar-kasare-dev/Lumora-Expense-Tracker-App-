@@ -1,12 +1,13 @@
 package com.finance.lumora.presentation.profile.viewmodel
 
 
-
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.finance.lumora.domain.model.UserProfile
 import com.finance.lumora.domain.repository.AuthRepository
 import com.finance.lumora.domain.usecase.auth.GetUserProfileUseCase
+import com.finance.lumora.domain.usecase.auth.UpdateUserProfileUseCase
 import com.finance.lumora.presentation.profile.state.ProfileState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,85 +19,20 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
-
     private val getUserProfileUseCase: GetUserProfileUseCase,
-    private val authRepository: AuthRepository,
-
-
+    private val updateUserProfileUseCase: UpdateUserProfileUseCase,
+    private val authRepository: AuthRepository
 ) : ViewModel() {
 
-
-    private val _uiState = MutableStateFlow(
-        ProfileState()
-    )
+    private val _uiState = MutableStateFlow(ProfileState())
 
     val uiState: StateFlow<ProfileState> =
         _uiState.asStateFlow()
 
-
-    //-----------------------------------
-/*
-    fun loadProfile(
-        uid: String
-    ) {
-
-        viewModelScope.launch {
-
-            _uiState.update {
-
-                it.copy(
-
-                    isLoading = true,
-
-                    errorMessage = null
-
-                )
-
-            }
-
-            getUserProfileUseCase(uid)
-
-                .onSuccess { profile ->
-
-                    _uiState.update {
-
-                        it.copy(
-
-                            profile = profile,
-
-                            isLoading = false
-
-                        )
-
-                    }
-
-                }
-
-                .onFailure { exception ->
-
-                    _uiState.update {
-
-                        it.copy(
-
-                            isLoading = false,
-
-                            errorMessage = exception.message
-
-                                ?: "Unable to load profile."
-
-                        )
-
-                    }
-
-                }
-
-        }
-
-    }
-
-
- */
-
+    /**
+     * Loads the currently authenticated user's profile
+     * from Firestore.
+     */
     fun loadProfile() {
 
         val currentUser = authRepository.getCurrentUser()
@@ -104,93 +40,120 @@ class ProfileViewModel @Inject constructor(
         Log.d("PROFILE", "Current User = $currentUser")
 
         if (currentUser == null) {
-            Log.d("PROFILE", "User is null")
 
             _uiState.update {
-
                 it.copy(
-
                     isLoading = false,
-
                     errorMessage = "User is not logged in."
-
                 )
-
             }
 
             return
-
         }
 
         viewModelScope.launch {
-            Log.d("PROFILE", "Loading uid = ${currentUser.uid}")
 
             _uiState.update {
-
                 it.copy(
-
                     isLoading = true,
-
                     errorMessage = null
-
                 )
-
             }
+
+            Log.d(
+                "PROFILE",
+                "Loading profile for uid = ${currentUser.uid}"
+            )
 
             getUserProfileUseCase(currentUser.uid)
 
                 .onSuccess { profile ->
-                    Log.d("PROFILE", "Firestore profile = $profile")
 
+                    Log.d(
+                        "PROFILE",
+                        "Firestore profile = $profile"
+                    )
 
                     _uiState.update {
-
                         it.copy(
-
                             profile = profile,
-
-                            isLoading = false
-
+                            isLoading = false,
+                            errorMessage = null
                         )
-
                     }
-
                 }
 
                 .onFailure { exception ->
-                    Log.e("PROFILE", exception.stackTraceToString())
+
+                    Log.e(
+                        "PROFILE",
+                        "Failed to load profile",
+                        exception
+                    )
+
+                    _uiState.update {
+                        it.copy(
+                            isLoading = false,
+                            errorMessage = exception.message
+                                ?: "Unable to load profile."
+                        )
+                    }
+                }
+        }
+    }
+
+    // Update userProfile helper Fucntion:
+    fun updateProfile(
+        userProfile: UserProfile
+    ) {
+
+        viewModelScope.launch {
+
+            _uiState.update {
+
+                it.copy(
+                    isUpdating = true,
+                    errorMessage = null,
+                    updateSuccess = false
+                )
+            }
+
+            updateUserProfileUseCase(userProfile)
+
+                .onSuccess {
 
                     _uiState.update {
 
                         it.copy(
-
-                            isLoading = false,
-
-                            errorMessage = exception.message
-                                ?: "Unable to load profile."
-
+                            profile = userProfile,
+                            isUpdating = false,
+                            updateSuccess = true
                         )
-
                     }
-
                 }
 
-        }
+                .onFailure { exception ->
 
+                    _uiState.update {
+
+                        it.copy(
+                            isUpdating = false,
+                            errorMessage =
+                                exception.message
+                                    ?: "Unable to update profile."
+                        )
+                    }
+                }
+        }
     }
 
-
-    //---------------------------
+    /**
+     * Logs out the currently authenticated user.
+     */
     fun logout() {
 
         viewModelScope.launch {
-
             authRepository.logout()
-
         }
-
     }
-
-
-
 }

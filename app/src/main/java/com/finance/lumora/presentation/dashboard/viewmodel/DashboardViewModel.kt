@@ -32,7 +32,6 @@ import kotlinx.coroutines.flow.receiveAsFlow
  */
 @HiltViewModel
 class DashboardViewModel @Inject constructor(
-
     private val dashboardUseCases: DashboardUseCases
 
 ) : ViewModel() {

@@ -68,4 +68,16 @@ class FirestoreUserDataSource @Inject constructor(
 
     }
 
+    // Update Profile-Section:
+
+    suspend fun updateUserProfile(
+        userProfile: UserProfile
+    ) {
+        usersCollection
+            .document(userProfile.uid)
+            .set(userProfile)
+            .await()
+    }
+
+
 }

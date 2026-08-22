@@ -10,11 +10,6 @@ package com.finance.lumora.domain.model
  */
 data class DashboardCategorySummary(
 
-    /**
-     * Category with the highest expense.
-     *
-     * Null when no expense transaction exists.
-     */
     val topExpenseCategory: TopExpenseCategory? = null
 
 )

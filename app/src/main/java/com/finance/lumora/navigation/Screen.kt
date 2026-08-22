@@ -47,4 +47,6 @@ sealed class Screen(val route: String) {
     object Splash : Screen("splash")
     object Search : Screen("search")
 
+    object SetBudget: Screen("set_budget")
+
 }
