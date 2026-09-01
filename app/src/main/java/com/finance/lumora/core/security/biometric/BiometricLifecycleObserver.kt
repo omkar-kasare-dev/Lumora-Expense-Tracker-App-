@@ -1,6 +1,5 @@
 package com.finance.lumora.core.security.biometric
 
-import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
@@ -8,21 +7,32 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class BiometricLifecycleObserver @Inject constructor(
-    private val biometricLockManager: BiometricLockManager
+    private val biometricLockManager: BiometricLockManager,
+    private val biometricActivityHolder: BiometricActivityHolder
 ) : DefaultLifecycleObserver {
 
-    private var wasInBackground = false
+    /**
+     * Indicates that the application has genuinely
+     * entered the background.
+     *
+     * This prevents biometric authentication
+     * during the initial application launch.
+     */
+    private var hasEnteredBackground = false
 
     override fun onStop(owner: LifecycleOwner) {
         super.onStop(owner)
 
-        wasInBackground = true
-
         owner.lifecycleScope.launch {
+
             if (
-                biometricLockManager.isBiometricLockEnabled()
+                biometricLockManager
+                    .isBiometricLockEnabled()
             ) {
+
                 biometricLockManager.lock()
+
+                hasEnteredBackground = true
             }
         }
     }
@@ -30,23 +40,32 @@ class BiometricLifecycleObserver @Inject constructor(
     override fun onStart(owner: LifecycleOwner) {
         super.onStart(owner)
 
-        if (!wasInBackground) {
+        /**
+         * Do not authenticate on initial launch.
+         */
+        if (!hasEnteredBackground) {
             return
         }
 
-        wasInBackground = false
-
-        val activity = owner as? FragmentActivity
-            ?: return
+        hasEnteredBackground = false
 
         owner.lifecycleScope.launch {
 
             if (
-                biometricLockManager.isBiometricLockEnabled()
+                biometricLockManager
+                    .isBiometricLockEnabled()
             ) {
-                biometricLockManager.authenticate(
-                    activity
-                )
+
+                val activity =
+                    biometricActivityHolder
+                        .getActivity()
+
+                if (activity != null) {
+
+                    biometricLockManager.authenticate(
+                        activity
+                    )
+                }
             }
         }
     }

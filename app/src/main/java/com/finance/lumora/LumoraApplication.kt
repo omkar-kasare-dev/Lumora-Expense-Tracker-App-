@@ -1,30 +1,5 @@
 package com.finance.lumora
 
-/*
-import android.app.Application
-import com.finance.lumora.notifications.NotificationChannels
-import com.google.firebase.FirebaseApp
-import dagger.hilt.android.HiltAndroidApp
-
-
-@HiltAndroidApp
-class LumoraApplication : Application(){
-    override fun onCreate() {
-        super.onCreate()
-
-        FirebaseApp.initializeApp(this)
-
-        /**
-         * Create Lumora notification channels.
-         */
-        NotificationChannels.createChannels(this)
-    }
-}
-
- */
-
-
-
 import android.app.Application
 
 import androidx.hilt.work.HiltWorkerFactory
@@ -61,12 +36,6 @@ class LumoraApplication : Application(), Configuration.Provider {
 
     }
 
-    /**
-     * Provides Hilt's WorkerFactory to WorkManager.
-     *
-     * This allows @HiltWorker classes such as
-     * BudgetAlertWorker to receive injected dependencies.
-     */
     override val workManagerConfiguration: Configuration
         get() =
             Configuration.Builder()

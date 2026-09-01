@@ -15,12 +15,14 @@ class BiometricLockManager @Inject constructor(
     private val settingsRepository: SettingsRepository,
     private val biometricAuthenticator: BiometricAuthenticator
 ) {
+
     // -------------------------------------------------------------------------
-    // Current biometric lock state
+    // Current lock state
+    // -------------------------------------------------------------------------
 
     private val _lockState =
         MutableStateFlow<BiometricLockState>(
-            BiometricLockState.Unlocked
+            BiometricLockState.Initializing
         )
 
     val lockState: Flow<BiometricLockState> =
@@ -28,6 +30,8 @@ class BiometricLockManager @Inject constructor(
 
     // -------------------------------------------------------------------------
     // Check whether biometric lock is enabled
+    // -------------------------------------------------------------------------
+
     suspend fun isBiometricLockEnabled(): Boolean {
         return settingsRepository
             .isBiometricEnabled
@@ -36,6 +40,8 @@ class BiometricLockManager @Inject constructor(
 
     // -------------------------------------------------------------------------
     // Initialize lock state
+    // -------------------------------------------------------------------------
+
     suspend fun initialize() {
 
         val biometricEnabled =
@@ -52,10 +58,29 @@ class BiometricLockManager @Inject constructor(
     }
 
     // -------------------------------------------------------------------------
+    // Lock application
+    // -------------------------------------------------------------------------
+
+    fun lock() {
+
+        _lockState.value =
+            BiometricLockState.Locked
+    }
+
+    // -------------------------------------------------------------------------
     // Authenticate user
+    // -------------------------------------------------------------------------
+
     fun authenticate(
         activity: FragmentActivity
     ) {
+
+        if (_lockState.value ==
+            BiometricLockState.Authenticating
+        ) {
+            return
+        }
+
         _lockState.value =
             BiometricLockState.Authenticating
 
@@ -66,26 +91,31 @@ class BiometricLockManager @Inject constructor(
             when (result) {
 
                 BiometricResult.Success -> {
+
                     _lockState.value =
                         BiometricLockState.Unlocked
                 }
 
                 BiometricResult.Failed -> {
+
                     _lockState.value =
                         BiometricLockState.Locked
                 }
 
                 BiometricResult.Cancelled -> {
+
                     _lockState.value =
                         BiometricLockState.Locked
                 }
 
                 is BiometricResult.Unavailable -> {
+
                     _lockState.value =
                         BiometricLockState.Locked
                 }
 
                 is BiometricResult.Error -> {
+
                     _lockState.value =
                         BiometricLockState.Locked
                 }
@@ -94,15 +124,9 @@ class BiometricLockManager @Inject constructor(
     }
 
     // -------------------------------------------------------------------------
-    // Lock application
-    fun lock() {
-
-        _lockState.value =
-            BiometricLockState.Locked
-    }
-
-    // -------------------------------------------------------------------------
     // Unlock application
+    // -------------------------------------------------------------------------
+
     fun unlock() {
 
         _lockState.value =
