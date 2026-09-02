@@ -43,7 +43,7 @@ fun SettingsRoute(
     onClearCacheClick: () -> Unit,
     onPrivacyPolicyClick: () -> Unit,
     onTermsClick: () -> Unit,
-    appVersion: String,
+    onAppVersionClick: ()->Unit,
     viewModel: SettingsViewModel = hiltViewModel()
 ) {
 
@@ -204,7 +204,7 @@ fun SettingsRoute(
 
                 onTermsClick = onTermsClick,
 
-                appVersion = appVersion,
+                onAppVersionClick = onAppVersionClick,
 
                 // -------------------------------------------------
                 // Currency

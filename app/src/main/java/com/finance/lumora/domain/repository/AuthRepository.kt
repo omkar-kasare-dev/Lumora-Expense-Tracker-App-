@@ -39,4 +39,9 @@ interface AuthRepository {
         email: String
     ): Result<Unit>
 
+    suspend fun changePassword(
+        currentPassword: String,
+        newPassword: String
+    ): Result<Unit>
+
 }

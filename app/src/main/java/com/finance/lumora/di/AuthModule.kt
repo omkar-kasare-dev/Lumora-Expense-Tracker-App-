@@ -8,6 +8,7 @@ import com.finance.lumora.domain.usecase.auth.GetCurrentUserUseCase
 import com.finance.lumora.domain.usecase.auth.LoginUseCase
 import com.finance.lumora.domain.usecase.auth.LogoutUseCase
 import com.finance.lumora.domain.usecase.auth.ObserveAuthStateUseCase
+import com.finance.lumora.domain.usecase.auth.ChangePasswordUseCase
 import com.finance.lumora.domain.usecase.auth.RegisterUseCase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -84,7 +85,9 @@ object AuthModule {
 
             getCurrentUser = GetCurrentUserUseCase(repository),
 
-            observeAuthState = ObserveAuthStateUseCase(repository)
+            observeAuthState = ObserveAuthStateUseCase(repository),
+
+            changePassword = ChangePasswordUseCase(repository)
 
         )
 

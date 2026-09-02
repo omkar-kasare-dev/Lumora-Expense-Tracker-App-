@@ -11,6 +11,7 @@ import androidx.navigation.navArgument
 import com.finance.lumora.domain.model.NotificationItem
 import com.finance.lumora.domain.model.NotificationType
 import com.finance.lumora.presentation.analytics.screen.AnalyticsScreen
+import com.finance.lumora.presentation.auth.screen.ChangePasswordScreen
 import com.finance.lumora.presentation.auth.screen.ForgotPasswordScreen
 import com.finance.lumora.presentation.auth.screen.LoginScreen
 import com.finance.lumora.presentation.auth.screen.RegisterScreen
@@ -22,7 +23,9 @@ import com.finance.lumora.presentation.profile.screen.ProfileScreen
 import com.finance.lumora.presentation.profile.viewmodel.ProfileViewModel
 import com.finance.lumora.presentation.search.screen.SearchScreen
 import com.finance.lumora.presentation.settings.PrivacyPolicyScreen
+import com.finance.lumora.presentation.settings.components.AppVersionScreen
 import com.finance.lumora.presentation.settings.components.SettingsRoute
+import com.finance.lumora.presentation.settings.components.TermsOfServiceScreen
 import com.finance.lumora.presentation.settings.screen.SetBudgetScreen
 import com.finance.lumora.presentation.splash.SplashScreen
 import com.finance.lumora.presentation.transaction.screen.TransactionScreen
@@ -240,7 +243,7 @@ fun LumoraNavGraph(
                 },
 
                 onChangePasswordClick = {
-                    // TODO: Phase 10.6
+                    navController.navigate(Screen.ChangePassword.route)
                 },
 
                 onExportDataClick = {
@@ -259,10 +262,12 @@ fun LumoraNavGraph(
 
 
                 onTermsClick = {
-                    // TODO: Terms & Legal implementation
+                    navController.navigate(Screen.TermsOfService.route)
                 },
 
-                appVersion = "1.0.0"
+                onAppVersionClick = {
+                    navController.navigate(Screen.AppVersionScreen.route)
+                }
 
             )
         }
@@ -306,5 +311,36 @@ fun LumoraNavGraph(
                 }
             )
         }
+
+        // Change Password Screen :
+        composable(
+            route = Screen.ChangePassword.route
+        ) {
+            ChangePasswordScreen(
+                onBackClick = {
+                    navController.popBackStack()
+                },
+                onPasswordChanged = {
+                    navController.popBackStack()
+                }
+            )
+        }
+
+        // Terms of service:
+
+        composable(route = Screen.TermsOfService.route) {
+            TermsOfServiceScreen(
+                onBackClick = { navController.popBackStack() },
+                onContactSupportClick = { }
+            )
+        }
+
+        // APP Version:
+        composable(route= Screen.AppVersionScreen.route){
+            AppVersionScreen(
+                onBackClick = { navController.popBackStack() }
+            )
+        }
+
     }
 }

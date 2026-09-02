@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
+import com.google.firebase.auth.EmailAuthProvider
 
 
 class FirebaseAuthDataSource @Inject constructor(
@@ -175,6 +176,29 @@ class FirebaseAuthDataSource @Inject constructor(
             .sendPasswordResetEmail(email)
             .await()
 
+    }
+
+    // Change Password
+    suspend fun changePassword(
+        currentPassword: String,
+        newPassword: String
+    ) {
+        val user = firebaseAuth.currentUser
+            ?: throw IllegalStateException("No authenticated user found.")
+
+        val email = user.email
+            ?: throw IllegalStateException(
+                "No email address is associated with this account."
+            )
+
+        val credential = EmailAuthProvider.getCredential(
+            email,
+            currentPassword
+        )
+
+        user.reauthenticate(credential).await()
+
+        user.updatePassword(newPassword).await()
     }
 
 

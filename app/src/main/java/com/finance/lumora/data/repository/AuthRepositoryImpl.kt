@@ -135,6 +135,27 @@ class AuthRepositoryImpl @Inject constructor(
         }
     }
 
+    //Change Password Section: START:
+    override suspend fun changePassword(
+        currentPassword: String,
+        newPassword: String
+    ): Result<Unit> {
+        return try {
+            dataSource.changePassword(
+                currentPassword = currentPassword,
+                newPassword = newPassword
+            )
+
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(
+                Exception(mapFirebaseAuthError(e))
+            )
+        }
+    }
+
+    // Change Password Section END:
+
     private fun mapFirebaseAuthError(
         exception: Exception
     ): String {
@@ -166,6 +187,18 @@ class AuthRepositoryImpl @Inject constructor(
 
                     "ERROR_INVALID_EMAIL" ->
                         "Please enter a valid email address."
+
+                    "ERROR_WRONG_PASSWORD" ->
+                        "Current password is incorrect."
+
+                    "ERROR_WEAK_PASSWORD" ->
+                        "New password is too weak. Please choose a stronger password."
+
+                    "ERROR_REQUIRES_RECENT_LOGIN" ->
+                        "For security, please log in again and try changing your password."
+
+                    "ERROR_USER_DISABLED" ->
+                        "This account has been disabled."
 
                     else ->
                         "Authentication failed. Please try again."

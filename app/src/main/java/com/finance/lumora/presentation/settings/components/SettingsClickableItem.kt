@@ -25,6 +25,7 @@ fun SettingsClickableItem(
     icon: ImageVector,
     title: String,
     subtitle: String? = null,
+    value: String? = null,
     onClick: () -> Unit
 ) {
     Row(
@@ -50,6 +51,14 @@ fun SettingsClickableItem(
                     fontSize = 13.sp
                 )
             }
+        }
+        if (value != null) {
+            Text(
+                text = value,
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(end = 4.dp)
+            )
         }
         Icon(
             imageVector = Icons.Outlined.ChevronRight,

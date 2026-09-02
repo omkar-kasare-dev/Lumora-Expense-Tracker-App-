@@ -19,7 +19,7 @@ import com.finance.lumora.domain.model.UserSettings
 import com.finance.lumora.presentation.settings.components.SettingsClickableItem
 import com.finance.lumora.presentation.settings.components.SettingsContainer
 import com.finance.lumora.presentation.settings.components.SettingsDivider
-import com.finance.lumora.presentation.settings.components.SettingsInfoItem
+
 import com.finance.lumora.presentation.settings.components.SettingsSectionHeader
 import com.finance.lumora.presentation.settings.components.SettingsToggleItem
 
@@ -27,7 +27,7 @@ import com.finance.lumora.presentation.settings.components.SettingsToggleItem
 @Composable
 fun SettingsScreen(
     settings: UserSettings,
-    appVersion: String = "1.2.0",
+    appVersion: String = "2.4.0",
     onBackClick: () -> Unit = {},
     onCurrencyChange: (String) -> Unit = {},
     onThemeChange: (AppTheme) -> Unit = {},
@@ -41,7 +41,8 @@ fun SettingsScreen(
     onClearCacheClick: () -> Unit = {},
     onProfileClick: () -> Unit = {},
     onPrivacyPolicyClick: () -> Unit = {},
-    onTermsClick: () -> Unit = {}
+    onTermsClick: () -> Unit = {},
+    onAppVersionClick: () -> Unit = {}
 ) {
     var showCurrencyDialog by remember { mutableStateOf(false) }
     var showThemeDialog by remember { mutableStateOf(false) }
@@ -209,10 +210,11 @@ fun SettingsScreen(
                     onClick = onTermsClick
                 )
                 SettingsDivider()
-                SettingsInfoItem(
+                SettingsClickableItem(
                     icon = Icons.Outlined.Info,
                     title = "App Version",
-                    value = "v$appVersion"
+                    value = "v$appVersion",
+                    onClick = onAppVersionClick
                 )
             }
 

@@ -12,6 +12,7 @@ data class AuthUseCases(
 
     val getCurrentUser: GetCurrentUserUseCase,
 
-    val observeAuthState: ObserveAuthStateUseCase
+    val observeAuthState: ObserveAuthStateUseCase,
+    val changePassword: ChangePasswordUseCase
 
 )
