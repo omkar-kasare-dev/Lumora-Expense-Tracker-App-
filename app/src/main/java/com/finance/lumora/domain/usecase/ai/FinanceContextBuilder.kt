@@ -1,7 +1,5 @@
 package com.finance.lumora.domain.usecase.ai
 
-
-
 import com.finance.lumora.domain.analytics.model.DateRange
 import com.finance.lumora.domain.analytics.usecase.AnalyticsUseCases
 import com.finance.lumora.domain.model.ai.FinanceCategorySummary
@@ -13,9 +11,12 @@ import java.util.Locale
 import javax.inject.Inject
 import kotlinx.coroutines.flow.first
 
+import com.finance.lumora.domain.repository.SettingsRepository
+
 class FinanceContextBuilder @Inject constructor(
     private val analyticsUseCases: AnalyticsUseCases,
-    private val getBudgetUseCase: GetBudgetUseCase
+    private val getBudgetUseCase: GetBudgetUseCase,
+    private val settingsRepository: SettingsRepository
 ) {
 
     suspend operator fun invoke(): FinanceContext {
@@ -26,6 +27,9 @@ class FinanceContextBuilder @Inject constructor(
             analyticsUseCases
                 .getMonthlySummary(dateRange)
                 .first()
+
+        val currency =
+            settingsRepository.selectedCurrency.first()
 
         val categorySummaries =
             analyticsUseCases
@@ -48,6 +52,7 @@ class FinanceContextBuilder @Inject constructor(
 
         return FinanceContext(
             period = getCurrentMonthLabel(),
+            currency = currency,
             totalIncome = monthlySummary.totalIncome,
             totalExpense = monthlySummary.totalExpense,
             balance = monthlySummary.balance,

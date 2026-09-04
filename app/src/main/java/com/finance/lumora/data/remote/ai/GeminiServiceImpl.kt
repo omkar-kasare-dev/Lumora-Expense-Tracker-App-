@@ -1,6 +1,7 @@
 package com.finance.lumora.data.remote.ai
 
 
+import com.finance.lumora.domain.model.ai.AurixException
 import com.finance.lumora.domain.repository.GeminiService
 import com.google.firebase.Firebase
 import com.google.firebase.ai.ai
@@ -19,11 +20,49 @@ class GeminiServiceImpl @Inject constructor() : GeminiService {
         prompt: String
     ): String {
 
-        val response = model.generateContent(prompt)
+        return try {
 
-        return response.text
-            ?: throw IllegalStateException(
-                "Gemini returned an empty response."
-            )
+            val response =
+                model.generateContent(prompt)
+
+            response.text
+                ?.takeIf { it.isNotBlank() }
+                ?: throw AurixException.EmptyResponse
+
+        } catch (exception: AurixException) {
+
+            throw exception
+
+        } catch (exception: Exception) {
+
+            val message =
+                exception.message
+                    ?.lowercase()
+                    .orEmpty()
+
+            when {
+
+                message.contains("permission") ||
+                        message.contains("permission_denied") ||
+                        message.contains("unauthorized") -> {
+
+                    throw AurixException.PermissionDenied
+                }
+
+                message.contains("network") ||
+                        message.contains("timeout") ||
+                        message.contains("unable to resolve host") ||
+                        message.contains("connection") ||
+                        message.contains("socket") -> {
+
+                    throw AurixException.Network
+                }
+
+                else -> {
+
+                    throw AurixException.Unknown
+                }
+            }
+        }
     }
 }

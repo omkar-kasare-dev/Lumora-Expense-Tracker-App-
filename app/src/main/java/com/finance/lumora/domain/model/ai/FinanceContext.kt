@@ -3,6 +3,7 @@ package com.finance.lumora.domain.model.ai
 
 data class FinanceContext(
     val period: String,
+    val currency: String,
     val totalIncome: Double,
     val totalExpense: Double,
     val balance: Double,
