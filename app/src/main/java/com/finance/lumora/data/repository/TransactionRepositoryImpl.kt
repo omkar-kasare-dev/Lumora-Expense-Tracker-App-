@@ -11,11 +11,35 @@ import com.finance.lumora.domain.model.Transaction
 import com.finance.lumora.domain.repository.TransactionRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import com.finance.lumora.domain.model.ExportTransaction
+import com.finance.lumora.data.local.relation.TransactionWithCategory
 
 
 class TransactionRepositoryImpl(
     private val transactionDao: TransactionDao
 ) : TransactionRepository {
+
+    // Get all transaction for Export:
+    override suspend fun getTransactionsForExport(): List<ExportTransaction> {
+
+        return transactionDao
+            .getAllTransactionsWithCategoryForExport()
+            .map { transactionWithCategory ->
+
+                ExportTransaction(
+                    id = transactionWithCategory.transaction.id,
+                    amount = transactionWithCategory.transaction.amount,
+                    type = transactionWithCategory.transaction.type,
+                    categoryName = transactionWithCategory.category.name,
+                    note = transactionWithCategory.transaction.note,
+                    transactionDate = transactionWithCategory.transaction.transactionDate,
+                    createdAt = transactionWithCategory.transaction.createdAt,
+                    updatedAt = transactionWithCategory.transaction.updatedAt
+                )
+            }
+    }
+
+    //----------------------------------------
 
     override suspend fun addTransaction(
         transaction: Transaction

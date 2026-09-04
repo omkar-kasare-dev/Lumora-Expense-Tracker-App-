@@ -431,4 +431,32 @@ interface TransactionDao {
     /**
      * Search DAO END
      **/
+
+    /**
+     * Get all Transaction for Import Section: START
+     */
+    /*
+    @Transaction
+    @Query(
+        """
+    SELECT t.*
+    FROM transactions t
+    INNER JOIN categories c
+        ON t.category_id = c.id
+    ORDER BY t.transaction_date DESC, t.id DESC
+    """
+    )
+    suspend fun getAllTransactionsForExport(): List<TransactionEntity>
+
+     */
+
+    @Transaction
+    @Query(
+        """
+    SELECT *
+    FROM transactions
+    ORDER BY transaction_date DESC, id DESC
+    """
+    )
+    suspend fun getAllTransactionsWithCategoryForExport(): List<TransactionWithCategory>
 }

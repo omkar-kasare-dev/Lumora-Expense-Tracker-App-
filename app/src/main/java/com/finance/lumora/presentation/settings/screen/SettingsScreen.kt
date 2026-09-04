@@ -22,6 +22,8 @@ import com.finance.lumora.presentation.settings.components.SettingsDivider
 
 import com.finance.lumora.presentation.settings.components.SettingsSectionHeader
 import com.finance.lumora.presentation.settings.components.SettingsToggleItem
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.TextButton
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -46,6 +48,12 @@ fun SettingsScreen(
 ) {
     var showCurrencyDialog by remember { mutableStateOf(false) }
     var showThemeDialog by remember { mutableStateOf(false) }
+
+    // cache dialog
+    var showClearCacheDialog by remember {
+        mutableStateOf(false)
+    }
+    //----
 
     Scaffold(
         topBar = {
@@ -187,7 +195,9 @@ fun SettingsScreen(
                     icon = Icons.Outlined.CleaningServices,
                     title = "Clear Cache",
                     subtitle = "Frees up local storage space",
-                    onClick = onClearCacheClick
+                    onClick =  {
+                        showClearCacheDialog = true
+                    }
                 )
             }
 
@@ -299,4 +309,42 @@ fun SettingsScreen(
             }
         )
     }
+    // Clear Cache Dialog
+    if (showClearCacheDialog) {
+        AlertDialog(
+            onDismissRequest = {
+                showClearCacheDialog = false
+            },
+            title = {
+                Text("Clear Cache?")
+            },
+            text = {
+                Text(
+                    "This will remove temporary files from Lumora. " +
+                            "Your transactions and settings will not be deleted."
+                )
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        showClearCacheDialog = false
+                        onClearCacheClick()
+                    }
+                ) {
+                    Text("Clear")
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = {
+                        showClearCacheDialog = false
+                    }
+                ) {
+                    Text("Cancel")
+                }
+            }
+        )
+    }
+
+    //---
 }

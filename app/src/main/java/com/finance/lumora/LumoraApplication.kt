@@ -12,6 +12,8 @@ import com.google.firebase.FirebaseApp
 import dagger.hilt.android.HiltAndroidApp
 import javax.inject.Inject
 
+import com.finance.lumora.core.firebase.AppCheckInitializerImpl
+
 @HiltAndroidApp
 class LumoraApplication : Application(), Configuration.Provider {
 
@@ -30,6 +32,9 @@ class LumoraApplication : Application(), Configuration.Provider {
             .lifecycle
             .addObserver(biometricLifecycleObserver)
         FirebaseApp.initializeApp(this)
+
+        AppCheckInitializerImpl()
+            .initialize(this)
 
         NotificationChannels.createChannels(this)
 

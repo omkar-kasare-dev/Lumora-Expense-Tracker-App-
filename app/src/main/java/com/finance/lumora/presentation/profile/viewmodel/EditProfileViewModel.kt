@@ -14,12 +14,15 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import com.finance.lumora.domain.repository.SettingsRepository
+import kotlinx.coroutines.flow.combine
 
 @HiltViewModel
 class EditProfileViewModel @Inject constructor(
     private val authRepository: AuthRepository,
     private val getUserProfileUseCase: GetUserProfileUseCase,
-    private val updateUserProfileUseCase: UpdateUserProfileUseCase
+    private val updateUserProfileUseCase: UpdateUserProfileUseCase,
+    private val settingsRepository: SettingsRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(EditProfileState())
@@ -49,6 +52,7 @@ class EditProfileViewModel @Inject constructor(
         }
 
         viewModelScope.launch {
+
             _uiState.update {
                 it.copy(
                     isLoading = true,
@@ -57,20 +61,34 @@ class EditProfileViewModel @Inject constructor(
             }
 
             getUserProfileUseCase(currentUser.uid)
-                .onSuccess { profile ->
-                    _uiState.update {
-                        it.copy(
-                            profile = profile,
-                            fullName = profile.fullName,
-                            email = profile.email,
-                            currency = profile.currency,
-                            language = profile.language,
-                            isLoading = false,
-                            errorMessage = null
+                .onSuccess { firestoreProfile ->
+
+                    combine(
+                        settingsRepository.selectedCurrency,
+                        kotlinx.coroutines.flow.flowOf(firestoreProfile)
+                    ) { currency, profile ->
+
+                        profile.copy(
+                            currency = currency
                         )
+
+                    }.collect { mergedProfile ->
+
+                        _uiState.update {
+                            it.copy(
+                                profile = mergedProfile,
+                                fullName = mergedProfile.fullName,
+                                email = mergedProfile.email,
+                                currency = mergedProfile.currency,
+                                language = mergedProfile.language,
+                                isLoading = false,
+                                errorMessage = null
+                            )
+                        }
                     }
                 }
                 .onFailure { exception ->
+
                     _uiState.update {
                         it.copy(
                             isLoading = false,
@@ -215,7 +233,6 @@ class EditProfileViewModel @Inject constructor(
         val updatedProfile = currentProfile.copy(
             fullName = trimmedName,
             email = trimmedEmail,
-            currency = currentState.currency,
             language = currentState.language
         )
 
@@ -228,15 +245,22 @@ class EditProfileViewModel @Inject constructor(
                 )
             }
 
+            settingsRepository.setCurrency(currentState.currency)
+
             updateUserProfileUseCase(updatedProfile)
                 .onSuccess {
+
+                    val finalProfile = updatedProfile.copy(
+                        currency = currentState.currency
+                    )
+
                     _uiState.update {
                         it.copy(
-                            profile = updatedProfile,
-                            fullName = updatedProfile.fullName,
-                            email = updatedProfile.email,
-                            currency = updatedProfile.currency,
-                            language = updatedProfile.language,
+                            profile = finalProfile,
+                            fullName = finalProfile.fullName,
+                            email = finalProfile.email,
+                            currency = finalProfile.currency,
+                            language = finalProfile.language,
                             isSaving = false,
                             isSaved = true,
                             errorMessage = null

@@ -2,16 +2,28 @@ package com.finance.lumora.presentation.dashboard.screen
 
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.paddingFromBaseline
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AutoAwesome
+import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -33,6 +45,8 @@ import com.finance.lumora.presentation.dashboard.viewmodel.DashboardViewModel
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.flow.collectLatest
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -48,9 +62,7 @@ import com.finance.lumora.presentation.transaction.viewmodel.TransactionViewMode
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DashboardScreen(
-
     navController: NavHostController,
-
     viewModel: DashboardViewModel = hiltViewModel(),
     transactionViewModel: TransactionViewModel = hiltViewModel()
 
@@ -224,6 +236,42 @@ fun DashboardScreen(
 
             else -> {
 
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues)
+            ) {
+
+                AurixEntryCard(
+                    onClick = {
+                        if (
+                            navController.currentDestination?.route !=
+                            Screen.Aurix.route
+                        ) {
+                            navController.navigate(
+                                Screen.Aurix.route
+                            )
+                        }
+                    }
+                )
+
+                Spacer(
+                    modifier = Modifier.size(12.dp)
+                )
+
+                DashboardContent(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .weight(1f),
+
+                    state = state,
+
+                    onEvent = viewModel::onEvent
+                )
+            }
+        }
+                /*{
+
                 DashboardContent(
 
                     modifier = Modifier.fillMaxSize()
@@ -236,7 +284,9 @@ fun DashboardScreen(
                 )
 
 
+
             }
+            */
 
 
 
@@ -266,4 +316,60 @@ fun DashboardScreen(
     */
 
 
+}
+
+@Composable
+private fun AurixEntryCard(
+    onClick: () -> Unit
+) {
+    Card(
+        onClick = onClick,
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(20.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+
+            Surface(
+                modifier = Modifier.size(44.dp),
+                shape = RoundedCornerShape(14.dp),
+                color = MaterialTheme.colorScheme.primaryContainer
+            ) {
+                Box(
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.AutoAwesome,
+                        contentDescription = "AURIX",
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                }
+            }
+
+            Spacer(
+                modifier = Modifier.size(12.dp)
+            )
+
+            Column(
+                modifier = Modifier.weight(1f)
+            ) {
+
+                Text(
+                    text = "Ask AURIX",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.SemiBold
+                )
+
+                Text(
+                    text = "Understand your spending and budget",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+        }
+    }
 }

@@ -52,4 +52,7 @@ sealed class Screen(val route: String) {
     object TermsOfService:Screen("Terms_Of_Service")
     object AppVersionScreen: Screen("AppVersionScreen")
 
+    data object GeminiTest : Screen("gemini_test")
+    data object Aurix : Screen("aurix")
+
 }

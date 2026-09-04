@@ -7,6 +7,7 @@ import com.finance.lumora.domain.analytics.usecase.GetIncomeExpenseSummaryUseCas
 import com.finance.lumora.domain.analytics.usecase.GetMonthlySummaryUseCase
 import com.finance.lumora.domain.repository.DashboardRepository
 import com.finance.lumora.domain.repository.SubCategoryRepository
+import com.finance.lumora.domain.repository.TransactionRepository
 import com.finance.lumora.domain.usecase.category.AddCategoryUseCase
 import com.finance.lumora.domain.usecase.category.CategoryUseCases
 import com.finance.lumora.domain.usecase.category.DeleteCategoryUseCase
@@ -45,6 +46,9 @@ import com.finance.lumora.domain.usecase.settings.SaveNotificationsUseCase
 import com.finance.lumora.domain.usecase.settings.SaveThemeUseCase
 import com.finance.lumora.domain.usecase.settings.SettingsUseCases
 import com.finance.lumora.domain.usecase.transaction.GetMonthlyExpenseUseCase
+
+// Export usecase:
+import com.finance.lumora.domain.usecase.export.ExportDataUseCase
 
 import dagger.Module
 import dagger.Provides
@@ -203,6 +207,15 @@ object UseCaseModule {
 
             getBiometric = getBiometric,
             saveBiometric = saveBiometric
+        )
+    }
+
+    @Provides
+    fun provideExportDataUseCase(
+        transactionRepository: TransactionRepository
+    ): ExportDataUseCase {
+        return ExportDataUseCase(
+            transactionRepository
         )
     }
 }

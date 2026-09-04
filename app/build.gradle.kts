@@ -88,13 +88,12 @@ dependencies {
     //biometric
     implementation(libs.androidx.biometric)
 
-
+    // Firebase
     implementation(platform(libs.firebase.bom))
-
     implementation(libs.firebase.auth)
-
     implementation(libs.firebase.firestore)
-
+    implementation(libs.firebase.ai)
+    debugImplementation(libs.firebase.appcheck.debug)
 
     testImplementation(libs.junit)
     androidTestImplementation(platform(libs.androidx.compose.bom))

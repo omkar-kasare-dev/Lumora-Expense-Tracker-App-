@@ -18,11 +18,17 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
+import com.finance.lumora.data.export.CsvExporter
+import com.finance.lumora.domain.usecase.export.ExportDataUseCase
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
     private val settingsUseCases: SettingsUseCases,
     private val budgetAlertUseCases: BudgetAlertUseCases,
-    private val budgetAlertWorkScheduler: BudgetAlertWorkScheduler
+    private val budgetAlertWorkScheduler: BudgetAlertWorkScheduler,
+    private val exportDataUseCase: ExportDataUseCase
 ) : ViewModel() {
 
     val currentMonthlyExpense: StateFlow<Double> = budgetAlertUseCases
@@ -32,6 +38,14 @@ class SettingsViewModel @Inject constructor(
             started = SharingStarted.WhileSubscribed(5000),
             initialValue = 0.0
         )
+    // Export State:
+    private val _exportCsv = MutableStateFlow<String?>(null)
+
+    val exportCsv: StateFlow<String?> = _exportCsv.asStateFlow()
+    private val _exportMessage = MutableStateFlow<String?>(null)
+
+    val exportMessage: StateFlow<String?> = _exportMessage.asStateFlow()
+    //----
 
     /**
      * ----------------------------------------------------
@@ -302,5 +316,39 @@ class SettingsViewModel @Inject constructor(
         budgetAlertWorkScheduler.triggerImmediateBudgetCheck()
     }
 
+    //Export Data Function:
+    fun exportData() {
+        viewModelScope.launch {
+            try {
+                _exportMessage.value = null
+                _exportCsv.value = null
+
+                val transactions = exportDataUseCase()
+
+                if (transactions.isEmpty()) {
+                    _exportMessage.value =
+                        "No transactions available to export."
+                    return@launch
+                }
+
+                _exportCsv.value = CsvExporter.generate(
+                    transactions
+                )
+
+            } catch (e: Exception) {
+                _exportCsv.value = null
+                _exportMessage.value =
+                    "Unable to export transactions. Please try again."
+            }
+        }
+    }
+
+    fun clearExportCsv() {
+        _exportCsv.value = null
+    }
+    fun clearExportMessage() {
+        _exportMessage.value = null
+    }
+    //--------------------
 
 }

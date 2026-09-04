@@ -10,6 +10,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.finance.lumora.domain.model.NotificationItem
 import com.finance.lumora.domain.model.NotificationType
+import com.finance.lumora.presentation.ai.screen.AurixScreen
 import com.finance.lumora.presentation.analytics.screen.AnalyticsScreen
 import com.finance.lumora.presentation.auth.screen.ChangePasswordScreen
 import com.finance.lumora.presentation.auth.screen.ForgotPasswordScreen
@@ -31,6 +32,8 @@ import com.finance.lumora.presentation.splash.SplashScreen
 import com.finance.lumora.presentation.transaction.screen.TransactionScreen
 import java.util.concurrent.TimeUnit
 
+import com.finance.lumora.presentation.ai.screen.GeminiTestScreen
+
 @Composable
 fun LumoraNavGraph(
     modifier: Modifier = Modifier
@@ -40,6 +43,7 @@ fun LumoraNavGraph(
     NavHost(
         navController = navController,
         startDestination = Screen.Splash.route,
+       // startDestination = Screen.GeminiTest.route,
         modifier = modifier
     ) {
         //--------------------------------------------------
@@ -340,6 +344,17 @@ fun LumoraNavGraph(
             AppVersionScreen(
                 onBackClick = { navController.popBackStack() }
             )
+        }
+
+        //--------------------------------------------------
+// AURIX - Gemini Connection Test
+//--------------------------------------------------
+        composable(route = Screen.GeminiTest.route) {
+            GeminiTestScreen()
+        }
+
+        composable(route = Screen.Aurix.route) {
+            AurixScreen()
         }
 
     }

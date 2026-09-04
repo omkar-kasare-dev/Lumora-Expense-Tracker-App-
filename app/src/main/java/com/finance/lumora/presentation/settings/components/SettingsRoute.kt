@@ -1,7 +1,5 @@
 package com.finance.lumora.presentation.settings.components
 
-
-
 import android.Manifest
 import android.content.Context
 import android.content.ContextWrapper
@@ -33,6 +31,13 @@ import com.finance.lumora.presentation.settings.screen.SettingsScreen
 import com.finance.lumora.presentation.settings.viewmodel.SettingsViewModel
 
 
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.platform.LocalContext
+import com.finance.lumora.data.export.ExportFileManager
+import com.finance.lumora.data.export.ExportShareManager
+import com.finance.lumora.data.cache.CacheManager
+
+
 @Composable
 fun SettingsRoute(
     onBackClick: () -> Unit,
@@ -48,8 +53,10 @@ fun SettingsRoute(
 ) {
 
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-
+    val exportCsv by viewModel.exportCsv.collectAsStateWithLifecycle()
+    val exportMessage by viewModel.exportMessage.collectAsStateWithLifecycle()
     val context = LocalContext.current
+    val cacheManager = CacheManager(context)
 
     // ---------------------------------------------------------
     // Find FragmentActivity safely
@@ -93,6 +100,44 @@ fun SettingsRoute(
             pendingOnGranted = null
             pendingOnDenied = null
         }
+
+    // Data Export helper function:
+    LaunchedEffect(exportCsv) {
+        val csv = exportCsv ?: return@LaunchedEffect
+
+        try {
+            val fileManager = ExportFileManager(context)
+
+            val fileUri = fileManager.createCsvFile(csv)
+
+            ExportShareManager.shareCsv(
+                context = context,
+                fileUri = fileUri
+            )
+        } catch (e: Exception) {
+            Toast.makeText(
+                context,
+                "Unable to export transactions.",
+                Toast.LENGTH_SHORT
+            ).show()
+        } finally {
+            viewModel.clearExportCsv()
+        }
+    }
+
+    //Export message
+    LaunchedEffect(exportMessage) {
+        val message = exportMessage ?: return@LaunchedEffect
+
+        Toast.makeText(
+            context,
+            message,
+            Toast.LENGTH_SHORT
+        ).show()
+
+        viewModel.clearExportMessage()
+    }
+    //---------------------------------
 
     // ---------------------------------------------------------
     // Notification permission initialization
@@ -196,9 +241,19 @@ fun SettingsRoute(
 
                 onChangePasswordClick = onChangePasswordClick,
 
-                onExportDataClick = onExportDataClick,
+                onExportDataClick = {
+                    viewModel.exportData()
+                },
 
-                onClearCacheClick = onClearCacheClick,
+                onClearCacheClick = {
+                    cacheManager.clearCache()
+
+                    Toast.makeText(
+                        context,
+                        "Cache cleared successfully.",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                },
 
                 onPrivacyPolicyClick = onPrivacyPolicyClick,
 

@@ -4,6 +4,7 @@ package com.finance.lumora.domain.repository
 import com.finance.lumora.data.local.enums.TransactionType
 import com.finance.lumora.domain.model.Transaction
 import kotlinx.coroutines.flow.Flow
+import com.finance.lumora.domain.model.ExportTransaction
 
 /**
  * Repository contract for Transaction operations.
@@ -44,6 +45,8 @@ interface TransactionRepository {
     ): Flow<List<Transaction>>
 
     suspend fun getTransactionCount(): Int
+
+    suspend fun getTransactionsForExport(): List<ExportTransaction>
 
     // -------------------------
     // DASHBOARD

@@ -1,6 +1,6 @@
 package com.finance.lumora.presentation.profile.viewmodel
 
-
+/*
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -16,6 +16,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+
 
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
@@ -157,3 +158,130 @@ class ProfileViewModel @Inject constructor(
         }
     }
 }
+
+ */
+
+
+
+
+import android.util.Log
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.finance.lumora.domain.repository.AuthRepository
+import com.finance.lumora.domain.repository.SettingsRepository
+import com.finance.lumora.domain.usecase.auth.GetUserProfileUseCase
+import com.finance.lumora.domain.usecase.auth.UpdateUserProfileUseCase
+import com.finance.lumora.presentation.profile.state.ProfileState
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import javax.inject.Inject
+
+@HiltViewModel
+class ProfileViewModel @Inject constructor(
+    private val getUserProfileUseCase: GetUserProfileUseCase,
+    private val updateUserProfileUseCase: UpdateUserProfileUseCase,
+    private val authRepository: AuthRepository,
+    private val settingsRepository: SettingsRepository
+) : ViewModel() {
+
+    private val _uiState = MutableStateFlow(ProfileState())
+
+    val uiState: StateFlow<ProfileState> = _uiState.asStateFlow()
+
+    fun loadProfile() {
+
+        val currentUser = authRepository.getCurrentUser()
+        Log.d("PROFILE", "Current User = $currentUser")
+
+        if (currentUser == null) {
+            _uiState.update {
+                it.copy(
+                    isLoading = false,
+                    errorMessage = "User is not logged in."
+                )
+            }
+            return
+        }
+
+        viewModelScope.launch {
+
+            _uiState.update {
+                it.copy(
+                    isLoading = true,
+                    errorMessage = null
+                )
+            }
+
+            Log.d(
+                "PROFILE",
+                "Loading profile for uid = ${currentUser.uid}"
+            )
+
+            getUserProfileUseCase(currentUser.uid)
+                .onSuccess { firestoreProfile ->
+
+                    Log.d(
+                        "PROFILE",
+                        "Firestore profile = $firestoreProfile"
+                    )
+
+                    combine(
+                        settingsRepository.selectedCurrency,
+                        settingsRepository.theme,
+                        settingsRepository.isNotificationsEnabled
+                    ) { currency, theme, notificationsEnabled ->
+
+                        firestoreProfile.copy(
+                            currency = currency,
+                            theme = theme.name,
+                            notificationsEnabled = notificationsEnabled
+                        )
+
+                    }.collect { mergedProfile ->
+
+                        Log.d(
+                            "PROFILE",
+                            "Merged profile = $mergedProfile"
+                        )
+
+                        _uiState.update {
+                            it.copy(
+                                profile = mergedProfile,
+                                isLoading = false,
+                                errorMessage = null
+                            )
+                        }
+                    }
+                }
+                .onFailure { exception ->
+
+                    Log.e(
+                        "PROFILE",
+                        "Failed to load profile",
+                        exception
+                    )
+
+                    _uiState.update {
+                        it.copy(
+                            isLoading = false,
+                            errorMessage = exception.message
+                                ?: "Unable to load profile."
+                        )
+                    }
+                }
+        }
+    }
+
+    fun logout() {
+
+        viewModelScope.launch {
+            authRepository.logout()
+        }
+    }
+}
+
