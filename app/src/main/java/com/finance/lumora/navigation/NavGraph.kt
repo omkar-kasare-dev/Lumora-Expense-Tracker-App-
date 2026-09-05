@@ -32,7 +32,7 @@ import com.finance.lumora.presentation.splash.SplashScreen
 import com.finance.lumora.presentation.transaction.screen.TransactionScreen
 import java.util.concurrent.TimeUnit
 
-import com.finance.lumora.presentation.ai.screen.GeminiTestScreen
+
 
 @Composable
 fun LumoraNavGraph(
@@ -347,12 +347,7 @@ fun LumoraNavGraph(
         }
 
         //--------------------------------------------------
-// AURIX - Gemini Connection Test
-//--------------------------------------------------
-        composable(route = Screen.GeminiTest.route) {
-            GeminiTestScreen()
-        }
-
+        // AURIX -
         composable(route = Screen.Aurix.route) {
             AurixScreen()
         }

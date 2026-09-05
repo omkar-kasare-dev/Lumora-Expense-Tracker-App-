@@ -8,9 +8,9 @@ data class FinanceContext(
     val totalExpense: Double,
     val balance: Double,
     val transactionCount: Int,
-    val monthlyBudget: Double,
-    val budgetRemaining: Double,
-    val budgetUsagePercentage: Double,
+    val monthlyBudget: Double?,
+    val budgetRemaining: Double?,
+    val budgetUsagePercentage: Double?,
     val categorySummaries: List<FinanceCategorySummary>
 )
 

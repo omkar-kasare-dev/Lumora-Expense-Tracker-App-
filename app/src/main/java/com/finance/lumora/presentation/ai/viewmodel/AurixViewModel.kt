@@ -88,6 +88,8 @@ class AurixViewModel @Inject constructor(
             viewModelScope.launch {
 
                 try {
+                    val conversationHistory =
+                        previousMessages.takeLast(10)
 
                     val result =
                         askAurixUseCase(
