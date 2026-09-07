@@ -27,6 +27,10 @@ class AurixInsightDetector @Inject constructor() {
             return AurixInsightType.BUDGET
         }
 
+        if (isSpendingConcentrationQuestion(normalizedQuestion)) {
+            return AurixInsightType.SPENDING_CONCENTRATION
+        }
+
         if (
             isTrendFollowUpQuestion(
                 question = normalizedQuestion,
@@ -53,6 +57,14 @@ class AurixInsightDetector @Inject constructor() {
     ): Boolean {
 
         return BUDGET_PHRASES.any {
+            question.contains(it)
+        }
+    }
+
+    private fun isSpendingConcentrationQuestion(
+        question: String
+    ): Boolean {
+        return SPENDING_CONCENTRATION_PHRASES.any {
             question.contains(it)
         }
     }
@@ -277,6 +289,29 @@ class AurixInsightDetector @Inject constructor() {
                 "how much of my budget is used",
                 "what percentage of my budget have i used",
                 "what percentage of my budget did i use"
+            )
+
+        private val SPENDING_CONCENTRATION_PHRASES =
+            listOf(
+                "largest spending category",
+                "largest spend category",
+                "biggest spending category",
+                "biggest spend category",
+                "highest spending category",
+                "highest spend category",
+                "category i spend the most on",
+                "category do i spend the most on",
+                "where do i spend the most",
+                "where am i spending the most",
+                "what do i spend the most on",
+                "what category do i spend the most on",
+                "which category do i spend the most on",
+                "which category has the highest expense",
+                "which category has the highest spending",
+                "which category costs me the most",
+                "what is my biggest expense category",
+                "what is my highest expense category",
+                "what is my largest expense category"
             )
     }
     private fun normalizeQuestion(

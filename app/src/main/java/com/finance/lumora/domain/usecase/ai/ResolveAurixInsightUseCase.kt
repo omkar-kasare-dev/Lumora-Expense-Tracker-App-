@@ -8,15 +8,18 @@ package com.finance.lumora.domain.usecase.ai
 
 import com.finance.lumora.domain.model.ai.AurixInsightResult
 import com.finance.lumora.domain.model.ai.AurixInsightType
+import com.finance.lumora.domain.model.ai.FinanceContext
 import javax.inject.Inject
 
 class ResolveAurixInsightUseCase @Inject constructor(
     private val getAurixExpenseTrendUseCase: GetAurixExpenseTrendUseCase,
-    private val getBudgetInsightUseCase: GetBudgetInsightUseCase
+    private val getBudgetInsightUseCase: GetBudgetInsightUseCase,
+    private val getSpendingConcentrationInsightUseCase: GetSpendingConcentrationInsightUseCase
 ) {
 
     suspend operator fun invoke(
-        insightType: AurixInsightType
+        insightType: AurixInsightType,
+        financeContext: FinanceContext
     ): AurixInsightResult {
 
         return when (insightType) {
@@ -27,6 +30,12 @@ class ResolveAurixInsightUseCase @Inject constructor(
 
             AurixInsightType.BUDGET -> {
                 resolveBudget()
+            }
+
+            AurixInsightType.SPENDING_CONCENTRATION -> {
+                resolveSpendingConcentration(
+                    financeContext = financeContext
+                )
             }
 
             AurixInsightType.NONE -> {
@@ -52,6 +61,20 @@ class ResolveAurixInsightUseCase @Inject constructor(
 
         return AurixInsightResult(
             budgetInsight = budgetInsight
+        )
+    }
+
+    private suspend fun resolveSpendingConcentration(
+        financeContext: FinanceContext
+    ): AurixInsightResult {
+
+        val spendingConcentrationInsight =
+            getSpendingConcentrationInsightUseCase(
+                financeContext = financeContext
+            )
+
+        return AurixInsightResult(
+            spendingConcentrationInsight = spendingConcentrationInsight
         )
     }
 }

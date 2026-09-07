@@ -38,7 +38,8 @@ class AskAurixUseCase @Inject constructor(
 
         val insightResult =
             resolveAurixInsightUseCase(
-                insightType = insightType
+                insightType = insightType,
+                financeContext = financeContext
             )
 
         val prompt =
@@ -47,7 +48,9 @@ class AskAurixUseCase @Inject constructor(
                 financeContext = financeContext,
                 conversationHistory = conversationHistory,
                 expenseTrendInsight = insightResult.expenseTrendInsight,
-                budgetInsight = insightResult.budgetInsight
+                budgetInsight = insightResult.budgetInsight,
+                spendingConcentrationInsight =
+                    insightResult.spendingConcentrationInsight
             )
 
         return geminiService.generateResponse(

@@ -5,7 +5,9 @@ import com.finance.lumora.domain.model.ai.ChatMessage
 import com.finance.lumora.domain.model.ai.ChatMessageRole
 import com.finance.lumora.domain.model.ai.ExpenseTrendInsight
 import com.finance.lumora.domain.model.ai.FinanceContext
+import com.finance.lumora.domain.model.ai.SpendingConcentrationInsight
 import javax.inject.Inject
+
 
 class AurixPromptBuilder @Inject constructor() {
 
@@ -14,7 +16,8 @@ class AurixPromptBuilder @Inject constructor() {
         financeContext: FinanceContext,
         conversationHistory: List<ChatMessage>,
         expenseTrendInsight: ExpenseTrendInsight?,
-        budgetInsight: BudgetInsight?
+        budgetInsight: BudgetInsight?,
+        spendingConcentrationInsight: SpendingConcentrationInsight?
     ): String {
 
         return buildString {
@@ -38,6 +41,12 @@ class AurixPromptBuilder @Inject constructor() {
             if (budgetInsight != null) {
                 appendBudgetInsight(
                     budgetInsight
+                )
+            }
+
+            if (spendingConcentrationInsight != null) {
+                appendSpendingConcentrationInsight(
+                    spendingConcentrationInsight
                 )
             }
 
@@ -322,6 +331,58 @@ class AurixPromptBuilder @Inject constructor() {
 
             78. For budget comparison questions, the response should prioritize
             clarity and quick understanding over technical financial terminology.
+            
+                  79. When SPENDING CONCENTRATION INSIGHT is available, use it to answer
+    questions about the user's largest, biggest, or highest spending category.
+
+80. For questions asking for the largest spending category, use the
+    Top Spending Category value from SPENDING CONCENTRATION INSIGHT.
+
+81. For questions asking how much was spent in the largest spending
+    category, use the Top Category Amount value.
+
+82. For questions asking what percentage of total spending belongs to
+    the largest category, use the Top Category Percentage value.
+
+83. Do not recalculate the Top Category Percentage when it is already
+    provided in SPENDING CONCENTRATION INSIGHT.
+
+84. When answering a largest spending category question, state the
+    category name and amount directly in the first sentence.
+
+85. When useful, explain what the category's percentage means in simple
+    language so the user can understand how significant that expense is.
+
+86. For example, if the Top Category Percentage is 61.82%, explain that
+    the category accounts for about 62% of the user's total spending,
+    rather than making the user interpret the percentage themselves.
+
+87. When SPENDING CONCENTRATION INSIGHT is available, do not invent
+    additional spending insights that are not supported by the provided
+    financial data.
+
+88. The category breakdown in FINANCIAL CONTEXT may be used to provide
+    additional context after answering the main question, but the
+    SPENDING CONCENTRATION INSIGHT should be treated as the primary
+    source for the largest-category answer.
+
+89. Do not unnecessarily repeat the same category amount and percentage
+    multiple times.
+
+90. For largest spending category questions, prefer simple wording such as:
+    "Your largest spending category is Room Rent. You spent ₹2,000 on it,
+    which accounts for 61.82% of your total spending."
+
+91. If the largest spending category accounts for a substantial portion
+    of total spending, briefly explain that this means a significant share
+    of the user's spending is concentrated in that category.
+
+92. If there is no SPENDING CONCENTRATION INSIGHT, do not invent a largest
+    spending category.
+
+93. For direct largest-category questions, answer the question first and
+    keep any additional category breakdown concise.
+            
             """.trimIndent()
         )
 
@@ -524,6 +585,22 @@ class AurixPromptBuilder @Inject constructor() {
         appendLine("AURIX RESPONSE")
     }
 
+    private fun StringBuilder.appendSpendingConcentrationInsight(
+        insight: SpendingConcentrationInsight
+    ) {
+        appendLine("SPENDING CONCENTRATION INSIGHT")
+        appendLine()
+        appendLine("Top Spending Category: ${insight.topCategoryName}")
+        appendLine("Top Category Amount: ${insight.topCategoryAmount}")
+        appendLine(
+            "Top Category Percentage: " +
+                    formatPercentage(insight.topCategoryPercentage) +
+                    "%"
+        )
+        appendLine("Total Expense: ${insight.totalExpense}")
+        appendLine()
+    }
+
     private fun formatPercentage(
         percentage: Double
     ): String {
@@ -534,4 +611,5 @@ class AurixPromptBuilder @Inject constructor() {
             percentage
         )
     }
+
 }
