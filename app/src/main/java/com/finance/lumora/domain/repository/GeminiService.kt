@@ -4,4 +4,6 @@ interface GeminiService {
     suspend fun generateResponse(
         prompt: String
     ): String
+
+
 }
