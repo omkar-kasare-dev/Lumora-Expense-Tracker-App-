@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.hilt)
     alias(libs.plugins.ksp)
     alias(libs.plugins.google.services)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -87,6 +88,18 @@ dependencies {
 
     //biometric
     implementation(libs.androidx.biometric)
+
+    // CameraX
+    implementation(libs.androidx.camera.core)
+    implementation(libs.androidx.camera.camera2)
+    implementation(libs.androidx.camera.lifecycle)
+    implementation(libs.androidx.camera.view)
+
+    // ML Kit OCR
+    implementation(libs.mlkit.text.recognition)
+
+    //Serialization:
+    implementation(libs.kotlinx.serialization.json)
 
     // Firebase
     implementation(platform(libs.firebase.bom))
