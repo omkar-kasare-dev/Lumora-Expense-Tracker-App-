@@ -20,4 +20,8 @@ sealed class AurixException(
     data object Unknown : AurixException(
         "AURIX couldn't process the request right now."
     )
+
+    data object QuotaExceeded : AurixException(
+        "AURIX has temporarily reached its AI request limit. Please try again later."
+    )
 }

@@ -4,6 +4,9 @@ package com.finance.lumora.di
 import com.finance.lumora.data.remote.auth.FirestoreUserDataSource
 import com.finance.lumora.data.repository.UserRepositoryImpl
 import com.finance.lumora.domain.repository.UserRepository
+import com.google.firebase.Firebase
+import com.google.firebase.ai.GenerativeModel
+import com.google.firebase.ai.ai
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.Module
@@ -51,6 +54,15 @@ object FirebaseModule {
 
         return UserRepositoryImpl(dataSource)
 
+    }
+
+
+
+    @Provides
+    @Singleton
+    fun provideGenerativeModel(): GenerativeModel {
+            // Replace "gemini-1.5-flash" with your specific model name if needed
+            return Firebase.ai.generativeModel("gemini-1.5-flash")
     }
 
 }

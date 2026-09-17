@@ -5,6 +5,8 @@ import com.finance.lumora.domain.model.CaptureSource
 import com.finance.lumora.domain.model.DraftTransaction
 import com.finance.lumora.domain.model.ai.TransactionCaptureParser
 import com.finance.lumora.domain.repository.GeminiService
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 class TransactionCaptureParserImpl @Inject constructor(
@@ -23,9 +25,13 @@ class TransactionCaptureParserImpl @Inject constructor(
             "Transaction capture input cannot be empty."
         }
 
+        val currentDate =
+            LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE)
+
         val prompt = promptBuilder.build(
             input = input,
-            source = source
+            source = source,
+            currentDate = currentDate
         )
 
         val response = geminiService.generateResponse(prompt)

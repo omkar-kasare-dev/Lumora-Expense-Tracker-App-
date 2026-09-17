@@ -1,5 +1,5 @@
 package com.finance.lumora.presentation.ai.viewmodel
-
+//Main
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.finance.lumora.data.voice.AndroidVoiceInputProcessor
@@ -18,11 +18,15 @@ import androidx.lifecycle.viewModelScope
 import com.finance.lumora.domain.model.ai.TransactionCaptureParser
 import javax.inject.Inject
 
+import com.finance.lumora.domain.model.ai.AurixVoiceIntent
+import com.finance.lumora.domain.usecase.ai.AurixVoiceIntentRouter
+
 @HiltViewModel
 class VoiceCaptureViewModel @Inject constructor(
     private val voiceInputProcessor: VoiceInputProcessor,
     private val transactionCaptureParser: TransactionCaptureParser,
-    private val resolveTransactionCategoryUseCase: ResolveTransactionCategoryUseCase
+    private val resolveTransactionCategoryUseCase: ResolveTransactionCategoryUseCase,
+    private val aurixVoiceIntentRouter: AurixVoiceIntentRouter
 ) : ViewModel() {
 
     private val _state =
@@ -39,10 +43,18 @@ class VoiceCaptureViewModel @Inject constructor(
     val resolvedDraft: StateFlow<ResolvedTransactionDraft?> =
         _resolvedDraft.asStateFlow()
 
+    // Financial Query Section:
+    private val _financialQuery =
+        MutableStateFlow<String?>(null)
+
+    val financialQuery: StateFlow<String?> =
+        _financialQuery.asStateFlow()
+
+    //-------------------------------
+
     fun startListening() {
-
         _resolvedDraft.value = null
-
+        _financialQuery.value = null
         _state.value = VoiceInputState.Listening
 
         voiceInputProcessor.startListening(
@@ -54,13 +66,12 @@ class VoiceCaptureViewModel @Inject constructor(
                 )
             },
             onFinalResult = { text ->
-
                 _state.value = VoiceInputState.Transcript(
                     text = text,
                     isFinal = true
                 )
 
-                parseTranscript(text)
+                routeTranscript(text)
             },
             onError = { errorCode ->
 
@@ -77,15 +88,40 @@ class VoiceCaptureViewModel @Inject constructor(
 
     fun cancelListening() {
         voiceInputProcessor.cancelListening()
-
         _resolvedDraft.value = null
+        _financialQuery.value = null
         _state.value = VoiceInputState.Idle
     }
 
     fun reset() {
         _resolvedDraft.value = null
+        _financialQuery.value = null
         _state.value = VoiceInputState.Idle
     }
+
+    // Route Intent:
+    private fun routeTranscript(transcript: String) {
+
+        if (transcript.isBlank()) {
+            _state.value = VoiceInputState.Error(
+                "No speech was detected."
+            )
+            return
+        }
+
+        when (aurixVoiceIntentRouter(transcript)) {
+
+            AurixVoiceIntent.ADD_TRANSACTION -> {
+                parseTranscript(transcript)
+            }
+
+            AurixVoiceIntent.FINANCIAL_QUERY -> {
+                _financialQuery.value = transcript
+                _state.value = VoiceInputState.Idle
+            }
+        }
+    }
+    //--------------------
 
     private fun parseTranscript(transcript: String) {
 
@@ -135,6 +171,12 @@ class VoiceCaptureViewModel @Inject constructor(
 
             } catch (exception: Exception) {
 
+                Log.e(
+                    "VoiceCapture",
+                    "Transaction parsing failed",
+                    exception
+                )
+
                 _state.value = VoiceInputState.Error(
                     exception.message
                         ?: "Unable to understand the transaction."
@@ -178,6 +220,8 @@ class VoiceCaptureViewModel @Inject constructor(
         }
     }
 
+
+
     override fun onCleared() {
         super.onCleared()
 
@@ -186,3 +230,4 @@ class VoiceCaptureViewModel @Inject constructor(
         }
     }
 }
+

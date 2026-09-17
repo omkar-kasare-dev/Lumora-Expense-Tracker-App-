@@ -1,7 +1,5 @@
 package com.finance.lumora.domain.model.ai
 
-
-
 data class ExpenseTrendInsight(
     val currentExpense: Double,
     val previousExpense: Double,

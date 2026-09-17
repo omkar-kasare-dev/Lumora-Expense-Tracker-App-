@@ -8,8 +8,9 @@ class TransactionCapturePromptBuilder @Inject constructor() {
 
     fun build(
         input: String,
-        source: CaptureSource
-    ): String {
+        source: CaptureSource,
+        currentDate: String
+    ):  String {
         val sourceDescription = when (source) {
             CaptureSource.RECEIPT_OCR ->
                 "The input was extracted from a shopping receipt using OCR."
@@ -71,10 +72,14 @@ class TransactionCapturePromptBuilder @Inject constructor() {
                  Travel, Personal Care.
                - Do not invent overly specific categories.
 
-            5. transactionDate
-               - Return the transaction date as YYYY-MM-DD.
-               - If the input says "today", use today's date.
-               - If no date is available, use today's date.
+             5. transactionDate
+               - Return the transaction date as YYYY-MM-DD when a date is explicitly
+                 mentioned or can be resolved from a relative date.
+               - The current date is: $currentDate
+               - Use this date as the reference when resolving words such as "today",
+                 "yesterday", "tomorrow", "last Monday", etc.
+               - If no transaction date is mentioned or implied, return null.
+               - Never invent a transaction date.
 
             6. Never invent an amount.
             7. Never invent a merchant.

@@ -276,13 +276,14 @@ fun AurixScreen(
  */
 
 
-
+// Main:
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.Arrangement
+
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
@@ -728,6 +729,10 @@ fun AurixScreen(
                 showVoiceCapture = false
 
                 resolvedDraft = draft
+            },
+            onFinancialQuery = { query ->
+                showVoiceCapture = false
+                viewModel.askQuestion(query)
             },
 
             onClose = {
