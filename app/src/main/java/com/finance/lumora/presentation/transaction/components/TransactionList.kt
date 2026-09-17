@@ -16,48 +16,27 @@ import com.finance.lumora.domain.model.Transaction
  * composed inside a parent LazyColumn, avoiding nested scrolling.
  */
 fun LazyListScope.transactionList(
-
     transactions: List<Transaction>,
-
     categories: List<Category>,
-
     onEditClick: (Transaction) -> Unit,
-
     onDeleteClick: (Transaction) -> Unit
-
 ) {
+    val categoryMap = categories.associateBy { it.id }
 
     items(
-
         items = transactions,
-
-        key = { transaction ->
-            transaction.id
-        }
-
+        key = { transaction -> transaction.id }
     ) { transaction ->
-
-        val category = categories.firstOrNull {
-
-            it.id == transaction.categoryId
-
-        }
+        val category = categoryMap[transaction.categoryId]
 
         TransactionItem(
-
             transaction = transaction,
-
             category = category,
-
             onEditClick = onEditClick,
-
-            onDeleteClick = onDeleteClick
-
-        )
-        Spacer(
-            modifier = Modifier.height(12.dp)
+            onDeleteClick = onDeleteClick,
+            modifier = Modifier.animateItem()
         )
 
+        Spacer(modifier = Modifier.height(8.dp))
     }
-
 }

@@ -1,23 +1,25 @@
 package com.finance.lumora.presentation.transaction.screen
 
-
 import android.util.Log
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -33,16 +35,16 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.finance.lumora.navigation.BottomNavigationBar
 import com.finance.lumora.presentation.category.components.AddCategoryDialog
-import com.finance.lumora.presentation.dashboard.components.DashboardTopBar
 import com.finance.lumora.presentation.subcategory.components.AddSubCategoryDialog
 import com.finance.lumora.presentation.transaction.components.AddTransactionDialog
 import com.finance.lumora.presentation.transaction.components.DashboardSection
@@ -63,8 +65,6 @@ fun TransactionScreen(
     val state by viewModel.state.collectAsStateWithLifecycle()
     var isAddTransactionDialogOpen by remember { mutableStateOf(false) }
     val snackbarHostState = remember { SnackbarHostState() }
-
-    val viewModel: TransactionViewModel = viewModel()
 
     LaunchedEffect(Unit) {
         viewModel.onEvent(TransactionEvent.LoadCategories)
@@ -87,58 +87,32 @@ fun TransactionScreen(
 
     Scaffold(
         topBar = {
-
             CenterAlignedTopAppBar(
-
                 title = {
-
                     Text(
-
                         text = "Transactions",
-
-                        style = MaterialTheme.typography.titleLarge,
-
-                        fontWeight = FontWeight.SemiBold
-
+                        style = MaterialTheme.typography.titleMedium.copy(
+                            fontSize = 16.sp,
+                            letterSpacing = (-0.2).sp
+                        ),
+                        fontWeight = FontWeight.Bold
                     )
-
                 },
-
                 navigationIcon = {
-
-                    IconButton(
-
-                        onClick = onBackClick
-
-                    ) {
-
+                    IconButton(onClick = onBackClick) {
                         Icon(
-
                             imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
-
-                            contentDescription = "Back"
-
+                            contentDescription = "Back",
+                            modifier = Modifier.size(20.dp)
                         )
-
                     }
-
                 },
-
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-
-                    containerColor =
-                        MaterialTheme.colorScheme.surface,
-
-                    titleContentColor =
-                        MaterialTheme.colorScheme.onSurface,
-
-                    navigationIconContentColor =
-                        MaterialTheme.colorScheme.onSurface
-
+                    containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
+                    titleContentColor = MaterialTheme.colorScheme.onSurface,
+                    navigationIconContentColor = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-
             )
-
         },
         snackbarHost = {
             SnackbarHost(hostState = snackbarHostState)
@@ -147,14 +121,27 @@ fun TransactionScreen(
             BottomNavigationBar(navController = navController)
         },
         floatingActionButton = {
-            FloatingActionButton(onClick = { isAddTransactionDialogOpen = true }) {
-                Icon(imageVector = Icons.Default.Add, contentDescription = "Add Transaction")
+            FloatingActionButton(
+                onClick = { isAddTransactionDialogOpen = true },
+                shape = RoundedCornerShape(30.dp),
+                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                elevation = FloatingActionButtonDefaults.elevation(
+                    defaultElevation = 2.dp,
+                    pressedElevation = 4.dp
+                )
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Add,
+                    contentDescription = "Add Transaction",
+                    modifier = Modifier.size(19.dp)
+                )
             }
         }
     ) { innerPadding ->
 
         // ---------------------------------------------------------
-        // Overlay Dialogs Hierarchy (Placed cleanly outside layout boundaries)
+        // Overlay Dialogs Hierarchy
         // ---------------------------------------------------------
         if (state.showDeleteDialog) {
             DeleteTransactionDialog(
@@ -163,7 +150,6 @@ fun TransactionScreen(
             )
         }
 
-        // FIX 2: Extracted AddTransactionDialog cleanly out of the FAB content builder scope
         AddTransactionDialog(
             showDialog = isAddTransactionDialogOpen,
             state = state,
@@ -172,94 +158,41 @@ fun TransactionScreen(
             onCategoryChanged = { viewModel.onEvent(TransactionEvent.CategoryChanged(it)) },
             onDateChanged = { viewModel.onEvent(TransactionEvent.DateChanged(it)) },
             onSubCategoryChanged = {
-
-                viewModel.onEvent(
-
-                    TransactionEvent.SubCategoryChanged(it)
-
-                )
-
+                viewModel.onEvent(TransactionEvent.SubCategoryChanged(it))
             },
-
             onAddSubCategoryClick = {
-
-                viewModel.onEvent(
-
-                    TransactionEvent.ShowAddSubCategoryDialog
-
-                )
-
+                viewModel.onEvent(TransactionEvent.ShowAddSubCategoryDialog)
             },
             onNoteChanged = { viewModel.onEvent(TransactionEvent.NoteChanged(it)) },
             onSaveClicked = { viewModel.onEvent(TransactionEvent.SaveTransaction) },
             onAddCategoryClick = {
                 Log.d("CATEGORY_DIALOG", "Add Category Clicked")
-
-                viewModel.onEvent(
-                    TransactionEvent.ShowAddCategoryDialog
-                )
-
-
+                viewModel.onEvent(TransactionEvent.ShowAddCategoryDialog)
             },
             onDismissRequest = { isAddTransactionDialogOpen = false }
         )
 
-
         if (state.showAddCategoryDialog) {
-
             AddCategoryDialog(
-
                 onDismiss = {
-                    viewModel.onEvent(
-                        TransactionEvent.DismissAddCategoryDialog
-                    )
+                    viewModel.onEvent(TransactionEvent.DismissAddCategoryDialog)
                 },
-
                 onSave = { category ->
-                    Log.d(
-                        "CATEGORY_SAVE",
-                        "Sending Event: ${category.name}"
-                    )
-
-                    viewModel.onEvent(
-                        TransactionEvent.SaveCustomCategory(category)
-                    )
-
+                    Log.d("CATEGORY_SAVE", "Sending Event: ${category.name}")
+                    viewModel.onEvent(TransactionEvent.SaveCustomCategory(category))
                 }
-
             )
         }
 
         if (state.showAddSubCategoryDialog) {
-
             AddSubCategoryDialog(
-
                 onDismiss = {
-
-                    viewModel.onEvent(
-
-                        TransactionEvent.DismissAddSubCategoryDialog
-
-                    )
-
+                    viewModel.onEvent(TransactionEvent.DismissAddSubCategoryDialog)
                 },
-
                 onSave = { subCategory ->
-
-                    viewModel.onEvent(
-
-                        TransactionEvent.SaveCustomSubCategory(
-
-                            subCategory
-
-                        )
-
-                    )
-
+                    viewModel.onEvent(TransactionEvent.SaveCustomSubCategory(subCategory))
                 }
-
             )
-
         }
 
         // ---------------------------------------------------------
@@ -270,8 +203,7 @@ fun TransactionScreen(
             contentPadding = PaddingValues(
                 start = 16.dp,
                 end = 16.dp,
-                // Explicitly uses Scaffold's calculated top offset + item spacing buffers
-                top = innerPadding.calculateTopPadding() + 6.dp,
+                top = innerPadding.calculateTopPadding() + 8.dp,
                 bottom = innerPadding.calculateBottomPadding() + 16.dp
             )
         ) {
@@ -280,15 +212,46 @@ fun TransactionScreen(
                     totalIncome = state.totalIncome,
                     totalExpense = state.totalExpense
                 )
-                Spacer(modifier = Modifier.height(12.dp))
+                Spacer(modifier = Modifier.height(16.dp))
             }
 
             item {
-                Text(
-                    text = "Recent Transactions",
-                    style = MaterialTheme.typography.titleLarge,
-                    modifier = Modifier.padding(top = 16.dp, bottom = 12.dp)
-                )
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "Recent Transactions",
+                        style = MaterialTheme.typography.titleMedium.copy(
+                            fontSize = 15.sp,
+                            letterSpacing = (-0.1).sp
+                        ),
+                        fontWeight = FontWeight.SemiBold,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+
+                    if (state.transactions.isNotEmpty()) {
+                        Surface(
+                            shape = RoundedCornerShape(6.dp),
+                            color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.6f),
+                            border = BorderStroke(
+                                width = 0.6.dp,
+                                color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f)
+                            )
+                        ) {
+                            Text(
+                                text = "${state.transactions.size} items",
+                                style = MaterialTheme.typography.labelMedium.copy(fontSize = 10.sp),
+                                fontWeight = FontWeight.Medium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
+                            )
+                        }
+                    }
+                }
             }
 
             if (state.transactions.isEmpty()) {

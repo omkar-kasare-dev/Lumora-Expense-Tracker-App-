@@ -1,6 +1,7 @@
 package com.finance.lumora.presentation.transaction.components
 
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -11,35 +12,35 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.Payments
-import androidx.compose.material3.Card
+import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material.icons.outlined.Edit
+import androidx.compose.material.icons.outlined.Payments
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Divider
-import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedCard
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalLocale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.finance.lumora.data.local.enums.TransactionType
 import com.finance.lumora.domain.model.Category
 import com.finance.lumora.domain.model.Transaction
 import java.text.SimpleDateFormat
 import java.util.Date
-import java.util.Locale
-import androidx.compose.ui.platform.LocalLocale
 
 /**
  * Professional Material 3 Transaction Item
@@ -55,30 +56,12 @@ fun TransactionItem(
     onDeleteClick: (Transaction) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val isIncome = transaction.type == TransactionType.INCOME
 
-    val amountColor =
-        if (transaction.type == TransactionType.INCOME)
-            Color(0xFF2E7D32)
-        else
-            Color(0xFFC62828)
-
-    val categoryColor =
-        if (transaction.type == TransactionType.INCOME)
-            Color(0xFFE8F5E9)
-        else
-            Color(0xFFFFEBEE)
-
-    val iconTint =
-        if (transaction.type == TransactionType.INCOME)
-            Color(0xFF2E7D32)
-        else
-            Color(0xFFC62828)
-
-    val amountPrefix =
-        if (transaction.type == TransactionType.INCOME)
-            "+ ₹"
-        else
-            "- ₹"
+    val amountColor = if (isIncome) Color(0xFF10B981) else Color(0xFFEF4444)
+    val categoryBgColor = if (isIncome) Color(0xFF10B981).copy(alpha = 0.12f) else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.6f)
+    val iconTint = if (isIncome) Color(0xFF10B981) else MaterialTheme.colorScheme.onSurfaceVariant
+    val amountPrefix = if (isIncome) "+ ₹" else "- ₹"
 
     val formattedDate = SimpleDateFormat(
         "dd MMM yyyy",
@@ -87,199 +70,147 @@ fun TransactionItem(
         Date(transaction.transactionDate)
     )
 
-    Card(
-        modifier = modifier
-            .fillMaxWidth(),
-        shape = RoundedCornerShape(20.dp),
-        elevation = CardDefaults.cardElevation(
-            defaultElevation = 6.dp
+    OutlinedCard(
+        modifier = modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(16.dp),
+        border = BorderStroke(
+            width = 0.8.dp,
+            color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.35f)
         ),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface
+        colors = CardDefaults.outlinedCardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceContainerLow
         )
     ) {
-
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(18.dp)
+                .padding(14.dp)
         ) {
-
             //--------------------------------------------------
-            // Top Row
+            // Main Transaction Row
             //--------------------------------------------------
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-
-                //--------------------------------------------------
-                // Category Avatar
-                //--------------------------------------------------
-
+                // Category Icon Avatar
                 Box(
                     modifier = Modifier
-                        .size(52.dp)
+                        .size(44.dp)
                         .clip(CircleShape)
-                        .background(categoryColor),
+                        .background(categoryBgColor),
                     contentAlignment = Alignment.Center
                 ) {
-
                     Icon(
-                        imageVector = Icons.Default.Payments,
+                        imageVector = Icons.Outlined.Payments,
                         contentDescription = null,
-                        tint = iconTint
+                        tint = iconTint,
+                        modifier = Modifier.size(22.dp)
                     )
-
                 }
 
-                Spacer(
-                    modifier = Modifier.size(14.dp)
-                )
+                Spacer(modifier = Modifier.width(12.dp))
 
-                //--------------------------------------------------
-                // Category + Date
-                //--------------------------------------------------
-
+                // Category Title & Date
                 Column(
                     modifier = Modifier.weight(1f)
                 ) {
-
                     Text(
                         text = category?.name ?: "Unknown Category",
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold
+                        style = MaterialTheme.typography.titleMedium.copy(
+                            fontSize = 14.5.sp,
+                            letterSpacing = (-0.1).sp
+                        ),
+                        fontWeight = FontWeight.SemiBold,
+                        color = MaterialTheme.colorScheme.onSurface,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
                     )
 
-                    Spacer(
-                        modifier = Modifier.height(4.dp)
-                    )
+                    Spacer(modifier = Modifier.height(2.dp))
 
                     Text(
                         text = formattedDate,
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        style = MaterialTheme.typography.bodySmall.copy(fontSize = 11.5.sp),
+                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.75f)
                     )
-
                 }
 
-                //--------------------------------------------------
-                // Amount
-                //--------------------------------------------------
+                Spacer(modifier = Modifier.width(8.dp))
 
+                // Amount Display
                 Text(
                     text = amountPrefix + "%.2f".format(transaction.amount),
-                    style = MaterialTheme.typography.titleMedium,
+                    style = MaterialTheme.typography.titleMedium.copy(
+                        fontSize = 14.5.sp,
+                        letterSpacing = (-0.2).sp
+                    ),
                     fontWeight = FontWeight.Bold,
                     color = amountColor
                 )
-
             }
-/*
-            //--------------------------------------------------
-            // Note
-            //--------------------------------------------------
 
+            //--------------------------------------------------
+            // Note Section (Optional Container)
+            //--------------------------------------------------
             if (!transaction.note.isNullOrBlank()) {
+                Spacer(modifier = Modifier.height(10.dp))
 
-                Spacer(
-                    modifier = Modifier.height(16.dp)
-                )
-
-                Text(
-                    text = "Note",
-                    style = MaterialTheme.typography.labelMedium,
-                    color = MaterialTheme.colorScheme.primary,
-                    fontWeight = FontWeight.SemiBold
-                )
-
-                Spacer(
-                    modifier = Modifier.height(4.dp)
-                )
-
-                Text(
-                    text = transaction.note,
-                    style = MaterialTheme.typography.bodyMedium,
-                    maxLines = 3,
-                    overflow = TextOverflow.Ellipsis,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-
+                Surface(
+                    shape = RoundedCornerShape(8.dp),
+                    color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.35f),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(
+                        text = transaction.note,
+                        style = MaterialTheme.typography.bodySmall.copy(
+                            fontSize = 12.sp,
+                            lineHeight = 16.sp
+                        ),
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp)
+                    )
+                }
             }
 
-            Spacer(
-                modifier = Modifier.height(16.dp)
-            )
-
-            Divider()
-
-            Spacer(
-                modifier = Modifier.height(12.dp)
-            )
-            */
+            Spacer(modifier = Modifier.height(8.dp))
 
             //--------------------------------------------------
-            // Action Buttons
+            // Minimal Action Buttons Strip
             //--------------------------------------------------
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.End
+                horizontalArrangement = Arrangement.End,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-
-                FilledTonalButton(
-                    onClick = {
-                        onEditClick(transaction)
-
-                    }
+                IconButton(
+                    onClick = { onEditClick(transaction) },
+                    modifier = Modifier.size(32.dp)
                 ) {
-
                     Icon(
-                        imageVector = Icons.Default.Edit,
-                        contentDescription = "Edit"
+                        imageVector = Icons.Outlined.Edit,
+                        contentDescription = "Edit Transaction",
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.size(18.dp)
                     )
-
-                    Spacer(
-                        modifier = Modifier.size(6.dp)
-                    )
-
-                    Text("Edit")
-
                 }
 
-                Spacer(
-                    modifier = Modifier.size(10.dp)
-                )
+                Spacer(modifier = Modifier.width(4.dp))
 
-                FilledTonalButton(
-                    onClick = {
-                        onDeleteClick(transaction)
-                    },
-                    colors = ButtonDefaults.filledTonalButtonColors(
-                        containerColor = MaterialTheme.colorScheme.errorContainer,
-                        contentColor = MaterialTheme.colorScheme.onErrorContainer
-                    )
+                IconButton(
+                    onClick = { onDeleteClick(transaction) },
+                    modifier = Modifier.size(32.dp)
                 ) {
-
                     Icon(
-                        imageVector = Icons.Default.Delete,
-                        contentDescription = "Delete"
+                        imageVector = Icons.Outlined.Delete,
+                        contentDescription = "Delete Transaction",
+                        tint = MaterialTheme.colorScheme.error,
+                        modifier = Modifier.size(18.dp)
                     )
-
-                    Spacer(
-                        modifier = Modifier.size(6.dp)
-                    )
-
-                    Text("Delete")
-
                 }
-
             }
-
-
-
         }
-
     }
 }

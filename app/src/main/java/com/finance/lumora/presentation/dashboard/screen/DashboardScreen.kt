@@ -1,5 +1,6 @@
 package com.finance.lumora.presentation.dashboard.screen
 
+
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
@@ -16,14 +17,15 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.Insights
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -46,15 +48,16 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.finance.lumora.navigation.BottomNavigationBar
 import com.finance.lumora.navigation.Screen
 import com.finance.lumora.presentation.dashboard.components.DashboardError
-import com.finance.lumora.presentation.dashboard.components.DashboardLoading
 import com.finance.lumora.presentation.dashboard.components.DashboardTopBar
 import com.finance.lumora.presentation.dashboard.components.EmptyDashboard
 import com.finance.lumora.presentation.dashboard.effect.DashboardUiEffect
@@ -113,6 +116,7 @@ fun DashboardScreen(
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
+        containerColor = MaterialTheme.colorScheme.background,
         snackbarHost = {
             SnackbarHost(hostState = snackbarHostState)
         },
@@ -121,10 +125,10 @@ fun DashboardScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .statusBarsPadding()
-                    .padding(top = 10.dp)
+                    .padding(horizontal = 4.dp, vertical = 6.dp)
             ) {
                 DashboardTopBar(
-                    userName = "Omkar",
+                    userName = state.userName.ifBlank { "User" },
                     onSearchClick = {
                         if (navController.currentDestination?.route != Screen.Search.route) {
                             navController.navigate(Screen.Search.route)
@@ -155,10 +159,14 @@ fun DashboardScreen(
 
         when {
             //------------------------------------------
-            // Loading
+            // Enhanced Loading State
             //------------------------------------------
             state.isLoading -> {
-                DashboardLoading()
+                EnhancedDashboardLoading(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(paddingValues)
+                )
             }
 
             //------------------------------------------
@@ -186,7 +194,7 @@ fun DashboardScreen(
             }
 
             //------------------------------------------
-            // Dashboard
+            // Dashboard Content
             //------------------------------------------
             else -> {
                 Column(
@@ -194,7 +202,7 @@ fun DashboardScreen(
                         .fillMaxSize()
                         .padding(paddingValues)
                 ) {
-                    Spacer(modifier = Modifier.size(4.dp))
+                    Spacer(modifier = Modifier.size(2.dp))
 
                     DashboardContent(
                         modifier = Modifier
@@ -209,6 +217,95 @@ fun DashboardScreen(
     }
 }
 
+//----------------------------------------------------
+// Enhanced Professional Loading Indicator
+//----------------------------------------------------
+
+@Composable
+private fun EnhancedDashboardLoading(
+    modifier: Modifier = Modifier
+) {
+    val infiniteTransition = rememberInfiniteTransition(label = "dashboard_loading_anim")
+
+    val outerPulseScale by infiniteTransition.animateFloat(
+        initialValue = 0.85f,
+        targetValue = 1.15f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(1200, easing = FastOutSlowInEasing),
+            repeatMode = RepeatMode.Reverse
+        ),
+        label = "outerPulseScale"
+    )
+
+    val outerPulseAlpha by infiniteTransition.animateFloat(
+        initialValue = 0.25f,
+        targetValue = 0.05f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(1200, easing = FastOutSlowInEasing),
+            repeatMode = RepeatMode.Reverse
+        ),
+        label = "outerPulseAlpha"
+    )
+
+    Box(
+        modifier = modifier,
+        contentAlignment = Alignment.Center
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier.size(72.dp)
+            ) {
+                // Outer Ambient Ring Pulse
+                Box(
+                    modifier = Modifier
+                        .size(64.dp)
+                        .scale(outerPulseScale)
+                        .clip(CircleShape)
+                        .background(
+                            MaterialTheme.colorScheme.primary.copy(alpha = outerPulseAlpha)
+                        )
+                )
+
+                // Secondary Accent Halo
+                CircularProgressIndicator(
+                    modifier = Modifier.size(52.dp),
+                    color = MaterialTheme.colorScheme.primary.copy(alpha = 0.15f),
+                    strokeWidth = 3.dp,
+                    trackColor = Color.Transparent
+                )
+
+                // Active Progress Ring
+                CircularProgressIndicator(
+                    modifier = Modifier.size(52.dp),
+                    color = MaterialTheme.colorScheme.primary,
+                    strokeWidth = 3.dp,
+                    strokeCap = StrokeCap.Round
+                )
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Text(
+                text = "Updating overview...",
+                style = MaterialTheme.typography.labelMedium.copy(
+                    fontSize = 12.sp,
+                    letterSpacing = 0.4.sp
+                ),
+                fontWeight = FontWeight.Medium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
+            )
+        }
+    }
+}
+
+//----------------------------------------------------
+// Aurix FAB (Minimal & Refined)
+//----------------------------------------------------
+
 @Composable
 fun AurixFloatingActionButton(
     onClick: () -> Unit,
@@ -216,46 +313,44 @@ fun AurixFloatingActionButton(
 ) {
     val infiniteTransition = rememberInfiniteTransition(label = "aurix_fab_pulse")
 
-    // Pulse Halo Animation
     val pulseScale by infiniteTransition.animateFloat(
         initialValue = 1f,
-        targetValue = 1.28f,
+        targetValue = 1.18f,
         animationSpec = infiniteRepeatable(
-            animation = tween(1600, easing = FastOutSlowInEasing),
+            animation = tween(1800, easing = FastOutSlowInEasing),
             repeatMode = RepeatMode.Reverse
         ),
         label = "pulseScale"
     )
 
     val pulseAlpha by infiniteTransition.animateFloat(
-        initialValue = 0.5f,
-        targetValue = 0.05f,
+        initialValue = 0.35f,
+        targetValue = 0.02f,
         animationSpec = infiniteRepeatable(
-            animation = tween(1600, easing = FastOutSlowInEasing),
+            animation = tween(1800, easing = FastOutSlowInEasing),
             repeatMode = RepeatMode.Reverse
         ),
         label = "pulseAlpha"
     )
 
-    // Icon Rotation Glow
     val iconRotation by infiniteTransition.animateFloat(
         initialValue = 0f,
         targetValue = 360f,
         animationSpec = infiniteRepeatable(
-            animation = tween(8000, easing = LinearEasing),
+            animation = tween(10000, easing = LinearEasing),
             repeatMode = RepeatMode.Restart
         ),
         label = "iconRotation"
     )
 
     Box(
-        modifier = modifier.padding(bottom = 8.dp, end = 4.dp),
+        modifier = modifier.padding(bottom = 6.dp, end = 2.dp),
         contentAlignment = Alignment.Center
     ) {
-        // Outer Glowing Pulse Halo
+        // Outer Glowing Halo
         Box(
             modifier = Modifier
-                .size(68.dp)
+                .size(58.dp)
                 .scale(pulseScale)
                 .clip(CircleShape)
                 .background(
@@ -263,13 +358,13 @@ fun AurixFloatingActionButton(
                 )
         )
 
-        // Main Animated Floating Pill Button
+        // Main Floating Pill
         Surface(
             onClick = onClick,
-            shape = RoundedCornerShape(28.dp),
+            shape = RoundedCornerShape(20.dp),
             color = Color.Transparent,
-            shadowElevation = 8.dp,
-            tonalElevation = 6.dp
+            shadowElevation = 6.dp,
+            tonalElevation = 2.dp
         ) {
             Row(
                 modifier = Modifier
@@ -282,23 +377,22 @@ fun AurixFloatingActionButton(
                         )
                     )
                     .border(
-                        width = 1.dp,
+                        width = 0.75.dp,
                         brush = Brush.horizontalGradient(
                             colors = listOf(
-                                Color.White.copy(alpha = 0.4f),
-                                Color.White.copy(alpha = 0.1f)
+                                Color.White.copy(alpha = 0.35f),
+                                Color.White.copy(alpha = 0.08f)
                             )
                         ),
-                        shape = RoundedCornerShape(28.dp)
+                        shape = RoundedCornerShape(20.dp)
                     )
-                    .padding(horizontal = 16.dp, vertical = 12.dp),
+                    .padding(horizontal = 14.dp, vertical = 9.dp),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                horizontalArrangement = Arrangement.spacedBy(6.dp)
             ) {
-                // Sparkle Icon with animated gradient frame
                 Box(
                     modifier = Modifier
-                        .size(26.dp)
+                        .size(20.dp)
                         .rotate(iconRotation),
                     contentAlignment = Alignment.Center
                 ) {
@@ -306,23 +400,26 @@ fun AurixFloatingActionButton(
                         imageVector = Icons.Default.Insights,
                         contentDescription = null,
                         tint = MaterialTheme.colorScheme.onPrimary,
-                        modifier = Modifier.size(20.dp)
+                        modifier = Modifier.size(16.dp)
                     )
                 }
 
                 Text(
                     text = "Ask AURIX",
-                    style = MaterialTheme.typography.labelLarge,
-                    fontWeight = FontWeight.Bold,
+                    style = MaterialTheme.typography.labelMedium.copy(
+                        fontSize = 12.sp,
+                        letterSpacing = 0.2.sp
+                    ),
+                    fontWeight = FontWeight.SemiBold,
                     color = MaterialTheme.colorScheme.onPrimary
                 )
 
-                // Status Dot indicator
+                // Active Online Dot Indicator
                 Box(
                     modifier = Modifier
-                        .size(6.dp)
+                        .size(5.dp)
                         .clip(CircleShape)
-                        .background(Color.Green)
+                        .background(Color(0xFF10B981))
                 )
             }
         }

@@ -10,6 +10,8 @@ import com.finance.lumora.domain.model.TransactionWithCategory
  */
 data class DashboardState(
 
+    val userName: String = "",
+
     /**
      * Indicates whether dashboard data
      * is currently loading.

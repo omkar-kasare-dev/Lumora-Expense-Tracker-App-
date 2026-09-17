@@ -18,7 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.finance.lumora.domain.analytics.model.MonthlySummary
-import com.finance.lumora.presentation.home.model.SummaryItem
+
 import java.text.NumberFormat
 
 @Composable

@@ -1,162 +1,230 @@
 package com.finance.lumora.presentation.dashboard.components
 
 
+
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Card
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDownward
+import androidx.compose.material.icons.filled.ArrowUpward
+import androidx.compose.material.icons.filled.ReceiptLong
+import androidx.compose.material.icons.rounded.BarChart
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedCard
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import java.text.NumberFormat
 import java.util.Locale
 
 @Composable
 fun StatisticsCard(
-
     transactionCount: Int,
-
     largestIncome: Double,
-
     largestExpense: Double,
-
     modifier: Modifier = Modifier
-
 ) {
-
-    Card(
-
+    OutlinedCard(
         modifier = modifier.fillMaxWidth(),
-
-        elevation = CardDefaults.cardElevation(
-            defaultElevation = 6.dp
+        shape = RoundedCornerShape(18.dp),
+        border = BorderStroke(
+            width = 0.8.dp,
+            color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.35f)
         ),
-
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
+        colors = CardDefaults.outlinedCardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceContainerLow
         )
-
     ) {
-
         Column(
-
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(20.dp)
-
+                .padding(16.dp)
         ) {
+            //--------------------------------------------------
+            // Section Header
+            //--------------------------------------------------
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(6.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Rounded.BarChart,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.size(16.dp)
+                    )
 
-            Text(
+                    Text(
+                        text = "Statistics",
+                        style = MaterialTheme.typography.titleMedium.copy(
+                            fontSize = 15.sp,
+                            letterSpacing = (-0.1).sp
+                        ),
+                        fontWeight = FontWeight.SemiBold,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                }
 
-                text = "Statistics",
+                Surface(
+                    shape = RoundedCornerShape(6.dp),
+                    color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.6f)
+                ) {
+                    Text(
+                        text = "Overview",
+                        style = MaterialTheme.typography.labelMedium.copy(fontSize = 10.sp),
+                        fontWeight = FontWeight.Medium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
+                    )
+                }
+            }
 
-                style = MaterialTheme.typography.titleLarge,
+            Spacer(modifier = Modifier.height(10.dp))
 
-                fontWeight = FontWeight.Bold
-
+            //--------------------------------------------------
+            // Statistic Items
+            //--------------------------------------------------
+            StatisticItem(
+                icon = {
+                    Icon(
+                        imageVector = Icons.Default.ReceiptLong,
+                        contentDescription = "Total Transactions",
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.size(16.dp)
+                    )
+                },
+                iconContainerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.6f),
+                title = "Transactions",
+                value = transactionCount.toString(),
+                valueColor = MaterialTheme.colorScheme.onSurface
             )
 
             HorizontalDivider(
-                modifier = Modifier.padding(vertical = 16.dp)
+                modifier = Modifier.padding(start = 44.dp),
+                thickness = 0.6.dp,
+                color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.25f)
             )
 
             StatisticItem(
-
-                title = "Transactions",
-
-                value = transactionCount.toString()
-
-            )
-
-            HorizontalDivider()
-
-            StatisticItem(
-
+                icon = {
+                    Icon(
+                        imageVector = Icons.Default.ArrowUpward,
+                        contentDescription = "Largest Income",
+                        tint = Color(0xFF059669),
+                        modifier = Modifier.size(16.dp)
+                    )
+                },
+                iconContainerColor = Color(0xFF10B981).copy(alpha = 0.12f),
                 title = "Largest Income",
-
-                value = formatCurrency(largestIncome)
-
+                value = formatCurrency(largestIncome),
+                valueColor = Color(0xFF10B981)
             )
 
-            HorizontalDivider()
+            HorizontalDivider(
+                modifier = Modifier.padding(start = 44.dp),
+                thickness = 0.6.dp,
+                color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.25f)
+            )
 
             StatisticItem(
-
+                icon = {
+                    Icon(
+                        imageVector = Icons.Default.ArrowDownward,
+                        contentDescription = "Largest Expense",
+                        tint = MaterialTheme.colorScheme.error,
+                        modifier = Modifier.size(16.dp)
+                    )
+                },
+                iconContainerColor = MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.4f),
                 title = "Largest Expense",
-
-                value = formatCurrency(largestExpense)
-
+                value = formatCurrency(largestExpense),
+                valueColor = MaterialTheme.colorScheme.onSurface
             )
-
         }
-
     }
-
 }
 
 @Composable
 private fun StatisticItem(
-
+    icon: @Composable () -> Unit,
+    iconContainerColor: Color,
     title: String,
-
-    value: String
-
+    value: String,
+    valueColor: Color
 ) {
-
     Row(
-
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 14.dp),
-
+            .padding(vertical = 10.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
-
         verticalAlignment = Alignment.CenterVertically
-
     ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(32.dp)
+                    .clip(RoundedCornerShape(8.dp))
+                    .background(iconContainerColor),
+                contentAlignment = Alignment.Center
+            ) {
+                icon()
+            }
+
+            Spacer(modifier = Modifier.width(12.dp))
+
+            Text(
+                text = title,
+                style = MaterialTheme.typography.bodyMedium.copy(
+                    fontSize = 13.5.sp,
+                    letterSpacing = 0.1.sp
+                ),
+                fontWeight = FontWeight.SemiBold,
+                color = MaterialTheme.colorScheme.onSurface
+            )
+        }
 
         Text(
-
-            text = title,
-
-            style = MaterialTheme.typography.bodyLarge,
-
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-
-        )
-
-        Text(
-
             text = value,
-
-            style = MaterialTheme.typography.titleMedium,
-
+            style = MaterialTheme.typography.titleMedium.copy(
+                fontSize = 14.5.sp,
+                letterSpacing = (-0.2).sp
+            ),
             fontWeight = FontWeight.SemiBold,
-
-            color = MaterialTheme.colorScheme.onSurface
-
+            color = valueColor
         )
-
     }
-
 }
 
-private fun formatCurrency(
-
-    amount: Double
-
-): String {
-
+private fun formatCurrency(amount: Double): String {
     return NumberFormat
         .getCurrencyInstance(Locale("en", "IN"))
         .format(amount)
-
 }

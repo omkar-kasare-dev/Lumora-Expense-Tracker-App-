@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
@@ -24,6 +25,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
@@ -61,10 +63,12 @@ fun AnalyticsScreen(
 
                         text = "Analytics",
 
-                        style = MaterialTheme.typography.titleLarge,
+                        style = MaterialTheme.typography.titleMedium.copy(
+                            fontSize = 16.sp,
+                            letterSpacing = (-0.2).sp
 
+                    ),
                         fontWeight = FontWeight.SemiBold
-
                     )
 
                 },
@@ -72,17 +76,12 @@ fun AnalyticsScreen(
                 navigationIcon = {
 
                     IconButton(
-
                         onClick = onBackClick
-
                     ) {
-
                         Icon(
-
                             imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
-
-                            contentDescription = "Back"
-
+                            contentDescription = "Back",
+                            modifier = Modifier.size(20.dp)
                         )
 
                     }
