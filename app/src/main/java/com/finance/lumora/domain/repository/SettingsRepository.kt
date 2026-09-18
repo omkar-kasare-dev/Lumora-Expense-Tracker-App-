@@ -40,6 +40,10 @@ interface SettingsRepository {
 
     suspend fun setMonthlyBudget(amount: Double)
 
+    // Large Expense Alert
+    val largeExpenseThreshold: Flow<Double>
+    suspend fun setLargeExpenseThreshold(amount: Double)
+
     // Alert Tracking
     val budgetAlertMonth: Flow<String>
     val lastBudgetAlertLevel: Flow<BudgetAlertLevel>

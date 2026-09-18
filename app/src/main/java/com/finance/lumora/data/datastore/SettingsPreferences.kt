@@ -96,6 +96,15 @@ class SettingsPreferences @Inject constructor(
         preferences[PreferenceKeys.LAST_BUDGET_ALERT_LEVEL] ?: ""
     }
 
+    // Large Expense Threshold
+    val largeExpenseThreshold: Flow<Double> =
+        context.dataStore.data.map { preferences ->
+
+            preferences[
+                PreferenceKeys.LARGE_EXPENSE_THRESHOLD
+            ] ?: DEFAULT_LARGE_EXPENSE_THRESHOLD
+        }
+
     // =========================================================================
     // Save Theme
     suspend fun setTheme(
@@ -192,6 +201,23 @@ class SettingsPreferences @Inject constructor(
                 PreferenceKeys.BIOMETRIC_ENABLED
             ] = enabled
         }
+    }
+
+    // Save Large Expense Threshold
+    suspend fun setLargeExpenseThreshold(
+        amount: Double
+    ) {
+
+        context.dataStore.edit { preferences ->
+
+            preferences[
+                PreferenceKeys.LARGE_EXPENSE_THRESHOLD
+            ] = amount
+        }
+    }
+
+    private companion object {
+        const val DEFAULT_LARGE_EXPENSE_THRESHOLD = 5000.0
     }
 
 }

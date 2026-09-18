@@ -37,5 +37,8 @@ object PreferenceKeys {
     val LAST_BUDGET_ALERT_LEVEL =
         stringPreferencesKey("last_budget_alert_level")
 
+    val LARGE_EXPENSE_THRESHOLD =
+        doublePreferencesKey("large_expense_threshold")
+
 }
 

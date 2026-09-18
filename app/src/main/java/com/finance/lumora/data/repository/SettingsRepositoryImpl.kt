@@ -82,6 +82,18 @@ class SettingsRepositoryImpl @Inject constructor(
         }
     }
 //---------------------------------------------------------------------
+
+    //Large Expense:
+
+    // Large Expense Threshold
+    override val largeExpenseThreshold: Flow<Double>
+        get() = settingsPreferences.largeExpenseThreshold
+
+    override suspend fun setLargeExpenseThreshold(amount: Double) {
+        settingsPreferences.setLargeExpenseThreshold(amount)
+    }
+
+    //---------------------
     override val budgetAlertMonth: Flow<String>
         get() = settingsPreferences.budgetAlertMonth
 
