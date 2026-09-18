@@ -18,6 +18,7 @@ import com.finance.lumora.presentation.auth.screen.LoginScreen
 import com.finance.lumora.presentation.auth.screen.RegisterScreen
 import com.finance.lumora.presentation.category.screen.CategoryScreen
 import com.finance.lumora.presentation.dashboard.screen.DashboardScreen
+import com.finance.lumora.presentation.news.NewsScreen
 import com.finance.lumora.presentation.notification.NotificationRoute
 import com.finance.lumora.presentation.notification.NotificationScreen
 import com.finance.lumora.presentation.profile.components.EditProfileRoute
@@ -345,6 +346,11 @@ fun LumoraNavGraph(
         // AURIX -
         composable(route = Screen.Aurix.route) {
             AurixScreen()
+        }
+
+        // News API
+        composable(Screen.News.route) {
+            NewsScreen()
         }
 
     }

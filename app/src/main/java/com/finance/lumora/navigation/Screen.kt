@@ -55,4 +55,6 @@ sealed class Screen(val route: String) {
 
     data object Aurix : Screen("aurix")
 
+    data object News: Screen("news")
+
 }
