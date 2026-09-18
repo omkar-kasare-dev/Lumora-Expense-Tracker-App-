@@ -18,6 +18,7 @@ import com.finance.lumora.presentation.auth.screen.LoginScreen
 import com.finance.lumora.presentation.auth.screen.RegisterScreen
 import com.finance.lumora.presentation.category.screen.CategoryScreen
 import com.finance.lumora.presentation.dashboard.screen.DashboardScreen
+import com.finance.lumora.presentation.notification.NotificationRoute
 import com.finance.lumora.presentation.notification.NotificationScreen
 import com.finance.lumora.presentation.profile.components.EditProfileRoute
 import com.finance.lumora.presentation.profile.screen.ProfileScreen
@@ -187,44 +188,38 @@ fun LumoraNavGraph(
         //--------------------------------------------------
         // Notifications
         //--------------------------------------------------
-        val sampleNotifications = listOf(
-            NotificationItem(
-                title = "Large Expense Warning",
-                message = "You spent ₹14,500 at Electronics Hub. You've reached 85% of your monthly shopping budget.",
-                timestampMillis = System.currentTimeMillis() - TimeUnit.MINUTES.toMillis(25),
-                type = NotificationType.TRANSACTION_ALERT,
-                isRead = false
-            ),
-            NotificationItem(
-                title = "New Device Login Detected",
-                message = "Your Lumora account was accessed from Chrome on Windows (Mumbai, India).",
-                timestampMillis = System.currentTimeMillis() - TimeUnit.HOURS.toMillis(3),
-                type = NotificationType.SECURITY,
-                isRead = false
-            ),
-            NotificationItem(
-                title = "Salary Credited 🎉",
-                message = "₹85,000 credited to your HDFC Bank account ****4102.",
-                timestampMillis = System.currentTimeMillis() - TimeUnit.HOURS.toMillis(18),
-                type = NotificationType.TRANSACTION_ALERT,
-                isRead = true
-            ),
-            NotificationItem(
-                title = "System Maintenance",
-                message = "Lumora cloud sync will be undergoing scheduled maintenance tonight from 2:00 AM to 3:00 AM IST.",
-                timestampMillis = System.currentTimeMillis() - TimeUnit.DAYS.toMillis(2),
-                type = NotificationType.SYSTEM,
-                isRead = true
-            )
-        )
 
         composable(route = Screen.Notifications.route) {
-            NotificationScreen(
-                notifications = sampleNotifications,
-                onBackClick = { navController.popBackStack() },
-                onNotificationClick = { notification -> },
-                onMarkAllAsReadClick = { },
-                onClearAllClick = { }
+            NotificationRoute(
+                onBackClick = {
+                    navController.popBackStack()
+                },
+                onNotificationClick = { notification ->
+                    when (notification.type) {
+
+                        NotificationType.TRANSACTION_ALERT,
+                        NotificationType.INCOME_ADDED,
+                        NotificationType.LARGE_EXPENSE_WARNING -> {
+                            navController.navigate(Screen.Transactions.route)
+                        }
+
+                        NotificationType.BUDGET_ALERT -> {
+                            navController.navigate(Screen.SetBudget.route)
+                        }
+
+                        NotificationType.SECURITY -> {
+                            navController.navigate(Screen.Settings.route)
+                        }
+
+                        NotificationType.SYSTEM -> {
+                            navController.navigate(Screen.AppVersionScreen.route)
+                        }
+
+                        NotificationType.PROMOTION -> {
+                            navController.navigate(Screen.Dashboard.route)
+                        }
+                    }
+                }
             )
         }
 
