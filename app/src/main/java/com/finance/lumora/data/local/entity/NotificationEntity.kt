@@ -12,5 +12,6 @@ data class NotificationEntity(
     val message: String,
     val timestampMillis: Long,
     val isRead: Boolean,
-    val type: NotificationType
+    val type: NotificationType,
+    val actionUrl: String? = null
 )
