@@ -6,6 +6,7 @@ import com.finance.lumora.data.local.dao.SubCategoryDao
 import com.finance.lumora.data.local.dao.TransactionDao
 import com.finance.lumora.data.repository.CategoryRepositoryImpl
 import com.finance.lumora.data.repository.DashboardRepositoryImpl
+import com.finance.lumora.data.repository.NewsRepositoryImpl
 import com.finance.lumora.data.repository.NotificationRepositoryImpl
 import com.finance.lumora.data.repository.SubCategoryRepositoryImpl
 import com.finance.lumora.data.repository.TransactionRepositoryImpl
@@ -17,6 +18,7 @@ import com.finance.lumora.domain.repository.SubCategoryRepository
 import com.finance.lumora.domain.repository.TransactionRepository
 import com.finance.lumora.domain.search.repository.SearchRepository
 import com.finance.lumora.data.repository.SettingsRepositoryImpl
+import com.finance.lumora.domain.repository.NewsRepository
 import com.finance.lumora.domain.repository.NotificationRepository
 import com.finance.lumora.domain.repository.SettingsRepository
 import dagger.Module
@@ -134,6 +136,14 @@ object RepositoryModule {
         notificationRepositoryImpl: NotificationRepositoryImpl
     ): NotificationRepository {
         return notificationRepositoryImpl
+    }
+
+    @Provides
+    @Singleton
+    fun bindNewsRepository(
+        impl: NewsRepositoryImpl
+    ): NewsRepository{
+        return impl
     }
 
 
