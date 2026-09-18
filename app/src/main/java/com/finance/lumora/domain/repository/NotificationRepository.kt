@@ -8,6 +8,7 @@ interface NotificationRepository {
 
 
     fun getNotifications(): Flow<List<NotificationItem>>
+    suspend fun addNotification(notification: NotificationItem)
 
     suspend fun markAsRead(notificationId: String)
 

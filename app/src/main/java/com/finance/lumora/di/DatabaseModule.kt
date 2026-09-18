@@ -3,9 +3,12 @@ package com.finance.lumora.di
 import android.content.Context
 import androidx.room.Room
 import com.finance.lumora.data.local.dao.CategoryDao
+import com.finance.lumora.data.local.dao.NewsDao
+import com.finance.lumora.data.local.dao.NotificationDao
 import com.finance.lumora.data.local.dao.SubCategoryDao
 import com.finance.lumora.data.local.dao.TransactionDao
 import com.finance.lumora.data.local.database.LumoraDatabase
+import com.finance.lumora.data.local.database.MIGRATION_2_3
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -30,9 +33,11 @@ object DatabaseModule {
             LumoraDatabase::class.java,
             "lumora_database"
         )
-            .fallbackToDestructiveMigration()
+            .addMigrations(MIGRATION_2_3)
             .build()
     }
+
+
 
 
     @Provides
@@ -58,5 +63,24 @@ object DatabaseModule {
     fun provideSubCategoryDao(
         database: LumoraDatabase
     ): SubCategoryDao = database.subCategoryDao()
+
+
+    @Provides
+    @Singleton
+    fun provideNewsDao(
+        database: LumoraDatabase
+    ): NewsDao {
+        return database.newsDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideNotificationDao(
+        database: LumoraDatabase
+    ): NotificationDao {
+        return database.notificationDao()
+    }
+
+
 
 }
