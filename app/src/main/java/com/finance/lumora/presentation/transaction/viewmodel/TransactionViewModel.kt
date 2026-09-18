@@ -29,6 +29,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
 
 import com.finance.lumora.notifications.BudgetAlertCoordinator
+import com.finance.lumora.notifications.TransactionNotifier
 
 /**
  * ViewModel responsible for handling
@@ -39,7 +40,8 @@ class TransactionViewModel @Inject constructor(
     private val transactionUseCases: TransactionUseCases,
     private val categoryUseCases: CategoryUseCases,
     private val subCategoryUseCases: SubCategoryUseCases,
-    private val budgetAlertCoordinator: BudgetAlertCoordinator
+    private val budgetAlertCoordinator: BudgetAlertCoordinator,
+    private val transactionNotifier: TransactionNotifier
 ) : ViewModel() {
 
     // UI State
@@ -523,23 +525,22 @@ class TransactionViewModel @Inject constructor(
 
                 ValidationResult.Success -> {
 
-                    // ---------------------------------------------------------
-                    // Budget Alert Evaluation
-                    // ---------------------------------------------------------
-                    //
-                    // Only expense transactions can affect the
-                    // monthly budget.
-                    //
-                    // The coordinator itself checks:
-                    //
-                    // 1. Notifications enabled
-                    // 2. Budget alerts enabled
-                    // 3. Valid monthly budget
-                    // 4. Current monthly expense
-                    // 5. Previous alert level
-                    //
-                    // Therefore we don't duplicate that logic here.
-                    // ---------------------------------------------------------
+                    try {
+
+                        transactionNotifier.notifyTransactionAdded(
+                            transaction = transaction,
+                            categoryName = category.name
+                        )
+
+                    } catch (e: Exception) {
+
+                        Log.e(
+                            "TRANSACTION_NOTIFIER",
+                            "Failed to create transaction notification",
+                            e
+                        )
+
+                    }
 
                     if (
                         currentState.transactionType ==

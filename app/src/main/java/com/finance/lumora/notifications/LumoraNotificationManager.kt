@@ -1,6 +1,7 @@
 package com.finance.lumora.notifications
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
@@ -28,6 +29,7 @@ class LumoraNotificationManager @Inject constructor(
      * Permission is checked before attempting to post
      * the notification.
      */
+    @SuppressLint("MissingPermission")
     @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
     fun showGeneralNotification(
         title: String,
@@ -66,6 +68,8 @@ class LumoraNotificationManager @Inject constructor(
      * and notification ID so they do not overwrite general
      */
     // LumoraNotificationManager.kt
+
+    @SuppressLint("MissingPermission")
     @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
     fun showBudgetAlertNotification(
         title: String,
