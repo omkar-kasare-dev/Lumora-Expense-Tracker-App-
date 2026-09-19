@@ -129,16 +129,7 @@ class TransactionViewModel @Inject constructor(
             TransactionEvent.SaveTransaction -> {
                 saveTransaction()
             }
-/*
-            is TransactionEvent.EditTransaction -> {
-                editTransaction(event.transactionId)
-            }
 
-            is TransactionEvent.DeleteTransaction -> {
-                deleteTransaction(event.transactionId)
-            }
-
- */
             // Transaction crud:
             is TransactionEvent.EditTransaction -> {
 
@@ -147,16 +138,7 @@ class TransactionViewModel @Inject constructor(
                 )
 
             }
-/*
-            is TransactionEvent.DeleteTransaction -> {
 
-                deleteTransaction(
-                    event.transaction
-                )
-
-            }
-
- */
             is TransactionEvent.ShowDeleteDialog -> {
 
                 showDeleteDialog(
@@ -175,30 +157,6 @@ class TransactionViewModel @Inject constructor(
 
                 confirmDeleteTransaction()
 
-            }
-
-            // ----------------------------------------------------
-            // Search
-            // ----------------------------------------------------
-
-            is TransactionEvent.SearchQueryChanged -> {
-                updateSearchQuery(event.query)
-            }
-
-            // ----------------------------------------------------
-            // Filters
-            // ----------------------------------------------------
-
-            is TransactionEvent.CategoryFilterChanged -> {
-                updateCategoryFilter(event.category)
-            }
-
-            is TransactionEvent.TypeFilterChanged -> {
-                updateTypeFilter(event.type)
-            }
-
-            TransactionEvent.ClearFilters -> {
-                clearFilters()
             }
 
             // ----------------------------------------------------
@@ -286,11 +244,6 @@ class TransactionViewModel @Inject constructor(
             else -> {}
         }
     }
-
-
-// Input Handlers
-
-
 // Input Handlers
 // ----------------------------------------------------
 
@@ -360,100 +313,10 @@ class TransactionViewModel @Inject constructor(
     }
 
     // input Handler End:
-// CRUD Operations
-
-
+     // CRUD Operations
      //Saves a new transaction.
     /**
      * Saves a new transaction or updates an existing one.
-     */
-    /*
-    // Original Save Transaction
-
-    private fun saveTransaction() {
-
-        viewModelScope.launch {
-
-            val currentState = state.value
-
-            val category = currentState.selectedCategory
-
-            if (category == null) {
-
-                _uiEffect.emit(
-                    TransactionUiEffect.ShowSnackbar(
-                        "Please select a category."
-                    )
-                )
-
-                return@launch
-            }
-
-            val amount = currentState.amount.toDoubleOrNull()
-
-            if (amount == null) {
-
-                _uiEffect.emit(
-                    TransactionUiEffect.ShowSnackbar(
-                        "Please enter a valid amount."
-                    )
-                )
-
-                return@launch
-            }
-
-            val transaction = Transaction(
-                id = currentState.editingTransactionId ?: 0L,
-                amount = amount,
-                type = currentState.transactionType,
-                categoryId = category.id,
-                note = currentState.note.ifBlank { null },
-                transactionDate = currentState.selectedDate,
-                updatedAt = System.currentTimeMillis()
-            )
-
-            val result = if (currentState.isEditMode) {
-
-                transactionUseCases.updateTransaction(transaction)
-
-            } else {
-
-                transactionUseCases.addTransaction(transaction)
-
-            }
-
-            when (result) {
-
-                ValidationResult.Success -> {
-
-                    _uiEffect.emit(
-                        TransactionUiEffect.ShowSnackbar(
-                            if (currentState.isEditMode)
-                                "Transaction updated successfully."
-                            else
-                                "Transaction saved successfully."
-                        )
-                    )
-
-                    resetForm()
-
-                    _uiEffect.emit(
-                        TransactionUiEffect.NavigateBack
-                    )
-                }
-
-                is ValidationResult.Error -> {
-
-                    _uiEffect.emit(
-                        TransactionUiEffect.ShowSnackbar(
-                            result.message
-                        )
-                    )
-                }
-            }
-        }
-    }
-
      */
     private fun saveTransaction() {
 
@@ -525,20 +388,24 @@ class TransactionViewModel @Inject constructor(
 
                 ValidationResult.Success -> {
 
-                    try {
+                    if (!currentState.isEditMode) {
 
-                        transactionNotifier.notifyTransactionAdded(
-                            transaction = transaction,
-                            categoryName = category.name
-                        )
+                        try {
 
-                    } catch (e: Exception) {
+                            transactionNotifier.notifyTransactionAdded(
+                                transaction = transaction,
+                                categoryName = category.name
+                            )
 
-                        Log.e(
-                            "TRANSACTION_NOTIFIER",
-                            "Failed to create transaction notification",
-                            e
-                        )
+                        } catch (e: Exception) {
+
+                            Log.e(
+                                "TRANSACTION_NOTIFIER",
+                                "Failed to create transaction notification",
+                                e
+                            )
+
+                        }
 
                     }
 
@@ -595,82 +462,6 @@ class TransactionViewModel @Inject constructor(
     }
 
     // save Transaction End:
-
-    // Edit Transaction
-    /*
-    private fun editTransaction(
-        transactionId: Long
-    ) {
-
-        viewModelScope.launch {
-
-            val transaction = transactionUseCases
-                .getTransactionById(transactionId)
-                ?: return@launch
-
-            val category = state.value.categories
-                .firstOrNull {
-                    it.id == transaction.categoryId
-                }
-
-            _state.update { currentState ->
-
-                currentState.copy(
-
-                    amount = transaction.amount.toString(),
-
-                    note = transaction.note.orEmpty(),
-
-                    selectedCategory = category,
-
-                    transactionType = transaction.type,
-
-                    selectedDate = transaction.transactionDate,
-
-                    editingTransactionId = transaction.id,
-
-                    isEditMode = true
-
-                )
-            }
-        }
-    }
-
-    // Edit Transaction End:
-
-    /**
-     * Deletes a transaction.
-     */
-    private fun deleteTransaction(
-        transactionId: Long
-    )
-
-    {
-
-        viewModelScope.launch {
-
-            val transaction = transactionUseCases
-                .getTransactionById(transactionId)
-                ?: return@launch
-
-            transactionUseCases.deleteTransaction(transaction)
-
-            _uiEffect.emit(
-                TransactionUiEffect.ShowSnackbar(
-                    "Transaction deleted successfully."
-                )
-            )
-
-            if (state.value.editingTransactionId == transactionId) {
-                resetForm()
-            }
-        }
-    }
-
-    //--------------------------
-
-     */
-
     /**
      * Loads the selected transaction into the form
      * so the user can edit it.
@@ -708,40 +499,6 @@ class TransactionViewModel @Inject constructor(
                 isEditMode = true
 
             )
-
-        }
-
-    }
-
-    /**
-     * Deletes the selected transaction.
-     */
-    /**
-     * Deletes the selected transaction.
-     */
-    private fun deleteTransaction(
-        transaction: Transaction
-    ) {
-
-        viewModelScope.launch {
-
-            transactionUseCases.deleteTransaction(
-                transaction
-            )
-
-            _uiEffect.emit(
-                TransactionUiEffect.ShowSnackbar(
-                    "Transaction deleted successfully."
-                )
-            )
-
-            if (
-                state.value.editingTransactionId == transaction.id
-            ) {
-
-                resetForm()
-
-            }
 
         }
 
@@ -881,43 +638,7 @@ class TransactionViewModel @Inject constructor(
     }
     // refresh End: :
 
-    //---------------------------------------------
-
-// Search & Filters
-
-    private fun updateSearchQuery(
-        query: String
-    ) {
-
-        // TODO: Implement in Phase 4.3.4.8
-
-    }
-
-    private fun updateCategoryFilter(
-        category: Category?
-    ) {
-
-        // TODO: Implement in Phase 4.3.4.8
-
-    }
-
-    private fun updateTypeFilter(
-        type: TransactionType?
-    ) {
-
-        // TODO: Implement in Phase 4.3.4.8
-
-    }
-
-
-    private fun clearFilters() {
-
-        // TODO: Implement in Phase 4.3.4.8
-
-    }
-
     // Delete Dialog helper Methods:
-
     private fun showDeleteDialog(
         transaction: Transaction
     ) {
@@ -1144,6 +865,4 @@ class TransactionViewModel @Inject constructor(
         }
 
     }
-
-    // Dialog Functions:
 }

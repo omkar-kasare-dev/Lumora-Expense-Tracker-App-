@@ -40,25 +40,6 @@ fun AddTransactionDialog(
             ),
             modifier = modifier.fillMaxWidth()
         ) {
-            /*
-            TransactionForm(
-                state = state,
-                onAmountChanged = onAmountChanged,
-                onTypeChanged = onTypeChanged,
-                onCategoryChanged = onCategoryChanged,
-                onAddCategoryClick = {
-                    Log.d("CATEGORY_DIALOG", "Add Category Clicked")
-                    onAddCategoryClick()
-                },
-                onDateChanged = onDateChanged,
-                onNoteChanged = onNoteChanged,
-                onSaveClicked = {
-                    onSaveClicked()
-                    onDismissRequest() // Closes the dialog after hitting save
-                }
-            )
-
-             */
 
             TransactionForm(
 
