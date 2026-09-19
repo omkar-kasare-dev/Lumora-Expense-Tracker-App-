@@ -1,7 +1,6 @@
 package com.finance.lumora.data.local.converter
 
 
-
 import androidx.room.TypeConverter
 import com.finance.lumora.data.local.enums.TransactionType
 
