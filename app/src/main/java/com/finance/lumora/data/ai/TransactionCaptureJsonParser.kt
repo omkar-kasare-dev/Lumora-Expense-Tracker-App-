@@ -1,7 +1,5 @@
 package com.finance.lumora.data.ai
 
-
-
 import com.finance.lumora.data.ai.model.TransactionCaptureResponse
 import kotlinx.serialization.json.Json
 import javax.inject.Inject

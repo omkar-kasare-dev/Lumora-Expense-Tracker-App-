@@ -1,6 +1,5 @@
 package com.finance.lumora.data.ai.model
 
-
 import kotlinx.serialization.Serializable
 
 @Serializable
