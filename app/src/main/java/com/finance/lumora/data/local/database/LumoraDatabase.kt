@@ -1,14 +1,5 @@
 package com.finance.lumora.data.local.database
-/*
-@Database(
-    entities = [
-        CategoryEntity::class,
-        TransactionEntity::class
-    ],
-    version = DatabaseConstants.DATABASE_VERSION,
-    exportSchema = true
-)
-*/
+
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
