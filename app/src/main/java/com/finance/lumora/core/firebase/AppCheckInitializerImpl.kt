@@ -14,11 +14,4 @@ class AppCheckInitializerImpl : AppCheckInitializer {
             )
     }
 
-/*
-    override fun initialize(context: Context) {
-    // Production App Check provider will be configured here
-    // before the release build is published.
-  }
-
- */
 }
