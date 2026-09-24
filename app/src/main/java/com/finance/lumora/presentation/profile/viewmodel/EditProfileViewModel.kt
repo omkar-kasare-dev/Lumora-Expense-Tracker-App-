@@ -233,6 +233,7 @@ class EditProfileViewModel @Inject constructor(
         val updatedProfile = currentProfile.copy(
             fullName = trimmedName,
             email = trimmedEmail,
+            currency = currentState.currency,
             language = currentState.language
         )
 

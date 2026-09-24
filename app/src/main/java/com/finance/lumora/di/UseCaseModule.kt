@@ -34,13 +34,11 @@ import com.finance.lumora.domain.usecase.transaction.UpdateTransactionUseCase
 // Setting Imports:
 import com.finance.lumora.domain.usecase.settings.GetBiometricUseCase
 import com.finance.lumora.domain.usecase.settings.GetBudgetAlertsUseCase
-import com.finance.lumora.domain.usecase.settings.GetBudgetUseCase
 import com.finance.lumora.domain.usecase.settings.GetCurrencyUseCase
 import com.finance.lumora.domain.usecase.settings.GetNotificationsUseCase
 import com.finance.lumora.domain.usecase.settings.GetThemeUseCase
 import com.finance.lumora.domain.usecase.settings.SaveBiometricUseCase
 import com.finance.lumora.domain.usecase.settings.SaveBudgetAlertsUseCase
-import com.finance.lumora.domain.usecase.settings.SaveBudgetUseCase
 import com.finance.lumora.domain.usecase.settings.SaveCurrencyUseCase
 import com.finance.lumora.domain.usecase.settings.SaveNotificationsUseCase
 import com.finance.lumora.domain.usecase.settings.SaveThemeUseCase
@@ -170,8 +168,6 @@ object UseCaseModule {
     @Provides
     @Singleton
     fun provideSettingsUseCases(
-        getBudget: GetBudgetUseCase,
-        saveBudget: SaveBudgetUseCase,
 
         getTheme: GetThemeUseCase,
         saveTheme: SaveThemeUseCase,
@@ -190,8 +186,6 @@ object UseCaseModule {
     ): SettingsUseCases {
 
         return SettingsUseCases(
-            getBudget = getBudget,
-            saveBudget = saveBudget,
 
             getTheme = getTheme,
             saveTheme = saveTheme,

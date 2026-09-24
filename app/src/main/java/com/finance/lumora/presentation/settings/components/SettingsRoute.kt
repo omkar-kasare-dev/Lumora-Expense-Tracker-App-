@@ -44,8 +44,6 @@ fun SettingsRoute(
     onProfileClick: () -> Unit,
     onSetBudgetClick: () -> Unit,
     onChangePasswordClick: () -> Unit,
-    onExportDataClick: () -> Unit,
-    onClearCacheClick: () -> Unit,
     onPrivacyPolicyClick: () -> Unit,
     onTermsClick: () -> Unit,
     onAppVersionClick: ()->Unit,

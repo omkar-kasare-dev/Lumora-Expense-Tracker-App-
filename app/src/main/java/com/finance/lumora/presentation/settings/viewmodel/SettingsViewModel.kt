@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -93,29 +94,19 @@ class SettingsViewModel @Inject constructor(
      * Settings UI State
      * ----------------------------------------------------
      *
-     * Combines UserSettings with the monthly budget.
+     * Monthly budget is intentionally NOT part of this state -
+     * it's owned exclusively by SetBudgetViewModel /
+     * SaveMonthlyBudgetUseCase, the actual screen users use
+     * to set their budget.
      */
-    val uiState: StateFlow<SettingsUiState> = combine(
-
-        userSettingsFlow,
-
-        settingsUseCases.getBudget()
-
-    ) { settings, monthlyBudget ->
-
-        SettingsUiState(
-
-            settings = settings,
-
-            monthlyBudget = monthlyBudget,
-
-            isLoading = false,
-
-            error = null
-
-        )
-
-    }
+    val uiState: StateFlow<SettingsUiState> = userSettingsFlow
+        .map { settings ->
+            SettingsUiState(
+                settings = settings,
+                isLoading = false,
+                error = null
+            )
+        }
         .onStart {
 
             emit(
@@ -196,13 +187,6 @@ class SettingsViewModel @Inject constructor(
 
             }
 
-            is SettingsEvent.ChangeBudget -> {
-
-                saveBudget(
-                    event.amount
-                )
-
-            }
         }
     }
 
@@ -265,7 +249,6 @@ class SettingsViewModel @Inject constructor(
      * Save Budget Alerts
      * ----------------------------------------------------
      */
-    // SettingsViewModel.kt
     private fun saveBudgetAlerts(enabled: Boolean) {
         viewModelScope.launch {
             settingsUseCases.saveBudgetAlerts(enabled)
@@ -295,23 +278,6 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
-    /**
-     * ----------------------------------------------------
-     * Save Monthly Budget
-     * ----------------------------------------------------
-     */
-    private fun saveBudget(
-        amount: Double
-    ) {
-
-        viewModelScope.launch {
-
-            settingsUseCases.saveBudget(
-                amount
-            )
-
-        }
-    }
     fun onTestBudgetAlertClicked() {
         budgetAlertWorkScheduler.triggerImmediateBudgetCheck()
     }

@@ -30,6 +30,7 @@ data class RegisterState(
 
     val passwordError: String? = null,
 
-    val confirmPasswordError: String? = null
+    val confirmPasswordError: String? = null,
+    val profileImageUploadFailed: Boolean = false
 
 )

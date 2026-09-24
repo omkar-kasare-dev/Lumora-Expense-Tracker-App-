@@ -73,6 +73,10 @@ class BudgetAlertCoordinator @Inject constructor(
         Log.d(TAG, "Current Level: $currentLevel | Previous Level: $previousLevel")
 
         if (currentLevel.ordinal <= previousLevel.ordinal) {
+
+            if (currentLevel != previousLevel || storedMonth != currentMonth) {
+                settingsRepository.setBudgetAlertState(currentMonth, currentLevel)
+            }
             Log.w(TAG, "Evaluation stopped: Current level ($currentLevel) <= Previous level ($previousLevel).")
             return
         }

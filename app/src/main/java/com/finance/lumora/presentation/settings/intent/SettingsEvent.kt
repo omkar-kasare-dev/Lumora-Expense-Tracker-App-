@@ -24,7 +24,4 @@ sealed interface SettingsEvent {
         val enabled: Boolean
     ) : SettingsEvent
 
-    data class ChangeBudget(
-        val amount: Double
-    ) : SettingsEvent
 }

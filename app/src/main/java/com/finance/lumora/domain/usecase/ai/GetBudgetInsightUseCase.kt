@@ -1,11 +1,10 @@
 package com.finance.lumora.domain.usecase.ai
 
 import com.finance.lumora.domain.model.ai.BudgetInsight
+import com.finance.lumora.domain.usecase.settings.GetBudgetUseCase
 import com.finance.lumora.domain.usecase.transaction.GetMonthlyExpenseUseCase
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
-
-import com.finance.lumora.domain.usecase.settings.GetBudgetUseCase
 
 class GetBudgetInsightUseCase @Inject constructor(
     private val getMonthlyExpenseUseCase: GetMonthlyExpenseUseCase,

@@ -5,7 +5,6 @@ import com.finance.lumora.domain.analytics.usecase.AnalyticsUseCases
 import com.finance.lumora.domain.model.ai.FinanceCategorySummary
 import com.finance.lumora.domain.model.ai.FinanceContext
 import com.finance.lumora.domain.model.ai.FinancePeriod
-import com.finance.lumora.domain.usecase.settings.GetBudgetUseCase
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -13,6 +12,7 @@ import javax.inject.Inject
 import kotlinx.coroutines.flow.first
 
 import com.finance.lumora.domain.repository.SettingsRepository
+import com.finance.lumora.domain.usecase.settings.GetBudgetUseCase
 
 class FinanceContextBuilder @Inject constructor(
     private val analyticsUseCases: AnalyticsUseCases,
