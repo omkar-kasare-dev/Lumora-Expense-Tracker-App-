@@ -13,19 +13,6 @@ sealed class Screen(val route: String) {
 
     object Transactions : Screen("transactions")
 
-    object AddTransaction : Screen("add_transaction")
-
-    object TransactionDetails :
-        Screen("transaction_details/{transactionId}") {
-
-        fun createRoute(transactionId: Long): String {
-
-            return "transaction_details/$transactionId"
-
-        }
-
-    }
-
     object Categories : Screen("categories")
 
 
@@ -34,12 +21,10 @@ sealed class Screen(val route: String) {
 
     object Notifications : Screen("notifications")
 
-    object Reports : Screen("reports")
 
     object Settings : Screen("settings")
 
     object PrivacyPolicy : Screen("privacy_policy")
-
 
     data object Analytics : Screen("analytics")
 
@@ -50,7 +35,6 @@ sealed class Screen(val route: String) {
     data object ChangePassword : Screen("change_password")
     object TermsOfService:Screen("Terms_Of_Service")
     object AppVersionScreen: Screen("AppVersionScreen")
-
 
     data object Aurix : Screen("aurix")
 

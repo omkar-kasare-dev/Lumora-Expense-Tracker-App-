@@ -33,9 +33,6 @@ import com.finance.lumora.presentation.settings.screen.SetBudgetScreen
 import com.finance.lumora.presentation.splash.SplashScreen
 import com.finance.lumora.presentation.transaction.screen.TransactionScreen
 import java.util.concurrent.TimeUnit
-
-
-
 @Composable
 fun LumoraNavGraph(
     modifier: Modifier = Modifier
@@ -45,7 +42,6 @@ fun LumoraNavGraph(
     NavHost(
         navController = navController,
         startDestination = Screen.Splash.route,
-       // startDestination = Screen.GeminiTest.route,
         modifier = modifier
     ) {
         //--------------------------------------------------
@@ -83,9 +79,10 @@ fun LumoraNavGraph(
                 },
                 onRegisterSuccess = {
                     navController.navigate(Screen.Dashboard.route) {
-                        popUpTo(Screen.Register.route) {
+                        popUpTo(navController.graph.id) {
                             inclusive = true
                         }
+                        launchSingleTop = true
                     }
                 }
             )
@@ -117,28 +114,6 @@ fun LumoraNavGraph(
                 onBackClick = { navController.popBackStack() },
                 navController = navController
             )
-        }
-
-        //--------------------------------------------------
-        // Add Transaction
-        //--------------------------------------------------
-        composable(route = Screen.AddTransaction.route) {
-            // TODO: AddTransactionScreen(navController)
-        }
-
-        //--------------------------------------------------
-        // Transaction Details
-        //--------------------------------------------------
-        composable(
-            route = Screen.TransactionDetails.route,
-            arguments = listOf(
-                navArgument("transactionId") {
-                    type = NavType.LongType
-                }
-            )
-        ) {
-            val transactionId = it.arguments?.getLong("transactionId") ?: -1L
-            // TODO: TransactionDetailsScreen(transactionId = transactionId)
         }
 
         //--------------------------------------------------
@@ -176,8 +151,7 @@ fun LumoraNavGraph(
                 onLogoutClick = {
                     profileViewModel.logout()
                     navController.navigate(Screen.Login.route) {
-                        // ✅ FIX: Safely pop up to the start destination (Splash) inclusively
-                        popUpTo(Screen.Splash.route) {
+                        popUpTo(navController.graph.id) {
                             inclusive = true
                         }
                         launchSingleTop = true
@@ -244,14 +218,6 @@ fun LumoraNavGraph(
 
                 onChangePasswordClick = {
                     navController.navigate(Screen.ChangePassword.route)
-                },
-
-                onExportDataClick = {
-                    // TODO: Phase 10.7
-                },
-
-                onClearCacheClick = {
-                    // TODO: Phase 10.7
                 },
 
                 onPrivacyPolicyClick = {
@@ -350,7 +316,7 @@ fun LumoraNavGraph(
 
         // News API
         composable(Screen.News.route) {
-            NewsScreen()
+            NewsScreen(onBackClick = { navController.popBackStack() })
         }
 
     }

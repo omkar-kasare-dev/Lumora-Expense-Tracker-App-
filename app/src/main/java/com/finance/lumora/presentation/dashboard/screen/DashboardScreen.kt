@@ -1,6 +1,7 @@
 package com.finance.lumora.presentation.dashboard.screen
 
 
+import android.util.Log
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
@@ -57,13 +58,17 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.finance.lumora.navigation.BottomNavigationBar
 import com.finance.lumora.navigation.Screen
+import com.finance.lumora.presentation.category.components.AddCategoryDialog
 import com.finance.lumora.presentation.dashboard.components.DashboardError
 import com.finance.lumora.presentation.dashboard.components.DashboardTopBar
 import com.finance.lumora.presentation.dashboard.components.EmptyDashboard
 import com.finance.lumora.presentation.dashboard.effect.DashboardUiEffect
 import com.finance.lumora.presentation.dashboard.event.DashboardEvent
 import com.finance.lumora.presentation.dashboard.viewmodel.DashboardViewModel
+import com.finance.lumora.presentation.subcategory.components.AddSubCategoryDialog
 import com.finance.lumora.presentation.transaction.viewmodel.TransactionViewModel
+import com.finance.lumora.presentation.transaction.components.AddTransactionDialog
+import com.finance.lumora.presentation.transaction.event.TransactionEvent
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -98,10 +103,13 @@ fun DashboardScreen(
                     snackbarHostState.showSnackbar(effect.message)
                 }
                 DashboardUiEffect.NavigateToAddTransaction -> {
-                    // TODO Navigation
+                    isAddTransactionDialogOpen = true
                 }
                 DashboardUiEffect.NavigateToTransactions -> {
-                    // TODO Navigation
+                    // Navigate to the Transactions screen
+                    if (navController.currentDestination?.route != Screen.Transactions.route) {
+                        navController.navigate(Screen.Transactions.route)
+                    }
                 }
                 is DashboardUiEffect.NavigateToTransactionDetails -> {
                     // TODO Navigation
@@ -135,10 +143,10 @@ fun DashboardScreen(
                         }
                     },
                     onNotificationClick = {
-                        navController.navigate("Notifications")
+                        navController.navigate(Screen.Notifications.route)
                     },
                     onProfileClick = {
-                        navController.navigate("Profile")
+                        navController.navigate(Screen.Profile.route)
                     }
                 )
             }
@@ -156,6 +164,67 @@ fun DashboardScreen(
             BottomNavigationBar(navController = navController)
         }
     ) { paddingValues ->
+
+
+
+        AddTransactionDialog(
+            showDialog = isAddTransactionDialogOpen,
+            state = transactionState,
+            onAmountChanged = {
+                transactionViewModel.onEvent(TransactionEvent.AmountChanged(it))
+            },
+            onTypeChanged = {
+                transactionViewModel.onEvent(TransactionEvent.TypeChanged(it))
+            },
+            onCategoryChanged = {
+                transactionViewModel.onEvent(TransactionEvent.CategoryChanged(it))
+            },
+            onDateChanged = {
+                transactionViewModel.onEvent(TransactionEvent.DateChanged(it))
+            },
+            onSubCategoryChanged = {
+                transactionViewModel.onEvent(TransactionEvent.SubCategoryChanged(it))
+            },
+            onAddSubCategoryClick = {
+                transactionViewModel.onEvent(TransactionEvent.ShowAddSubCategoryDialog)
+            },
+            onNoteChanged = {
+                transactionViewModel.onEvent(TransactionEvent.NoteChanged(it))
+            },
+            onSaveClicked = {
+                transactionViewModel.onEvent(TransactionEvent.SaveTransaction)
+                isAddTransactionDialogOpen = false
+            },
+            onAddCategoryClick = {
+                transactionViewModel.onEvent(TransactionEvent.ShowAddCategoryDialog)
+            },
+            onDismissRequest = {
+                isAddTransactionDialogOpen = false
+            }
+        )
+
+        if (transactionState.showAddCategoryDialog) {
+            AddCategoryDialog(
+                onDismiss = {
+                    transactionViewModel.onEvent(TransactionEvent.DismissAddCategoryDialog)
+                },
+                onSave = { category ->
+                    Log.d("CATEGORY_SAVE", "Sending Event: ${category.name}")
+                    transactionViewModel.onEvent(TransactionEvent.SaveCustomCategory(category))
+                }
+            )
+        }
+
+        if (transactionState.showAddSubCategoryDialog) {
+            AddSubCategoryDialog(
+                onDismiss = {
+                    transactionViewModel.onEvent(TransactionEvent.DismissAddSubCategoryDialog)
+                },
+                onSave = { subCategory ->
+                    transactionViewModel.onEvent(TransactionEvent.SaveCustomSubCategory(subCategory))
+                }
+            )
+        }
 
         when {
             //------------------------------------------

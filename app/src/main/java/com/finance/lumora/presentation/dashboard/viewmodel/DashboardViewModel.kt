@@ -531,7 +531,9 @@ class DashboardViewModel @Inject constructor(
                 navigateToAddTransaction()
             }
             DashboardEvent.ViewAllTransactions -> {
-                navigateToTransactions()
+                viewModelScope.launch {
+                    _uiEffect.emit(DashboardUiEffect.NavigateToTransactions)
+                }
             }
             is DashboardEvent.TransactionClicked -> {
                 navigateToTransactionDetails(event.transaction)

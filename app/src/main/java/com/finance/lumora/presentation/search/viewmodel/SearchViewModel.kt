@@ -255,10 +255,15 @@ class SearchViewModel @Inject constructor(
                     }
                 }
 
+
                 // ERROR HANDLING
                 // ----------------------------------------------------
 
                 .catch {
+
+                    val hasActiveSearch =
+                        searchQuery.value.isNotBlank() ||
+                                _uiState.value.filters != SearchFilters()
 
                     _uiState.update {
 
@@ -271,7 +276,7 @@ class SearchViewModel @Inject constructor(
                                 false,
 
                             showEmptyState =
-                                true
+                                hasActiveSearch
 
                         )
                     }
@@ -280,7 +285,17 @@ class SearchViewModel @Inject constructor(
                 // RESULTS
                 // ----------------------------------------------------
 
+                // RESULTS
+// ----------------------------------------------------
+
                 .collect { results ->
+
+                    // FIX: previously showEmptyState was set to
+                    // results.isEmpty() unconditionally, which was also
+
+                    val hasActiveSearch =
+                        searchQuery.value.isNotBlank() ||
+                                _uiState.value.filters != SearchFilters()
 
                     _uiState.update {
 
@@ -293,7 +308,7 @@ class SearchViewModel @Inject constructor(
                                 false,
 
                             showEmptyState =
-                                results.isEmpty()
+                                hasActiveSearch && results.isEmpty()
 
                         )
                     }

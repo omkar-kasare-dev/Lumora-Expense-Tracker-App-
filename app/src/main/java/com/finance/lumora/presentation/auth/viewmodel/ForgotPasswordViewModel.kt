@@ -1,7 +1,6 @@
 package com.finance.lumora.presentation.auth.viewmodel
 
 
-
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.finance.lumora.domain.repository.AuthRepository
@@ -173,8 +172,13 @@ class ForgotPasswordViewModel @Inject constructor(
 
                             isLoading = false,
 
-                            errorMessage = exception.message
-                                ?: "Unable to send reset email."
+                            // Deliberately generic message - never reveal
+                            // whether a specific email is registered, to
+                            // avoid email enumeration regardless of the
+                            // Firebase Console "Email Enumeration Protection"
+                            // project setting.
+                            errorMessage = "Unable to send reset email. " +
+                                    "Please check the address and try again."
 
                         )
 

@@ -1,7 +1,5 @@
 package com.finance.lumora.presentation.search.screen
 
-
-
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box

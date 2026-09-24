@@ -73,6 +73,7 @@ fun ForgotPasswordScreen(
     /**
      * Success
      */
+/*
     LaunchedEffect(uiState.resetEmailSent) {
 
         if (uiState.resetEmailSent) {
@@ -88,6 +89,9 @@ fun ForgotPasswordScreen(
         }
 
     }
+
+ */
+
 
     AuthBackground {
 
