@@ -1,4 +1,4 @@
-package com.finance.lumora.presentation.news
+package com.finance.lumora.presentation.news.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -6,6 +6,9 @@ import com.finance.lumora.domain.model.NewsArticle
 import com.finance.lumora.domain.model.NewsScope
 import com.finance.lumora.domain.model.Result
 import com.finance.lumora.domain.usecase.news.GetFinanceNewsUseCase
+import com.finance.lumora.presentation.news.NewsEffect
+import com.finance.lumora.presentation.news.intent.NewsIntent
+import com.finance.lumora.presentation.news.state.NewsState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
