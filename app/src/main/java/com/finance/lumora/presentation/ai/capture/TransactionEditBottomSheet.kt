@@ -79,6 +79,9 @@ fun TransactionEditBottomSheet(
     var dateError by remember { mutableStateOf<String?>(null) }
     var datePickerVisible by remember { mutableStateOf(false) }
 
+    //
+    var categoryError by remember { mutableStateOf<String?>(null) }
+
     LaunchedEffect(resolvedDraft.category) {
         selectedCategory = resolvedDraft.category
     }
@@ -144,6 +147,8 @@ fun TransactionEditBottomSheet(
                         .fillMaxWidth()
                         .menuAnchor(),
                     label = { Text("Category") },
+                    isError = categoryError != null,
+                    supportingText = { categoryError?.let { Text(it) } },
                     trailingIcon = {
                         ExposedDropdownMenuDefaults.TrailingIcon(
                             expanded = categoryMenuExpanded
@@ -161,6 +166,7 @@ fun TransactionEditBottomSheet(
                             onClick = {
                                 selectedCategory = category
                                 categoryMenuExpanded = false
+                                categoryError = null
                             }
                         )
                     }
@@ -275,6 +281,7 @@ fun TransactionEditBottomSheet(
                         }
 
                         if (selectedCategory == null) {
+                            categoryError = "Please select a category."
                             return@Button
                         }
 
