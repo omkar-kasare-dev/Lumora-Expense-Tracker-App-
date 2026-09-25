@@ -138,40 +138,21 @@ class LoginViewModel @Inject constructor(
                 userRepository
                     .updateLastLogin(user.uid)
                     .onFailure {
-                        // Optional:
-                        // Log.e("Login", "Failed to update last login", it)
+                        // Non-critical - last-login timestamp failing to
+                        // update shouldn't block the user from getting in.
                     }
 
+                // Profile is fetched here only as a best-effort warm-up;
+                // DashboardViewModel independently re-fetches it with its
+                // own fallback, so a failure here is intentionally not
+                // treated as a login failure.
                 getUserProfile(user.uid)
 
-                    .onSuccess { profile ->
-
-                        _uiState.update {
-
-                            it.copy(
-
-                                isLoading = false,
-
-                                loginSuccess = true,
-
-                                //userProfile = profile
-
-                            )
-
-                        }
-
-                    }
-
                 _uiState.update {
-
                     it.copy(
-
                         isLoading = false,
-
                         loginSuccess = true
-
                     )
-
                 }
 
             }.onFailure { exception ->

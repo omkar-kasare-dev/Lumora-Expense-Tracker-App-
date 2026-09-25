@@ -90,9 +90,17 @@ class AuthRepositoryImpl @Inject constructor(
     /**
      * Logout current user.
      */
-    override suspend fun logout() {
+    override suspend fun logout(): Result<Unit> {
 
-        dataSource.logout()
+        // FIX: previously un-guarded - an exception here would
+        // propagate uncaught out of a viewModelScope.launch and
+        // crash the app on the single most common user action.
+        return try {
+            dataSource.logout()
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
 
     }
 
