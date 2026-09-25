@@ -19,6 +19,11 @@ val localProperties = Properties().apply {
     }
 }
 
+val localProps = Properties().apply {
+    val f = rootProject.file("local.properties")
+    if (f.exists()) f.inputStream().use { load(it) }
+}
+
 android {
     namespace = "com.finance.lumora"
     compileSdk =37
@@ -31,6 +36,7 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField("String", "FINNHUB_API_KEY", "\"${localProps.getProperty("FINNHUB_API_KEY", "")}\"")
 
         buildConfigField(
             "String",
