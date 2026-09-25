@@ -19,10 +19,10 @@ class AurixVoiceIntentRouter @Inject constructor() {
             return AurixVoiceIntent.ADD_TRANSACTION
         }
 
-        return if (isFinancialQuery(text)) {
-            AurixVoiceIntent.FINANCIAL_QUERY
-        } else {
+        return if (isTransactionRequest(text)) {  // move this check first, unchanged
             AurixVoiceIntent.ADD_TRANSACTION
+        } else {
+            AurixVoiceIntent.FINANCIAL_QUERY  // changed default
         }
     }
 
