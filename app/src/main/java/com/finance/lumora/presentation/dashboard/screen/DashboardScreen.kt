@@ -135,6 +135,7 @@ fun DashboardScreen(
                     .statusBarsPadding()
                     .padding(horizontal = 4.dp, vertical = 6.dp)
             ) {
+                // ✅ NEW CODE
                 DashboardTopBar(
                     userName = state.userName.ifBlank { "User" },
                     onSearchClick = {
@@ -145,10 +146,12 @@ fun DashboardScreen(
                     onNotificationClick = {
                         navController.navigate(Screen.Notifications.route)
                     },
-                    onProfileClick = {
-                        navController.navigate(Screen.Profile.route)
+                    onSettingsClick = {
+                        // Navigate to Settings screen
+                        navController.navigate(Screen.Settings.route)
                     }
                 )
+
             }
         },
         floatingActionButton = {
@@ -494,3 +497,4 @@ fun AurixFloatingActionButton(
         }
     }
 }
+//}
