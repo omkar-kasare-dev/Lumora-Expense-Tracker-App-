@@ -26,7 +26,7 @@ interface AuthRepository {
 
     ): Result<User>
 
-    suspend fun logout()
+    suspend fun logout(): Result<Unit>
 
     fun getCurrentUser(): User?
 
