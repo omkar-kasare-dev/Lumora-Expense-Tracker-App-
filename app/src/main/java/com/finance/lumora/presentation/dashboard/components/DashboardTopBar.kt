@@ -1,10 +1,5 @@
 package com.finance.lumora.presentation.dashboard.components
 
-
-
-
-
-
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -19,8 +14,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Notifications
-import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.Search
+import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -29,7 +24,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -45,7 +39,7 @@ fun DashboardTopBar(
     modifier: Modifier = Modifier,
     onSearchClick: () -> Unit,
     onNotificationClick: () -> Unit = {},
-    onProfileClick: () -> Unit = {}
+    onSettingsClick: () -> Unit = {}
 ) {
     Surface(
         modifier = modifier.fillMaxWidth(),
@@ -103,6 +97,7 @@ fun DashboardTopBar(
                 horizontalArrangement = Arrangement.spacedBy(6.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
+
                 TopBarActionButton(
                     icon = Icons.Outlined.Search,
                     contentDescription = "Search",
@@ -116,9 +111,9 @@ fun DashboardTopBar(
                 )
 
                 TopBarActionButton(
-                    icon = Icons.Outlined.Person,
-                    contentDescription = "Profile",
-                    onClick = onProfileClick
+                    icon = Icons.Outlined.Settings,
+                    contentDescription = "Settings",
+                    onClick = onSettingsClick
                 )
             }
         }
