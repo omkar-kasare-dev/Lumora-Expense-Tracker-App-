@@ -53,19 +53,10 @@ class AndroidVoiceInputProcessor @Inject constructor(
                     }
 
                     override fun onResults(results: Bundle?) {
-                        val matches =
-                            results?.getStringArrayList(
-                                SpeechRecognizer.RESULTS_RECOGNITION
-                            )
+                        val matches = results?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
 
-                        val finalText = matches
-                            ?.firstOrNull()
-                            ?.trim()
-                            .orEmpty()
-
-                        if (finalText.isNotBlank()) {
-                            onFinalResult(finalText)
-                        }
+                        val finalText = matches?.firstOrNull()?.trim().orEmpty()
+                        onFinalResult(finalText)
                     }
 
                     override fun onPartialResults(
