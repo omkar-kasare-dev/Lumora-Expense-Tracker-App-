@@ -62,7 +62,7 @@ object FirebaseModule {
     @Singleton
     fun provideGenerativeModel(): GenerativeModel {
             // Replace "gemini-1.5-flash" with your specific model name if needed
-            return Firebase.ai.generativeModel("gemini-1.5-flash")
+            return Firebase.ai.generativeModel("gemini-3.7-flash")
     }
 
 }
