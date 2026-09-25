@@ -5,6 +5,7 @@ import android.util.Log
 import com.finance.lumora.domain.model.ai.AurixException
 import com.finance.lumora.domain.repository.GeminiService
 import com.google.firebase.Firebase
+import com.google.firebase.ai.GenerativeModel
 import com.google.firebase.ai.ai
 import com.google.firebase.ai.type.FirebaseAIException
 import com.google.firebase.ai.type.GenerativeBackend
@@ -13,13 +14,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-class GeminiServiceImpl @Inject constructor() : GeminiService {
+class GeminiServiceImpl @Inject constructor(
+    private val model: GenerativeModel
+) : GeminiService {
 
-    private val model by lazy {
-        Firebase.ai(
-            backend = GenerativeBackend.googleAI()
-        ).generativeModel("gemini-3.7-flash")
-    }
+
 
     override suspend fun generateResponse(prompt: String): String = withContext(Dispatchers.IO) {
         try {
