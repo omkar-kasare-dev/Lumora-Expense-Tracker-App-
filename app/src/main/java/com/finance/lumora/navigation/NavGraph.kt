@@ -3,12 +3,9 @@ package com.finance.lumora.navigation
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
-import com.finance.lumora.domain.model.NotificationItem
 import com.finance.lumora.domain.model.NotificationType
 import com.finance.lumora.presentation.ai.screen.AurixScreen
 import com.finance.lumora.presentation.analytics.screen.AnalyticsScreen
@@ -18,9 +15,8 @@ import com.finance.lumora.presentation.auth.screen.LoginScreen
 import com.finance.lumora.presentation.auth.screen.RegisterScreen
 import com.finance.lumora.presentation.category.screen.CategoryScreen
 import com.finance.lumora.presentation.dashboard.screen.DashboardScreen
-import com.finance.lumora.presentation.news.NewsScreen
+import com.finance.lumora.presentation.news.screen.NewsScreen
 import com.finance.lumora.presentation.notification.NotificationRoute
-import com.finance.lumora.presentation.notification.NotificationScreen
 import com.finance.lumora.presentation.profile.components.EditProfileRoute
 import com.finance.lumora.presentation.profile.screen.ProfileScreen
 import com.finance.lumora.presentation.profile.viewmodel.ProfileViewModel
@@ -32,7 +28,7 @@ import com.finance.lumora.presentation.settings.components.TermsOfServiceScreen
 import com.finance.lumora.presentation.settings.screen.SetBudgetScreen
 import com.finance.lumora.presentation.splash.SplashScreen
 import com.finance.lumora.presentation.transaction.screen.TransactionScreen
-import java.util.concurrent.TimeUnit
+
 @Composable
 fun LumoraNavGraph(
     modifier: Modifier = Modifier
