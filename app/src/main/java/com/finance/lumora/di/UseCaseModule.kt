@@ -47,6 +47,8 @@ import com.finance.lumora.domain.usecase.transaction.GetMonthlyExpenseUseCase
 
 // Export usecase:
 import com.finance.lumora.domain.usecase.export.ExportDataUseCase
+import com.finance.lumora.domain.usecase.settings.GetLargeExpenseThresholdUseCase
+import com.finance.lumora.domain.usecase.settings.SaveLargeExpenseThresholdUseCase
 
 import dagger.Module
 import dagger.Provides
@@ -182,7 +184,10 @@ object UseCaseModule {
         saveBudgetAlerts: SaveBudgetAlertsUseCase,
 
         getBiometric: GetBiometricUseCase,
-        saveBiometric: SaveBiometricUseCase
+        saveBiometric: SaveBiometricUseCase,
+
+        getLargeExpenseThreshold: GetLargeExpenseThresholdUseCase,
+        saveLargeExpenseThreshold: SaveLargeExpenseThresholdUseCase
     ): SettingsUseCases {
 
         return SettingsUseCases(
@@ -200,7 +205,10 @@ object UseCaseModule {
             saveBudgetAlerts = saveBudgetAlerts,
 
             getBiometric = getBiometric,
-            saveBiometric = saveBiometric
+            saveBiometric = saveBiometric,
+
+            getLargeExpenseThreshold = getLargeExpenseThreshold,
+            saveLargeExpenseThreshold = saveLargeExpenseThreshold
         )
     }
 

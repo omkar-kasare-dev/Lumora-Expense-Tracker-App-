@@ -226,6 +226,7 @@ fun SettingsRoute(
             SettingsScreen(
 
                 settings = uiState.settings,
+                largeExpenseThreshold = uiState.largeExpenseThreshold,
 
                 // -------------------------------------------------
                 // Navigation
@@ -284,6 +285,16 @@ fun SettingsRoute(
                         )
                     )
                 },
+                onLargeExpenseThresholdChange = { amount ->
+
+                    viewModel.onEvent(
+                        SettingsEvent.ChangeLargeExpenseThreshold(
+                            amount
+                        )
+                    )
+                },
+
+
 
                 // -------------------------------------------------
                 // BIOMETRIC

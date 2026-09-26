@@ -24,4 +24,9 @@ sealed interface SettingsEvent {
         val enabled: Boolean
     ) : SettingsEvent
 
+
+    data class ChangeLargeExpenseThreshold(
+        val amount: Double
+    ) : SettingsEvent
+
 }

@@ -14,7 +14,6 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -94,19 +93,33 @@ class SettingsViewModel @Inject constructor(
      * Settings UI State
      * ----------------------------------------------------
      *
+     * Combines UserSettings with the large expense threshold.
      * Monthly budget is intentionally NOT part of this state -
      * it's owned exclusively by SetBudgetViewModel /
      * SaveMonthlyBudgetUseCase, the actual screen users use
      * to set their budget.
      */
-    val uiState: StateFlow<SettingsUiState> = userSettingsFlow
-        .map { settings ->
-            SettingsUiState(
-                settings = settings,
-                isLoading = false,
-                error = null
-            )
-        }
+    val uiState: StateFlow<SettingsUiState> = combine(
+
+        userSettingsFlow,
+
+        settingsUseCases.getLargeExpenseThreshold()
+
+    ) { settings, largeExpenseThreshold ->
+
+        SettingsUiState(
+
+            settings = settings,
+
+            largeExpenseThreshold = largeExpenseThreshold,
+
+            isLoading = false,
+
+            error = null
+
+        )
+
+    }
         .onStart {
 
             emit(
@@ -183,6 +196,14 @@ class SettingsViewModel @Inject constructor(
 
                 saveBiometric(
                     event.enabled
+                )
+
+            }
+
+            is SettingsEvent.ChangeLargeExpenseThreshold -> {
+
+                saveLargeExpenseThreshold(
+                    event.amount
                 )
 
             }
@@ -274,6 +295,37 @@ class SettingsViewModel @Inject constructor(
             settingsUseCases.saveBiometric(
                 enabled
             )
+
+        }
+    }
+
+    /**
+     * ----------------------------------------------------
+     * Save Large Expense Threshold
+     * ----------------------------------------------------
+     */
+    private fun saveLargeExpenseThreshold(
+        amount: Double
+    ) {
+
+        viewModelScope.launch {
+
+            try {
+
+                settingsUseCases.saveLargeExpenseThreshold(
+                    amount
+                )
+
+            } catch (e: Exception) {
+
+                // BudgetValidationException surfaces here if amount <= 0;
+                // no error-message field exists in SettingsUiState for
+                // this specific input yet, so this is silently ignored
+                // for now - the dialog's own input validation (amount > 0
+                // check before calling onLargeExpenseThresholdChange)
+                // should prevent this from being reachable in practice.
+
+            }
 
         }
     }
