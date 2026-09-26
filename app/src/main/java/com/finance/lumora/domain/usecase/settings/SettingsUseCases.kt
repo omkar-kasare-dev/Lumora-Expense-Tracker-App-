@@ -17,5 +17,8 @@ data class SettingsUseCases(
     val saveBudgetAlerts: SaveBudgetAlertsUseCase,
 
     val getBiometric: GetBiometricUseCase,
-    val saveBiometric: SaveBiometricUseCase
+    val saveBiometric: SaveBiometricUseCase,
+
+    val getLargeExpenseThreshold: GetLargeExpenseThresholdUseCase,
+    val saveLargeExpenseThreshold: SaveLargeExpenseThresholdUseCase
 )

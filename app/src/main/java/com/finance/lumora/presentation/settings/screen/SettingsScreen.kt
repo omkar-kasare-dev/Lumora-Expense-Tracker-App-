@@ -1,6 +1,5 @@
 package com.finance.lumora.presentation.settings.screen
 
-
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -29,11 +28,13 @@ import androidx.compose.material3.TextButton
 @Composable
 fun SettingsScreen(
     settings: UserSettings,
+    largeExpenseThreshold: Double = 5000.0,
     appVersion: String = "2.4.0",
     onBackClick: () -> Unit = {},
     onCurrencyChange: (String) -> Unit = {},
     onThemeChange: (AppTheme) -> Unit = {},
-    onSetBudgetClick: () -> Unit = {}, // Added callback parameter for navigation
+    onSetBudgetClick: () -> Unit = {},
+    onLargeExpenseThresholdChange: (Double) -> Unit = {},
     onBiometricToggle: (Boolean) -> Unit = {},
     onNotificationsToggle: (Boolean) -> Unit = {},
     onBudgetAlertsToggle: (Boolean) -> Unit = {},
@@ -48,6 +49,7 @@ fun SettingsScreen(
 ) {
     var showCurrencyDialog by remember { mutableStateOf(false) }
     var showThemeDialog by remember { mutableStateOf(false) }
+    var showThresholdDialog by remember { mutableStateOf(false) }
 
     // cache dialog
     var showClearCacheDialog by remember {
@@ -112,7 +114,6 @@ fun SettingsScreen(
                     onClick = { showThemeDialog = true }
                 )
                 SettingsDivider()
-                // ADDED: Set Monthly Budget Item
                 SettingsClickableItem(
                     icon = Icons.Outlined.AccountBalanceWallet,
                     title = "Monthly Budget",
@@ -153,6 +154,14 @@ fun SettingsScreen(
                         onClick = onTestBudgetAlertClick
                     )
                 }
+
+                SettingsDivider()
+                SettingsClickableItem(
+                    icon = Icons.Outlined.ReportProblem,
+                    title = "Large Expense Threshold",
+                    subtitle = "Get notified about unusually large expenses",
+                    onClick = { showThresholdDialog = true }
+                )
             }
 
             Spacer(modifier = Modifier.height(20.dp))
@@ -309,6 +318,62 @@ fun SettingsScreen(
             }
         )
     }
+
+    // --- LARGE EXPENSE THRESHOLD DIALOG ---
+    if (showThresholdDialog) {
+        var thresholdInput by remember(largeExpenseThreshold) {
+            mutableStateOf(largeExpenseThreshold.toString())
+        }
+        var thresholdError by remember { mutableStateOf<String?>(null) }
+
+        AlertDialog(
+            onDismissRequest = { showThresholdDialog = false },
+            title = { Text("Large Expense Threshold") },
+            text = {
+                Column {
+                    Text(
+                        "You'll be notified when a single expense meets or exceeds this amount.",
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                    Spacer(modifier = Modifier.height(12.dp))
+                    OutlinedTextField(
+                        value = thresholdInput,
+                        onValueChange = {
+                            thresholdInput = it
+                            thresholdError = null
+                        },
+                        label = { Text("Amount") },
+                        singleLine = true,
+                        isError = thresholdError != null,
+                        supportingText = {
+                            thresholdError?.let { Text(it) }
+                        }
+                    )
+                }
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        val amount = thresholdInput.toDoubleOrNull()
+                        if (amount == null || amount <= 0.0) {
+                            thresholdError = "Enter a valid amount greater than zero."
+                            return@TextButton
+                        }
+                        onLargeExpenseThresholdChange(amount)
+                        showThresholdDialog = false
+                    }
+                ) {
+                    Text("Save")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showThresholdDialog = false }) {
+                    Text("Cancel")
+                }
+            }
+        )
+    }
+
     // Clear Cache Dialog
     if (showClearCacheDialog) {
         AlertDialog(
