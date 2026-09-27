@@ -1,14 +1,9 @@
 package com.finance.lumora.domain.usecase.ai
 
-/**
- * Main use of purpose
- * fetches the required insight
- */
-
-
 import com.finance.lumora.domain.model.ai.AurixInsightResult
 import com.finance.lumora.domain.model.ai.AurixInsightType
 import com.finance.lumora.domain.model.ai.FinanceContext
+import com.finance.lumora.domain.model.ai.FinancePeriod
 import javax.inject.Inject
 
 class ResolveAurixInsightUseCase @Inject constructor(
@@ -19,17 +14,18 @@ class ResolveAurixInsightUseCase @Inject constructor(
 
     suspend operator fun invoke(
         insightType: AurixInsightType,
-        financeContext: FinanceContext
+        financeContext: FinanceContext,
+        period: FinancePeriod
     ): AurixInsightResult {
 
         return when (insightType) {
 
             AurixInsightType.EXPENSE_TREND -> {
-                resolveExpenseTrend()
+                resolveExpenseTrend(period)
             }
 
             AurixInsightType.BUDGET -> {
-                resolveBudget()
+                resolveBudget(period)
             }
 
             AurixInsightType.SPENDING_CONCENTRATION -> {
@@ -44,7 +40,21 @@ class ResolveAurixInsightUseCase @Inject constructor(
         }
     }
 
-    private suspend fun resolveExpenseTrend(): AurixInsightResult {
+    /**
+     * Expense trend is inherently a "current vs previous month"
+     * comparison - GetAurixExpenseTrendUseCase has no period
+     * parameter of its own. Attaching it for a question about a
+     * specific past month, today, or this week would silently
+     * compare the wrong periods, so it's only resolved when the
+     * question is genuinely about the current month.
+     */
+    private suspend fun resolveExpenseTrend(
+        period: FinancePeriod
+    ): AurixInsightResult {
+
+        if (period != FinancePeriod.CURRENT_MONTH) {
+            return AurixInsightResult()
+        }
 
         val expenseTrendInsight =
             getAurixExpenseTrendUseCase()
@@ -54,7 +64,20 @@ class ResolveAurixInsightUseCase @Inject constructor(
         )
     }
 
-    private suspend fun resolveBudget(): AurixInsightResult {
+    /**
+     * Budget is a single ongoing setting, not a per-period record -
+     * there's no "August's budget" to compare against. Matches the
+     * same CURRENT_MONTH-only gating FinanceContextBuilder already
+     * applies to FinanceContext.monthlyBudget, so both sections of
+     * the prompt stay consistent with each other.
+     */
+    private suspend fun resolveBudget(
+        period: FinancePeriod
+    ): AurixInsightResult {
+
+        if (period != FinancePeriod.CURRENT_MONTH) {
+            return AurixInsightResult()
+        }
 
         val budgetInsight =
             getBudgetInsightUseCase()

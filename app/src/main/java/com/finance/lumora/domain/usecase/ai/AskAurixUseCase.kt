@@ -39,7 +39,8 @@ class AskAurixUseCase @Inject constructor(
         val insightResult =
             resolveAurixInsightUseCase(
                 insightType = insightType,
-                financeContext = financeContext
+                financeContext = financeContext,
+                period = period
             )
 
         val prompt =
