@@ -1,5 +1,6 @@
 package com.finance.lumora.data.ai
 
+import com.finance.lumora.data.local.enums.TransactionType
 import com.finance.lumora.domain.ai.TransactionCaptureValidator
 import com.finance.lumora.domain.model.CaptureSource
 import com.finance.lumora.domain.model.DraftTransaction
@@ -46,6 +47,7 @@ class TransactionCaptureParserImpl @Inject constructor(
             merchantName = parsedResponse.merchantName,
             categoryName = parsedResponse.categoryName,
             transactionDate = parsedResponse.transactionDate!!,
+            type = TransactionType.valueOf(parsedResponse.transactionType!!),
             source = source
         )
     }

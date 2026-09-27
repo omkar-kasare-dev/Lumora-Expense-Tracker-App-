@@ -138,6 +138,7 @@ fun DashboardScreen(
                 // ✅ NEW CODE
                 DashboardTopBar(
                     userName = state.userName.ifBlank { "User" },
+                    unreadNotificationCount = state.unreadNotificationCount,
                     onSearchClick = {
                         if (navController.currentDestination?.route != Screen.Search.route) {
                             navController.navigate(Screen.Search.route)

@@ -97,7 +97,7 @@ class SaveAurixTransactionUseCase @Inject constructor(
             // bug: extending TransactionCaptureParser/DraftTransaction to
             // detect income phrasing (e.g. "salary", "received", "credited")
             // would be a separate feature, not a fix to this use case.
-            type = TransactionType.EXPENSE,
+            type = resolvedDraft.draft.type,
 
             categoryId = category.id,
 

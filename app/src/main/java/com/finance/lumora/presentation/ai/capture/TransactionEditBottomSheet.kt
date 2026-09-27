@@ -46,6 +46,7 @@ import java.time.LocalDate
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
+import com.finance.lumora.data.local.enums.TransactionType
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -63,6 +64,10 @@ fun TransactionEditBottomSheet(
 
     var merchantName by remember(draft.merchantName) {
         mutableStateOf(draft.merchantName.orEmpty())
+    }
+
+    var transactionType by remember(draft.type) {
+        mutableStateOf(draft.type)
     }
 
     // Stored internally as "YYYY-MM-DD"
@@ -105,6 +110,45 @@ fun TransactionEditBottomSheet(
             )
 
             Spacer(modifier = Modifier.height(20.dp))
+
+            /*
+             * Transaction Type
+             */
+            Text(
+                text = "Type",
+                style = MaterialTheme.typography.labelLarge
+            )
+
+            Spacer(modifier = Modifier.height(6.dp))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                listOf(
+                    TransactionType.EXPENSE to "Expense",
+                    TransactionType.INCOME to "Income"
+                ).forEach { (type, label) ->
+
+                    val isSelected = transactionType == type
+
+                    if (isSelected) {
+                        Button(
+                            onClick = { transactionType = type },
+                            modifier = Modifier.weight(1f)
+                        ) {
+                            Text(label)
+                        }
+                    } else {
+                        OutlinedButton(
+                            onClick = { transactionType = type },
+                            modifier = Modifier.weight(1f)
+                        ) {
+                            Text(label)
+                        }
+                    }
+                }
+            }
 
             /*
              * Amount
@@ -290,7 +334,8 @@ fun TransactionEditBottomSheet(
                                 amount = amount,
                                 merchantName = merchantName.trim().ifBlank { null },
                                 categoryName = selectedCategory?.name,
-                                transactionDate = transactionDate.trim()
+                                transactionDate = transactionDate.trim(),
+                                type = transactionType
                             ),
                             category = selectedCategory
                         )

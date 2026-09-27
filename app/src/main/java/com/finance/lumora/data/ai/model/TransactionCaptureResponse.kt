@@ -8,5 +8,6 @@ data class TransactionCaptureResponse(
     val currency: String? = null,
     val merchantName: String? = null,
     val categoryName: String? = null,
-    val transactionDate: String? = null
+    val transactionDate: String? = null,
+    val transactionType: String? = null
 )

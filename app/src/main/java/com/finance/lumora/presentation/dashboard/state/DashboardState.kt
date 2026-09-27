@@ -62,6 +62,8 @@ data class DashboardState(
     val recentTransactions:
     List<TransactionWithCategory> = emptyList(),
 
+    val unreadNotificationCount: Int = 0,
+
     /**
      * Error message.
      */

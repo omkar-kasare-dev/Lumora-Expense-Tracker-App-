@@ -30,5 +30,14 @@ class TransactionCaptureValidator @Inject constructor() {
         ) {
             "Transaction date must use YYYY-MM-DD format."
         }
+
+        val type = response.transactionType
+            ?: throw IllegalArgumentException(
+                "Transaction type could not be identified."
+            )
+
+        require(type == "INCOME" || type == "EXPENSE") {
+            "Transaction type must be either INCOME or EXPENSE."
+        }
     }
 }

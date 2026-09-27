@@ -1,5 +1,5 @@
 package com.finance.lumora.presentation.dashboard.components
-
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -29,6 +29,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -37,6 +38,7 @@ import java.util.Locale
 fun DashboardTopBar(
     userName: String = "User",
     modifier: Modifier = Modifier,
+    unreadNotificationCount: Int = 0,
     onSearchClick: () -> Unit,
     onNotificationClick: () -> Unit = {},
     onSettingsClick: () -> Unit = {}
@@ -107,6 +109,7 @@ fun DashboardTopBar(
                 TopBarActionButton(
                     icon = Icons.Outlined.Notifications,
                     contentDescription = "Notifications",
+                    badgeCount = unreadNotificationCount,
                     onClick = onNotificationClick
                 )
 
@@ -124,22 +127,50 @@ fun DashboardTopBar(
 private fun TopBarActionButton(
     icon: ImageVector,
     contentDescription: String,
+    badgeCount: Int = 0,
     onClick: () -> Unit
 ) {
     Box(
-        modifier = Modifier
-            .size(36.dp)
-            .clip(CircleShape)
-            .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f))
-            .clickable(onClick = onClick),
+        modifier = Modifier.size(36.dp),
         contentAlignment = Alignment.Center
     ) {
-        Icon(
-            imageVector = icon,
-            contentDescription = contentDescription,
-            tint = MaterialTheme.colorScheme.onSurfaceVariant,
-            modifier = Modifier.size(18.dp)
-        )
+        Box(
+            modifier = Modifier
+                .size(36.dp)
+                .clip(CircleShape)
+                .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f))
+                .clickable(onClick = onClick),
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(
+                imageVector = icon,
+                contentDescription = contentDescription,
+                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.size(18.dp)
+            )
+        }
+
+        if (badgeCount > 0) {
+            Box(
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .offset(x = 3.dp, y = (-3).dp)
+                    .size(if (badgeCount > 9) 29.dp else 23.dp)
+                    .clip(CircleShape)
+                    .background(MaterialTheme.colorScheme.surface)
+                    .padding(1.5.dp)
+                    .clip(CircleShape)
+                    .background(MaterialTheme.colorScheme.error),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = if (badgeCount > 9) "9+" else badgeCount.toString(),
+                    color = MaterialTheme.colorScheme.onError,
+                    style = MaterialTheme.typography.labelSmall.copy(fontSize = 8.sp),
+                    fontWeight = FontWeight.Bold
+                )
+            }
+        }
     }
 }
 

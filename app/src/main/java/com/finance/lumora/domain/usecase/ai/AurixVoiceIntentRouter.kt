@@ -42,7 +42,23 @@ class AurixVoiceIntentRouter @Inject constructor() {
             "record an expense",
             "record expense",
             "log an expense",
-            "log expense"
+            "log expense",
+
+            // Income-indicating phrases
+            "i received",
+            "i got paid",
+            "i earned",
+            "i was paid",
+            "received a refund",
+            "got a refund",
+            "got refunded",
+            "credited to my account",
+            "salary credited",
+            "payment received",
+            "add income",
+            "add an income",
+            "record income",
+            "log income"
         )
 
         return transactionPatterns.any { pattern ->
@@ -75,7 +91,14 @@ class AurixVoiceIntentRouter @Inject constructor() {
             "largest spending",
             "highest expense",
             "largest expense",
-            "most expensive category"
+            "most expensive category",
+
+            "show my transaction history",
+            "show my transaction list",
+            "show my recent transactions",
+            "show recent transactions",
+
+
         )
 
         return queryPatterns.any { pattern ->
