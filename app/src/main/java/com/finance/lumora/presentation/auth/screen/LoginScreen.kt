@@ -264,7 +264,6 @@ fun LoginScreen(
         AuthLoading(
             message = "Signing in..."
         )
-
     }
 
 }
