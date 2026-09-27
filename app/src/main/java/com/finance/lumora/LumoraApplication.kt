@@ -5,6 +5,7 @@ import android.app.Application
 import androidx.hilt.work.HiltWorkerFactory
 import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.work.Configuration
+import com.finance.lumora.core.firebase.AppCheckInitializerImpl
 import com.finance.lumora.core.security.biometric.BiometricLifecycleObserver
 
 import com.finance.lumora.notifications.NotificationChannels
@@ -13,7 +14,7 @@ import com.google.firebase.FirebaseApp
 import dagger.hilt.android.HiltAndroidApp
 import javax.inject.Inject
 
-import com.finance.lumora.core.firebase.AppCheckInitializerImpl
+
 import com.finance.lumora.notifications.BudgetAlertWorkScheduler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

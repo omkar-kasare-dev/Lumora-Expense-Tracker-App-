@@ -58,6 +58,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.finance.lumora.navigation.BottomNavigationBar
 import com.finance.lumora.navigation.Screen
+
+import com.finance.lumora.presentation.auth.components.AuthLoading
 import com.finance.lumora.presentation.category.components.AddCategoryDialog
 import com.finance.lumora.presentation.dashboard.components.DashboardError
 import com.finance.lumora.presentation.dashboard.components.DashboardTopBar
@@ -235,10 +237,16 @@ fun DashboardScreen(
             // Enhanced Loading State
             //------------------------------------------
             state.isLoading -> {
+                /*
                 EnhancedDashboardLoading(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(paddingValues)
+                )
+
+                 */
+                AuthLoading(
+                    message = "Dashboard Loading..."
                 )
             }
 

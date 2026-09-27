@@ -45,6 +45,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+
+import com.finance.lumora.presentation.auth.components.AuthLoading
 import com.finance.lumora.presentation.profile.components.ProfileHeader
 import com.finance.lumora.presentation.profile.components.ProfileInfoToggleItem
 import com.finance.lumora.presentation.profile.components.ProfileItem
@@ -81,7 +83,10 @@ fun ProfileScreen(
             modifier = modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
-            CircularProgressIndicator()
+            AuthLoading(
+                message = "Profile Loading..."
+            )
+
         }
         return
     }
