@@ -1,6 +1,15 @@
 package com.finance.lumora.presentation.ai.components
 
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -8,79 +17,224 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Cyclone
 import androidx.compose.material.icons.filled.WavingHand
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 
 @Composable
 fun AurixWelcomeSection(
     onQuestionSelected: (String) -> Unit
 ) {
+
+    // ---------------------------------------------------------
+    // Subtle avatar breathing animation
+    // ---------------------------------------------------------
+
+    val infiniteTransition =
+        rememberInfiniteTransition(
+            label = "aurix_avatar_animation"
+        )
+
+    val pulseScale by infiniteTransition.animateFloat(
+
+        initialValue = 0.94f,
+
+        targetValue = 1.06f,
+
+        animationSpec = infiniteRepeatable(
+
+            animation = tween(
+                durationMillis = 2200,
+                easing = FastOutSlowInEasing
+            ),
+
+            repeatMode = RepeatMode.Reverse
+        ),
+
+        label = "aurix_avatar_scale"
+    )
+
+    // ---------------------------------------------------------
+    // Suggested questions
+    // ---------------------------------------------------------
+
+    val suggestedQuestions = listOf(
+        "How much did I spend this month?",
+        "Show my biggest expenses",
+        "How am I doing with my budget?"
+    )
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+            .padding(
+                top = 160.dp,
+                bottom = 18.dp
+            ),
+
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        // -----------------------------------------------------
+        // AURIX avatar
+        // -----------------------------------------------------
+/*
+        Box(
+            modifier = Modifier
+                .size(138.dp)
+                .padding(4.dp),
+
+            contentAlignment = Alignment.Center
+        ) {
+
+            // Outer glow
+
+            Box(
+                modifier = Modifier
+                    .size(126.dp)
+                    .scale(pulseScale)
+                    .clip(CircleShape)
+                    .background(
+                        Brush.radialGradient(
+                            colors = listOf(
+                                Color(0xFF64B5F6).copy(
+                                    alpha = 0.35f
+                                ),
+                                Color.Transparent
+                            )
+                        )
+                    )
+            )
+
+            // Avatar container
+
+            Box(
+                modifier = Modifier
+                    .size(104.dp)
+                    .clip(CircleShape)
+                    .background(
+                        Brush.linearGradient(
+                            colors = listOf(
+                                Color.White.copy(
+                                    alpha = 0.18f
+                                ),
+                                Color.White.copy(
+                                    alpha = 0.07f
+                                )
+                            )
+                        )
+                    )
+                    .border(
+                        width = 1.5.dp,
+                        color = Color.White.copy(
+                            alpha = 0.25f
+                        ),
+                        shape = CircleShape
+                    ),
+
+                contentAlignment = Alignment.Center
+            ) {
+               AurixLogo()
+            }
+        }
+        */
+
+        // -----------------------------------------------------
+        // Greeting
+        // -----------------------------------------------------
+
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
+
             Text(
                 text = "Hi, I'm AURIX",
-                style = MaterialTheme.typography.headlineMedium,
+
+                style = MaterialTheme.typography.headlineSmall,
+
+                color = Color.White,
+
                 fontWeight = FontWeight.Bold
             )
-            Spacer(modifier = Modifier.width(8.dp))
+
+            Spacer(
+                modifier = Modifier.width(7.dp)
+            )
+
             Icon(
                 imageVector = Icons.Default.WavingHand,
+
                 contentDescription = null,
-                tint = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.size(28.dp)
+
+                tint = Color(0xFFFFD54F),
+
+                modifier = Modifier.size(21.dp)
             )
         }
 
-        Text(
-            text = "I analyze your Lumora financial data to deliver personalized spending insights, budget tracking, and smart recommendations.",
-            style = MaterialTheme.typography.bodyLarge,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
+        Spacer(
+            modifier = Modifier.size(10.dp)
         )
 
         Text(
-            text = "Suggested prompts:",
-            style = MaterialTheme.typography.titleSmall,
-            fontWeight = FontWeight.SemiBold,
-            color = MaterialTheme.colorScheme.primary
+            text = "Ask about your spending, budgets, or transactions.",
+
+            style = MaterialTheme.typography.bodyMedium,
+
+            color = Color.White.copy(
+                alpha = 0.65f
+            ),
+
+            textAlign = TextAlign.Center,
+
+            modifier = Modifier.padding(
+                horizontal = 24.dp
+            )
         )
+
+        Spacer(
+            modifier = Modifier.size(22.dp)
+        )
+
+        // -----------------------------------------------------
+        // Suggested questions
+        // -----------------------------------------------------
 
         Column(
-            verticalArrangement = Arrangement.spacedBy(10.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 4.dp),
+
+            verticalArrangement = Arrangement.spacedBy(9.dp)
         ) {
-            AurixSuggestion(
-                text = "How much did I spend this month?",
-                onClick = onQuestionSelected
-            )
 
-            AurixSuggestion(
-                text = "Where did most of my money go?",
-                onClick = onQuestionSelected
-            )
+            suggestedQuestions.forEach { question ->
 
-            AurixSuggestion(
-                text = "Am I within my budget limits?",
-                onClick = onQuestionSelected
-            )
+                AurixSuggestionCard(
+                    text = question,
 
-            AurixSuggestion(
-                text = "How can I optimize my savings?",
-                onClick = onQuestionSelected
-            )
+                    onClick = {
+                        onQuestionSelected(question)
+                    }
+                )
+            }
         }
     }
 }
+
