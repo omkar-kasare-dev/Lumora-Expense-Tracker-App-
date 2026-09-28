@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.finance.lumora.data.local.entity.CategoryEntity
+import com.finance.lumora.presentation.auth.components.AuthLoading
 import com.finance.lumora.presentation.category.viewmodel.CategoryViewModel
 import com.finance.lumora.presentation.search.components.ActiveFilterChips
 import com.finance.lumora.presentation.search.components.FilterBottomSheet
@@ -170,6 +171,7 @@ fun SearchScreen(
                         modifier = Modifier.fillMaxSize(),
                         contentAlignment = Alignment.Center
                     ) {
+                        /*
                         LinearProgressIndicator(
                             modifier = Modifier
                                 .fillMaxWidth(0.45f)
@@ -177,6 +179,9 @@ fun SearchScreen(
                             color = MaterialTheme.colorScheme.primary,
                             trackColor = MaterialTheme.colorScheme.surfaceVariant
                         )
+
+                         */
+                        AuthLoading()
                     }
                 }
 
