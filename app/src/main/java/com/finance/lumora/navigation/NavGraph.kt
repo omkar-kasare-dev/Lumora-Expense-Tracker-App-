@@ -29,12 +29,16 @@ import com.finance.lumora.presentation.settings.components.TermsOfServiceScreen
 import com.finance.lumora.presentation.settings.screen.SetBudgetScreen
 import com.finance.lumora.presentation.splash.SplashScreen
 import com.finance.lumora.presentation.transaction.screen.TransactionScreen
+import androidx.compose.ui.platform.LocalContext
+import com.finance.lumora.core.util.SupportContact
+import com.finance.lumora.core.util.contactSupport
 
 @Composable
 fun LumoraNavGraph(
     modifier: Modifier = Modifier
 ) {
     val navController = rememberNavController()
+    val context = LocalContext.current
 
     NavHost(
         navController = navController,
@@ -241,7 +245,12 @@ fun LumoraNavGraph(
         composable(route = Screen.PrivacyPolicy.route) {
             PrivacyPolicyScreen(
                 onBackClick = { navController.popBackStack() },
-                onContactSupportClick = { }
+                onContactSupportClick = {
+                    context.contactSupport(
+                        recipient = SupportContact.PRIVACY_EMAIL,
+                        subject = "Lumora Privacy Inquiry"
+                    )
+                }
             )
         }
 
@@ -294,7 +303,12 @@ fun LumoraNavGraph(
         composable(route = Screen.TermsOfService.route) {
             TermsOfServiceScreen(
                 onBackClick = { navController.popBackStack() },
-                onContactSupportClick = { }
+                onContactSupportClick = {
+                    context.contactSupport(
+                        recipient = SupportContact.LEGAL_EMAIL,
+                        subject = "Lumora Terms of Service Inquiry"
+                    )
+                }
             )
         }
 
