@@ -205,9 +205,13 @@ fun SplashBackground(
 
         repeat(18) { index ->
 
-            val x = (index * 73 % size.width.toInt()).toFloat()
+            // coerceAtLeast avoids a divide-by-zero if the canvas is ever
+            // measured at size 0
+            val x = (index * 73 % size.width.toInt().coerceAtLeast(1)).toFloat()
 
-            val y = (index * 181 % size.height.toInt()).toFloat()
+            val y = (index * 181 % size.height.toInt().coerceAtLeast(1)).toFloat()
+
+            val particleCenter = Offset(x, y)
 
             drawCircle(
 
@@ -216,13 +220,17 @@ fun SplashBackground(
                     colors = listOf(
                         Color.White.copy(alpha = 0.18f),
                         Color.Transparent
-                    )
+                    ),
+
+                    center = particleCenter,
+
+                    radius = 10f
 
                 ),
 
                 radius = 10f,
 
-                center = Offset(x, y)
+                center = particleCenter
 
             )
 

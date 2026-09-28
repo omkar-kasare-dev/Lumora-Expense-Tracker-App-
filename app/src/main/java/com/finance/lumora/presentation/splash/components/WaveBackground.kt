@@ -248,6 +248,11 @@ fun WaveBackground(
          * =====================================
          */
 
+        val glowCenter = Offset(
+            size.width * 0.82f,
+            size.height * 0.42f
+        )
+
         drawCircle(
 
             brush = Brush.radialGradient(
@@ -258,19 +263,17 @@ fun WaveBackground(
 
                     Color.Transparent
 
-                )
+                ),
+
+                center = glowCenter,
+
+                radius = size.width * 0.45f
 
             ),
 
             radius = size.width * 0.45f,
 
-            center = Offset(
-
-                size.width * 0.82f,
-
-                size.height * 0.42f
-
-            ),
+            center = glowCenter,
 
             blendMode = BlendMode.Screen
 

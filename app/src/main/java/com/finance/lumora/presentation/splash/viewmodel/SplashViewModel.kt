@@ -28,82 +28,60 @@ class SplashViewModel @Inject constructor(
     val uiState: StateFlow<SplashUiState> =
         _uiState.asStateFlow()
 
-
-
     init {
         onEvent(
-
             SplashEvent.CheckAuthentication
-
         )
         startSplashTimer()
     }
 
     //---------------Event section start--------------------
     fun onEvent(
-
         event: SplashEvent
-
     ) {
-
-        when(event){
-
+        when (event) {
             SplashEvent.CheckAuthentication ->
-
                 observeAuthentication()
-
         }
-
     }
     //---------------Event section END--------------------
 
     //---------------Helper Function section start--------------------
 
+    /**
+     * isLoading stays true until the minimum splash time has passed.
+     * SplashScreen waits on it before navigating, so the animations
+     * always get to play even when the session resolves instantly.
+     */
     private fun startSplashTimer() {
-
         viewModelScope.launch {
-
-            delay(2500)
-
+            delay(SPLASH_MIN_DURATION_MS)
             _uiState.update {
-
                 it.copy(
                     isLoading = false
                 )
-
             }
-
         }
-
     }
 
-    //-------------------------
+    // Previously this also set isLoading = false, which opened the
+    // gate on the first auth emission and made the timer pointless.
     private fun observeAuthentication() {
-
         viewModelScope.launch {
-
             observeAuthState()
-
                 .collect { user ->
-
                     _uiState.update {
-
                         it.copy(
-
-                            isLoading = false,
-
                             isLoggedIn = user != null
-
                         )
-
                     }
-
                 }
-
         }
-
     }
 
     //---------------Helper Function section END--------------------
 
+    private companion object {
+        const val SPLASH_MIN_DURATION_MS = 2500L
+    }
 }

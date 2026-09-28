@@ -27,11 +27,12 @@ import com.finance.lumora.presentation.settings.components.AppVersionScreen
 import com.finance.lumora.presentation.settings.components.SettingsRoute
 import com.finance.lumora.presentation.settings.components.TermsOfServiceScreen
 import com.finance.lumora.presentation.settings.screen.SetBudgetScreen
-import com.finance.lumora.presentation.splash.SplashScreen
+
 import com.finance.lumora.presentation.transaction.screen.TransactionScreen
 import androidx.compose.ui.platform.LocalContext
 import com.finance.lumora.core.util.SupportContact
 import com.finance.lumora.core.util.contactSupport
+import com.finance.lumora.presentation.splash.screen.SplashScreen
 
 @Composable
 fun LumoraNavGraph(

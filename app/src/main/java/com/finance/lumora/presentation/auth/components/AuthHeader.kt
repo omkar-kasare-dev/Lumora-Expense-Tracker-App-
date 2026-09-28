@@ -83,7 +83,7 @@ fun AuthHeader(
 
                 painter = painterResource(
 
-                    id = R.drawable.lumora1_logo
+                    id = R.drawable.lumora_logo
                 ),
 
                 contentDescription = "Lumora Logo",
