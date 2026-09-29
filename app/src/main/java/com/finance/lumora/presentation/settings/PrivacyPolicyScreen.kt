@@ -96,9 +96,11 @@ fun PrivacyPolicyScreen(
                 icon = Icons.Outlined.Storage,
                 title = "1. Information We Collect",
                 content = listOf(
-                    "Account Data: Name, email address, and authentication credentials when you sign up.",
-                    "Financial Logs: Transaction amounts, category labels, timestamps, and currency preferences entered manually or synced via your account.",
-                    "Device Data: Basic device model, operating system, and unique device identifiers to ensure secure login and app stability."
+                    "Account Data: Your name, email address, and profile photo (if provided) when you sign up, stored securely via Firebase Authentication and Cloud Firestore.",
+                    "Financial Data: Transactions, categories, and budgets you enter are stored only on your device using a local database. This data is not uploaded to our servers or synced across devices.",
+                    "Aurix AI Assistant: When you use Aurix to scan a receipt, speak a transaction, or ask a financial question, the relevant text (receipt text, voice transcript, or a summary of your spending) is sent to Google's Gemini model via Firebase AI Logic to generate a response or draft transaction. This data is processed to answer your request and is not stored by us beyond the session.",
+                    "News Content: Financial news shown in the app is retrieved from third-party providers, Marketaux and Finnhub, based on general market and regional data, not your personal financial information.",
+                    "Device Data: Basic device model, operating system version, and app version, used for crash reporting and to keep the app stable and secure."
                 )
             )
 
@@ -108,8 +110,9 @@ fun PrivacyPolicyScreen(
                 icon = Icons.Outlined.Lock,
                 title = "2. How We Use & Protect Your Data",
                 content = listOf(
-                    "All financial transaction logs are encrypted in transit and at rest using industry-standard AES-256 encryption.",
-                    "We use your data solely to provide expense insights, budget tracking alerts, and customized financial analytics.",
+                    "Your transactions, categories, and budgets stay on your device. We do not have access to this data, and it is not transmitted to Lumora's servers.",
+                    "Account data (name, email, profile photo) is stored in Firebase, protected by Firebase Authentication and Firestore security rules, and Firebase App Check to help ensure only the genuine Lumora app can access it.",
+                    "We use your account data solely to provide sign-in, keep your profile in sync if you use multiple devices, and personalize app settings such as currency and theme.",
                     "We DO NOT sell, rent, or trade your personal or financial data to third-party advertisers."
                 )
             )
@@ -120,9 +123,10 @@ fun PrivacyPolicyScreen(
                 icon = Icons.Outlined.Key,
                 title = "3. Your Rights & Data Control",
                 content = listOf(
-                    "Export Data: You can export a copy of your expense data at any time via Settings.",
-                    "Account Deletion: You hold the right to permanently delete your Lumora account and wipe all associated data from our servers.",
-                    "Preferences: Control notification permissions and security features (such as biometric app lock) directly from app settings."
+                    "Export Data: You can export a copy of your transaction history as a CSV file at any time via Settings.",
+                    "Local Data Removal: Since your financial data lives only on your device, uninstalling the app permanently removes it from that device.",
+                    "Account Deletion: To request deletion of your account data (name, email, profile photo) from our servers, contact our privacy team using the button below. We will process your request within a reasonable time.",
+                    "Preferences: Control notification permissions and security features, such as biometric app lock, directly from app settings."
                 )
             )
 
@@ -132,8 +136,9 @@ fun PrivacyPolicyScreen(
                 icon = Icons.Outlined.Cloud,
                 title = "4. Third-Party Services",
                 content = listOf(
-                    "We utilize secure cloud infrastructure (such as Google Firebase) for authentication, database synchronization, and crash reporting.",
-                    "These services comply strictly with modern data protection standards (GDPR / CCPA)."
+                    "Google Firebase: Used for account authentication, storing your profile data, AI-powered features (Aurix, via Firebase AI Logic and Gemini), and app integrity checks (App Check).",
+                    "Marketaux and Finnhub: Used to retrieve financial news content shown in the app.",
+                    "These providers process data under their own privacy policies and applicable data protection standards."
                 )
             )
 

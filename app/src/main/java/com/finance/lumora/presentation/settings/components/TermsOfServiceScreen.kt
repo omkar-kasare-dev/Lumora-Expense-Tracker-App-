@@ -109,8 +109,9 @@ fun TermsOfServiceScreen(
                 title = "2. Financial Disclaimer",
                 content = listOf(
                     "Informational Purpose: Lumora provides personal expense tracking and financial tools for informational purposes only.",
-                    "Not Financial Advice: Content provided within the app does not constitute professional financial, investment, or legal advice.",
-                    "User Input: You acknowledge that analytics and budget reports are based directly on data you input or connect."
+                    "Not Financial Advice: Content provided within the app, including responses from the Aurix AI assistant, does not constitute professional financial, investment, tax, or legal advice.",
+                    "AI-Generated Content: Aurix uses Google's Gemini AI model to interpret receipts, voice input, and financial questions. While we aim for accuracy, AI-generated drafts and insights may occasionally be incorrect, and you should review transaction drafts before confirming them.",
+                    "User Input: You acknowledge that analytics and budget reports are based directly on data you input into the app."
                 )
             )
 
