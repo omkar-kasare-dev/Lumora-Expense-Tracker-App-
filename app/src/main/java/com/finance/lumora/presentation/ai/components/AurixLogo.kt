@@ -1,6 +1,5 @@
 package com.finance.lumora.presentation.ai.components
 
-
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
@@ -11,7 +10,6 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -28,6 +26,12 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import kotlin.math.cos
 import kotlin.math.sin
+
+// High-contrast, vibrant palette specifically designed for dark navy background Color(0xFF133253)
+private val AurixCyan = Color(0xFF00E5FF)       // Primary AI Glow & Nodes
+private val AurixElectricBlue = Color(0xFF2979FF) // Outer Circuit Accent
+private val AurixViolet = Color(0xFFB388FF)       // Tertiary Processing Accent
+private val AurixCoreWhite = Color(0xFFFFFFFF)    // Facet Highlight
 
 @Composable
 fun AurixLogo(
@@ -69,11 +73,6 @@ fun AurixLogo(
         label = "CorePulse"
     )
 
-    // Dynamic theme-aware colors
-    val primaryColor = MaterialTheme.colorScheme.primary
-    val secondaryColor = MaterialTheme.colorScheme.secondary
-    val tertiaryColor = MaterialTheme.colorScheme.tertiary
-
     Box(
         modifier = modifier.size(size),
         contentAlignment = Alignment.Center
@@ -82,12 +81,12 @@ fun AurixLogo(
             val center = Offset(this.size.width / 2f, this.size.height / 2f)
             val radius = this.size.minDimension / 2f
 
-            // 1. Ambient Background Radial Glow
+            // 1. Ambient Background Radial Glow (Optimized for 0xFF133253 Navy)
             drawCircle(
                 brush = Brush.radialGradient(
                     colors = listOf(
-                        primaryColor.copy(alpha = 0.28f),
-                        secondaryColor.copy(alpha = 0.10f),
+                        AurixCyan.copy(alpha = 0.35f),
+                        AurixElectricBlue.copy(alpha = 0.15f),
                         Color.Transparent
                     ),
                     center = center,
@@ -99,13 +98,13 @@ fun AurixLogo(
 
             // 2. Outer Orbital Ring (Fintech Data Circuit)
             rotate(outerRotation, pivot = center) {
-                val outerStrokeWidth = 2.dp.toPx()
+                val outerStrokeWidth = 2.2.dp.toPx()
                 drawCircle(
                     brush = Brush.sweepGradient(
                         colors = listOf(
-                            primaryColor.copy(alpha = 0.15f),
-                            primaryColor,
-                            secondaryColor,
+                            AurixCyan.copy(alpha = 0.20f),
+                            AurixCyan,
+                            AurixElectricBlue,
                             Color.Transparent
                         ),
                         center = center
@@ -114,18 +113,26 @@ fun AurixLogo(
                     center = center,
                     style = Stroke(
                         width = outerStrokeWidth,
-                        pathEffect = PathEffect.dashPathEffect(floatArrayOf(12f, 8f), 0f)
+                        pathEffect = PathEffect.dashPathEffect(floatArrayOf(14f, 8f), 0f)
                     )
                 )
 
-                // Outer Node Accents (Symbolizing transaction data points)
-                val nodeRadius = 3.5.dp.toPx()
+                // Outer Node Accents (Symbolizing transaction data points with halo effect)
+                val nodeRadius = 3.8.dp.toPx()
                 for (i in 0 until 3) {
                     val angle = Math.toRadians((i * 120).toDouble())
                     val x = center.x + (radius * 0.82f) * cos(angle).toFloat()
                     val y = center.y + (radius * 0.82f) * sin(angle).toFloat()
+
+                    // Soft Node Halo
                     drawCircle(
-                        color = primaryColor,
+                        color = AurixCyan.copy(alpha = 0.4f),
+                        radius = nodeRadius * 1.6f,
+                        center = Offset(x, y)
+                    )
+                    // Crisp Core Node
+                    drawCircle(
+                        color = AurixCoreWhite,
                         radius = nodeRadius,
                         center = Offset(x, y)
                     )
@@ -134,13 +141,13 @@ fun AurixLogo(
 
             // 3. Inner Counter-Rotating Ring (AI Processing Circuit)
             rotate(innerRotation, pivot = center) {
-                val innerStrokeWidth = 1.8.dp.toPx()
+                val innerStrokeWidth = 2.dp.toPx()
                 drawCircle(
                     brush = Brush.sweepGradient(
                         colors = listOf(
-                            tertiaryColor,
+                            AurixViolet,
                             Color.Transparent,
-                            secondaryColor.copy(alpha = 0.8f)
+                            AurixCyan.copy(alpha = 0.9f)
                         ),
                         center = center
                     ),
@@ -163,14 +170,16 @@ fun AurixLogo(
                 close()
             }
 
-            // Core Glow
+            // Core Glow Fill
             drawPath(
                 path = diamondPath,
                 brush = Brush.linearGradient(
                     colors = listOf(
-                        primaryColor,
-                        tertiaryColor
-                    )
+                        AurixCyan,
+                        AurixViolet
+                    ),
+                    start = Offset(center.x - diamondSize, center.y - diamondSize),
+                    end = Offset(center.x + diamondSize, center.y + diamondSize)
                 )
             )
 
@@ -184,8 +193,8 @@ fun AurixLogo(
 
             drawPath(
                 path = innerFacetPath,
-                color = Color.White.copy(alpha = 0.45f),
-                style = Stroke(width = 1.2.dp.toPx(), cap = StrokeCap.Round)
+                color = AurixCoreWhite.copy(alpha = 0.65f),
+                style = Stroke(width = 1.4.dp.toPx(), cap = StrokeCap.Round)
             )
         }
     }

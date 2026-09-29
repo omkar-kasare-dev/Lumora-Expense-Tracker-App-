@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 private val AurixBackground = Color(0xFF133253)
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AurixTopAppBar(
@@ -41,18 +42,25 @@ fun AurixTopAppBar(
     onMoreOptionsClick: (() -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
+    // High-contrast content colors optimized for dark navy background
+    val contentOnDark = Color.White
+    val secondaryContentOnDark = Color.White.copy(alpha = 0.7f)
+
     TopAppBar(
         modifier = modifier.fillMaxWidth(),
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = AurixBackground,
-            scrolledContainerColor = AurixBackground
+            scrolledContainerColor = AurixBackground,
+            navigationIconContentColor = contentOnDark,
+            titleContentColor = contentOnDark,
+            actionIconContentColor = secondaryContentOnDark
         ),
         navigationIcon = {
             IconButton(onClick = onBackClick) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                     contentDescription = "Navigate Back",
-                    tint = MaterialTheme.colorScheme.onSurface
+                    tint = contentOnDark
                 )
             }
         },
@@ -76,7 +84,7 @@ fun AurixTopAppBar(
                                 fontWeight = FontWeight.Bold,
                                 letterSpacing = 1.2.sp
                             ),
-                            color = MaterialTheme.colorScheme.onSurface,
+                            color = contentOnDark,
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis
                         )
@@ -98,7 +106,7 @@ fun AurixTopAppBar(
                             fontSize = 11.sp,
                             fontWeight = FontWeight.Normal
                         ),
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        color = secondaryContentOnDark,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
@@ -111,7 +119,7 @@ fun AurixTopAppBar(
                     Icon(
                         imageVector = Icons.Outlined.DeleteSweep,
                         contentDescription = "Clear Chat History",
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant
+                        tint = secondaryContentOnDark
                     )
                 }
             }
@@ -121,7 +129,7 @@ fun AurixTopAppBar(
                     Icon(
                         imageVector = Icons.Outlined.MoreVert,
                         contentDescription = "More Options",
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant
+                        tint = secondaryContentOnDark
                     )
                 }
             }

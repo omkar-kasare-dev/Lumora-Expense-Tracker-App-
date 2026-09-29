@@ -24,9 +24,12 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -45,6 +48,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
+import androidx.tv.material3.rememberDrawerState
 import com.finance.lumora.domain.model.ResolvedTransactionDraft
 import com.finance.lumora.domain.model.ai.ChatMessageRole
 import com.finance.lumora.domain.model.ai.ChatMessageStatus
@@ -52,6 +56,7 @@ import com.finance.lumora.presentation.ai.capture.ReceiptCameraScreen
 import com.finance.lumora.presentation.ai.capture.ReceiptOcrState
 import com.finance.lumora.presentation.ai.capture.TransactionConfirmationHost
 import com.finance.lumora.presentation.ai.capture.TransactionEditBottomSheet
+import com.finance.lumora.presentation.ai.components.AurixDrawerContent
 import com.finance.lumora.presentation.ai.components.AurixErrorCard
 import com.finance.lumora.presentation.ai.components.AurixInputSection
 import com.finance.lumora.presentation.ai.components.AurixLoadingCard
@@ -72,6 +77,7 @@ private val AurixBackground = Color(0xFF133253)
 
 @Composable
 fun AurixScreen(
+    onBackClick: () -> Unit,
     viewModel: AurixViewModel = hiltViewModel(),
 ) {
     // ---------------------------------------------------------
@@ -165,6 +171,9 @@ fun AurixScreen(
                 voiceCaptureViewModel.startListening()
             }
         }
+
+    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+
 
     fun startVoiceCapture() {
         val permissionGranted =
@@ -282,6 +291,36 @@ fun AurixScreen(
     // Main AURIX UI
     // ---------------------------------------------------------
 
+    ModalNavigationDrawer(
+        drawerState = drawerState,
+        gesturesEnabled = drawerState.isOpen, // Enable drag gesture when open
+        drawerContent = {
+            AurixDrawerContent(
+                onNewChatClick = {
+                    coroutineScope.launch { drawerState.close() }
+                    viewModel.clearConversation()
+                },
+                onHistoryClick = {
+                    coroutineScope.launch { drawerState.close() }
+                },
+                onExportChatClick = {
+                    coroutineScope.launch { drawerState.close() }
+                },
+                onSettingsClick = {
+                    coroutineScope.launch { drawerState.close() }
+                },
+                onHelpClick = {
+                    coroutineScope.launch { drawerState.close() }
+                },
+                onAboutClick = {
+                    coroutineScope.launch { drawerState.close() }
+                }
+            )
+        }
+    ) {
+
+
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -312,11 +351,13 @@ fun AurixScreen(
             },
             topBar = {
                 AurixTopAppBar(
-                    onBackClick = {
-                        //navController.popBackStack()
-                                  },
+                    onBackClick = onBackClick,
                     onClearChatClick = { viewModel.clearConversation() },
-                    onMoreOptionsClick = { /* Open settings/menu */ }
+                    onMoreOptionsClick = {
+                        coroutineScope.launch {
+                        drawerState.open()
+                    }
+                    }
                 )
             },
 
@@ -502,6 +543,7 @@ fun AurixScreen(
             }
         }
     }
+}
 
     // ---------------------------------------------------------
     // Receipt camera

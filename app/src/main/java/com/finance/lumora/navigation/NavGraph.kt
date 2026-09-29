@@ -323,7 +323,11 @@ fun LumoraNavGraph(
         //--------------------------------------------------
         // AURIX -
         composable(route = Screen.Aurix.route) {
-            AurixScreen()
+            AurixScreen(
+                onBackClick = {
+                    navController.popBackStack()
+                }
+            )
         }
 
         // News API
