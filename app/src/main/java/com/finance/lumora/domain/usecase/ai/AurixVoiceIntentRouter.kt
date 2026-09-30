@@ -14,27 +14,20 @@ class AurixVoiceIntentRouter @Inject constructor() {
         if (text.isBlank()) {
             return AurixVoiceIntent.FINANCIAL_QUERY
         }
+
         if (isTransactionRequest(text)) {
             return AurixVoiceIntent.ADD_TRANSACTION
         }
-/*
-        if (isFinancialQuery(text)) {
-            return AurixVoiceIntent.FINANCIAL_QUERY
-        }
+
+        // Whether or not this matches a known query pattern, unmatched
+        // speech falls through to FINANCIAL_QUERY either way, since
+        // AurixVoiceIntent has no third "unrecognized" option. Kept as
+        // an explicit check (rather than just returning FINANCIAL_QUERY
+        // directly) so query-pattern matching stays meaningful if a
+        // third intent is ever added later.
+        isFinancialQuery(text)
 
         return AurixVoiceIntent.FINANCIAL_QUERY
-
- */
-
-
-        return if (isTransactionRequest(text)) {  // move this check first, unchanged
-            AurixVoiceIntent.ADD_TRANSACTION
-        } else {
-            AurixVoiceIntent.FINANCIAL_QUERY  // changed default
-        }
-
-
-
     }
 
     private fun isTransactionRequest(text: String): Boolean {
@@ -103,13 +96,10 @@ class AurixVoiceIntentRouter @Inject constructor() {
             "highest expense",
             "largest expense",
             "most expensive category",
-
             "show my transaction history",
             "show my transaction list",
             "show my recent transactions",
-            "show recent transactions",
-
-
+            "show recent transactions"
         )
 
         return queryPatterns.any { pattern ->
