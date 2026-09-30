@@ -73,24 +73,7 @@ fun ForgotPasswordScreen(
     /**
      * Success
      */
-/*
-    LaunchedEffect(uiState.resetEmailSent) {
 
-        if (uiState.resetEmailSent) {
-
-            onResetEmailSent(
-                uiState.sentEmail
-            )
-
-            viewModel.onEvent(
-                ForgotPasswordEvent.ResetSuccessState
-            )
-
-        }
-
-    }
-
- */
 
 
     AuthBackground {

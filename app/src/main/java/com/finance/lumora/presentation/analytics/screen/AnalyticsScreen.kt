@@ -258,47 +258,7 @@ fun AnalyticsScreen(
                     //------------------------------------
                     // Pie Chart
                     //------------------------------------
-/*
-                    item {
 
-                        Text(
-
-                            text = "Expense Distribution",
-
-                            style = MaterialTheme.typography.titleMedium
-
-                        )
-
-                    }
-
-                    item {
-
-                        Box(
-                            modifier = Modifier.fillMaxWidth(),
-                            contentAlignment = Alignment.Center
-                        ) {
-
-                            PieChart(
-                                categories = uiState.categorySummary
-                            )
-
-                        }
-
-
-                    }
-
-                    item {
-
-                        PieChartLegend(
-
-                            categories =
-                                uiState.categorySummary
-
-                        )
-
-                    }
-
- */
                     item {
 
                         PieChartCard(categories =

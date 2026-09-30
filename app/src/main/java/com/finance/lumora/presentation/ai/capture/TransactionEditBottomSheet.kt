@@ -1,17 +1,20 @@
 package com.finance.lumora.presentation.ai.capture
 
-
-
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.Button
@@ -30,6 +33,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -84,220 +88,229 @@ fun TransactionEditBottomSheet(
     var dateError by remember { mutableStateOf<String?>(null) }
     var datePickerVisible by remember { mutableStateOf(false) }
 
-    //
     var categoryError by remember { mutableStateOf<String?>(null) }
+
+    val scrollState = rememberScrollState()
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
     LaunchedEffect(resolvedDraft.category) {
         selectedCategory = resolvedDraft.category
     }
 
-    ModalBottomSheet(onDismissRequest = onDismiss) {
+    ModalBottomSheet(
+        onDismissRequest = onDismiss,
+        sheetState = sheetState,
+        contentWindowInsets = { WindowInsets(0, 0, 0, 0) }
+    ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 24.dp, end = 24.dp, bottom = 32.dp)
+                .windowInsetsPadding(WindowInsets.ime)
+                .padding(horizontal = 24.dp)
+                .padding(bottom = 24.dp)
         ) {
+            // Non-scrolling Header Section
             Text(
                 text = "Edit Transaction",
-                style = MaterialTheme.typography.headlineSmall
+                style = MaterialTheme.typography.titleLarge
             )
 
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(4.dp))
 
             Text(
                 text = "Review and correct the transaction details before confirming.",
-                style = MaterialTheme.typography.bodyMedium
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
 
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
-            /*
-             * Transaction Type
-             */
-            Text(
-                text = "Type",
-                style = MaterialTheme.typography.labelLarge
-            )
-
-            Spacer(modifier = Modifier.height(6.dp))
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            // Scrollable Content Area for Form Fields
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f, fill = false)
+                    .verticalScroll(scrollState),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                listOf(
-                    TransactionType.EXPENSE to "Expense",
-                    TransactionType.INCOME to "Income"
-                ).forEach { (type, label) ->
+                /*
+                 * Transaction Type Selector
+                 */
+                Column {
+                    Text(
+                        text = "Type",
+                        style = MaterialTheme.typography.labelMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
 
-                    val isSelected = transactionType == type
+                    Spacer(modifier = Modifier.height(4.dp))
 
-                    if (isSelected) {
-                        Button(
-                            onClick = { transactionType = type },
-                            modifier = Modifier.weight(1f)
-                        ) {
-                            Text(label)
-                        }
-                    } else {
-                        OutlinedButton(
-                            onClick = { transactionType = type },
-                            modifier = Modifier.weight(1f)
-                        ) {
-                            Text(label)
-                        }
-                    }
-                }
-            }
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        listOf(
+                            TransactionType.EXPENSE to "Expense",
+                            TransactionType.INCOME to "Income"
+                        ).forEach { (type, label) ->
+                            val isSelected = transactionType == type
 
-            /*
-             * Amount
-             */
-            OutlinedTextField(
-                value = amountText,
-                onValueChange = {
-                    amountText = it
-                    amountError = null
-                },
-                modifier = Modifier.fillMaxWidth(),
-                label = { Text("Amount") },
-                singleLine = true,
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
-                isError = amountError != null,
-                supportingText = { amountError?.let { Text(it) } }
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            /*
-             * Category
-             */
-            Text(
-                text = "Category",
-                style = MaterialTheme.typography.labelLarge
-            )
-
-            Spacer(modifier = Modifier.height(6.dp))
-
-            ExposedDropdownMenuBox(
-                expanded = categoryMenuExpanded,
-                onExpandedChange = { categoryMenuExpanded = !categoryMenuExpanded }
-            ) {
-                OutlinedTextField(
-                    value = selectedCategory?.name ?: "Select category",
-                    onValueChange = {},
-                    readOnly = true,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .menuAnchor(),
-                    label = { Text("Category") },
-                    isError = categoryError != null,
-                    supportingText = { categoryError?.let { Text(it) } },
-                    trailingIcon = {
-                        ExposedDropdownMenuDefaults.TrailingIcon(
-                            expanded = categoryMenuExpanded
-                        )
-                    }
-                )
-
-                ExposedDropdownMenu(
-                    expanded = categoryMenuExpanded,
-                    onDismissRequest = { categoryMenuExpanded = false }
-                ) {
-                    categories.forEach { category ->
-                        DropdownMenuItem(
-                            text = { Text(category.name) },
-                            onClick = {
-                                selectedCategory = category
-                                categoryMenuExpanded = false
-                                categoryError = null
-                            }
-                        )
-                    }
-                }
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            /*
-             * Merchant
-             */
-            OutlinedTextField(
-                value = merchantName,
-                onValueChange = { merchantName = it },
-                modifier = Modifier.fillMaxWidth(),
-                label = { Text("Merchant") },
-                singleLine = true
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            /*
-             * Date Picker Field
-             */
-            Box(modifier = Modifier.fillMaxWidth()) {
-                OutlinedTextField(
-                    value = formatForDisplay(transactionDate),
-                    onValueChange = {},
-                    modifier = Modifier.fillMaxWidth(),
-                    label = { Text("Date") },
-                    readOnly = true,
-                    singleLine = true,
-                    trailingIcon = {
-                        Icon(
-                            imageVector = Icons.Default.DateRange,
-                            contentDescription = "Select Date"
-                        )
-                    },
-                    isError = dateError != null,
-                    supportingText = { dateError?.let { Text(it) } }
-                )
-
-                // Invisible overlay to catch clicks reliable across the entire text area
-                Box(
-                    modifier = Modifier
-                        .matchParentSize()
-                        .clickable { datePickerVisible = true }
-                )
-            }
-
-            if (datePickerVisible) {
-                val initialMillis = parseIsoToMillis(transactionDate)
-                val datePickerState = rememberDatePickerState(
-                    initialSelectedDateMillis = initialMillis
-                )
-
-                DatePickerDialog(
-                    onDismissRequest = { datePickerVisible = false },
-                    confirmButton = {
-                        TextButton(
-                            onClick = {
-                                datePickerState.selectedDateMillis?.let { selectedMillis ->
-                                    transactionDate = formatMillisToIso(selectedMillis)
-                                    dateError = null
+                            if (isSelected) {
+                                Button(
+                                    onClick = { transactionType = type },
+                                    modifier = Modifier.weight(1f)
+                                ) {
+                                    Text(label)
                                 }
-                                datePickerVisible = false
+                            } else {
+                                OutlinedButton(
+                                    onClick = { transactionType = type },
+                                    modifier = Modifier.weight(1f)
+                                ) {
+                                    Text(label)
+                                }
                             }
-                        ) {
-                            Text("OK")
-                        }
-                    },
-                    dismissButton = {
-                        TextButton(onClick = { datePickerVisible = false }) {
-                            Text("Cancel")
                         }
                     }
+                }
+
+                /*
+                 * Amount Field
+                 */
+                OutlinedTextField(
+                    value = amountText,
+                    onValueChange = {
+                        amountText = it
+                        amountError = null
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                    label = { Text("Amount") },
+                    singleLine = true,
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+                    isError = amountError != null,
+                    supportingText = { amountError?.let { Text(it) } }
+                )
+
+                /*
+                 * Category Dropdown
+                 */
+                ExposedDropdownMenuBox(
+                    expanded = categoryMenuExpanded,
+                    onExpandedChange = { categoryMenuExpanded = !categoryMenuExpanded }
                 ) {
-                    DatePicker(state = datePickerState)
+                    OutlinedTextField(
+                        value = selectedCategory?.name ?: "Select category",
+                        onValueChange = {},
+                        readOnly = true,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .menuAnchor(),
+                        label = { Text("Category") },
+                        isError = categoryError != null,
+                        supportingText = { categoryError?.let { Text(it) } },
+                        trailingIcon = {
+                            ExposedDropdownMenuDefaults.TrailingIcon(
+                                expanded = categoryMenuExpanded
+                            )
+                        }
+                    )
+
+                    ExposedDropdownMenu(
+                        expanded = categoryMenuExpanded,
+                        onDismissRequest = { categoryMenuExpanded = false }
+                    ) {
+                        categories.forEach { category ->
+                            DropdownMenuItem(
+                                text = { Text(category.name) },
+                                onClick = {
+                                    selectedCategory = category
+                                    categoryMenuExpanded = false
+                                    categoryError = null
+                                }
+                            )
+                        }
+                    }
+                }
+
+                /*
+                 * Merchant Name Field
+                 */
+                OutlinedTextField(
+                    value = merchantName,
+                    onValueChange = { merchantName = it },
+                    modifier = Modifier.fillMaxWidth(),
+                    label = { Text("Merchant") },
+                    singleLine = true
+                )
+
+                /*
+                 * Date Picker Field
+                 */
+                Box(modifier = Modifier.fillMaxWidth()) {
+                    OutlinedTextField(
+                        value = formatForDisplay(transactionDate),
+                        onValueChange = {},
+                        modifier = Modifier.fillMaxWidth(),
+                        label = { Text("Date") },
+                        readOnly = true,
+                        singleLine = true,
+                        trailingIcon = {
+                            Icon(
+                                imageVector = Icons.Default.DateRange,
+                                contentDescription = "Select Date"
+                            )
+                        },
+                        isError = dateError != null,
+                        supportingText = { dateError?.let { Text(it) } }
+                    )
+
+                    // Overlay box catching click for date modal
+                    Box(
+                        modifier = Modifier
+                            .matchParentSize()
+                            .clickable { datePickerVisible = true }
+                    )
+                }
+
+                if (datePickerVisible) {
+                    val initialMillis = parseIsoToMillis(transactionDate)
+                    val datePickerState = rememberDatePickerState(
+                        initialSelectedDateMillis = initialMillis
+                    )
+
+                    DatePickerDialog(
+                        onDismissRequest = { datePickerVisible = false },
+                        confirmButton = {
+                            TextButton(
+                                onClick = {
+                                    datePickerState.selectedDateMillis?.let { selectedMillis ->
+                                        transactionDate = formatMillisToIso(selectedMillis)
+                                        dateError = null
+                                    }
+                                    datePickerVisible = false
+                                }
+                            ) {
+                                Text("OK")
+                            }
+                        },
+                        dismissButton = {
+                            TextButton(onClick = { datePickerVisible = false }) {
+                                Text("Cancel")
+                            }
+                        }
+                    ) {
+                        DatePicker(state = datePickerState)
+                    }
                 }
             }
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
             HorizontalDivider()
 
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
+            // Bottom Action Buttons
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(12.dp)

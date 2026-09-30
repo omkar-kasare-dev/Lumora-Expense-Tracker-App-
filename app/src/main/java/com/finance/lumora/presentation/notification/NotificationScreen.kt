@@ -13,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.finance.lumora.domain.model.NotificationItem
 import com.finance.lumora.domain.model.NotificationType
 import com.finance.lumora.presentation.notification.components.EmptyNotificationState
@@ -63,7 +64,12 @@ fun NotificationScreen(
             TopAppBar(
                 title = {
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Text("Notifications", fontWeight = FontWeight.Bold)
+                        Text(
+                            text = "Notifications",
+                            style = MaterialTheme.typography.titleMedium.copy(
+                                fontSize = 17.sp,
+                                fontWeight = FontWeight.SemiBold
+                            ))
                         if (unreadCount > 0) {
                             Spacer(modifier = Modifier.width(8.dp))
                             Badge(

@@ -1,13 +1,10 @@
 package com.finance.lumora.presentation.ai.capture
 
-
-
 import android.Manifest
 import android.content.pm.PackageManager
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -25,14 +22,10 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Camera
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.FlashOff
 import androidx.compose.material.icons.filled.FlashOn
 import androidx.compose.material.icons.filled.PhotoCamera
-import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -47,17 +40,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.geometry.CornerRadius
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.PathEffect
-import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.camera.core.ImageCapture
 
 @Composable
 fun ReceiptCameraScreen(
@@ -112,6 +101,11 @@ fun ReceiptCameraScreen(
                 // Live Camera Stream
                 ReceiptCamera(
                     lifecycleOwner = lifecycleOwner,
+                    flashMode = if (isFlashEnabled) {
+                        ImageCapture.FLASH_MODE_ON
+                    } else {
+                        ImageCapture.FLASH_MODE_OFF
+                    },
                     onImageCaptured = { imageUri ->
                         isCapturing = false
                         onImageCaptured(imageUri)
@@ -230,168 +224,6 @@ fun ReceiptCameraScreen(
                             )
                         }
                     }
-                }
-            }
-        }
-    }
-}
-
-// Custom Document Frame Overlay Visualizer
-@Composable
-private fun ReceiptDocumentOverlay(modifier: Modifier = Modifier) {
-    Box(
-        modifier = modifier,
-        contentAlignment = Alignment.Center
-    ) {
-        Canvas(modifier = Modifier.fillMaxSize()) {
-            val strokeWidth = 3.dp.toPx()
-            val cornerLength = 32.dp.toPx()
-            val cornerRadius = 16.dp.toPx()
-
-            // Draw bounding corner guides
-            val pathEffect = PathEffect.dashPathEffect(floatArrayOf(20f, 10f), 0f)
-
-            drawRoundRect(
-                color = Color.White.copy(alpha = 0.5f),
-                size = size,
-                cornerRadius = CornerRadius(cornerRadius),
-                style = Stroke(width = 1.dp.toPx(), pathEffect = pathEffect)
-            )
-
-            // Top-Left Corner Accent
-            drawLine(
-                color = Color.White,
-                start = Offset(0f, cornerLength),
-                end = Offset(0f, 0f),
-                strokeWidth = strokeWidth
-            )
-            drawLine(
-                color = Color.White,
-                start = Offset(0f, 0f),
-                end = Offset(cornerLength, 0f),
-                strokeWidth = strokeWidth
-            )
-
-            // Top-Right Corner Accent
-            drawLine(
-                color = Color.White,
-                start = Offset(size.width - cornerLength, 0f),
-                end = Offset(size.width, 0f),
-                strokeWidth = strokeWidth
-            )
-            drawLine(
-                color = Color.White,
-                start = Offset(size.width, 0f),
-                end = Offset(size.width, cornerLength),
-                strokeWidth = strokeWidth
-            )
-
-            // Bottom-Left Corner Accent
-            drawLine(
-                color = Color.White,
-                start = Offset(0f, size.height - cornerLength),
-                end = Offset(0f, size.height),
-                strokeWidth = strokeWidth
-            )
-            drawLine(
-                color = Color.White,
-                start = Offset(0f, size.height),
-                end = Offset(cornerLength, size.height),
-                strokeWidth = strokeWidth
-            )
-
-            // Bottom-Right Corner Accent
-            drawLine(
-                color = Color.White,
-                start = Offset(size.width - cornerLength, size.height),
-                end = Offset(size.width, size.height),
-                strokeWidth = strokeWidth
-            )
-            drawLine(
-                color = Color.White,
-                start = Offset(size.width, size.height - cornerLength),
-                end = Offset(size.width, size.height),
-                strokeWidth = strokeWidth
-            )
-        }
-    }
-}
-
-// Permission Denied View Fallback
-@Composable
-private fun CameraPermissionDeniedContent(
-    onRequestPermission: () -> Unit,
-    onClose: () -> Unit
-) {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .statusBarsPadding()
-            .padding(24.dp),
-        contentAlignment = Alignment.Center
-    ) {
-        Card(
-            shape = RoundedCornerShape(24.dp),
-            colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
-            ),
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(24.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Box(
-                    modifier = Modifier
-                        .size(64.dp)
-                        .background(MaterialTheme.colorScheme.primaryContainer, CircleShape),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Camera,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onPrimaryContainer,
-                        modifier = Modifier.size(32.dp)
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                Text(
-                    text = "Camera Access Required",
-                    style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSurface
-                )
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                Text(
-                    text = "AURIX needs access to your camera to scan physical receipts and extract transaction details automatically.",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    textAlign = TextAlign.Center
-                )
-
-                Spacer(modifier = Modifier.height(24.dp))
-
-                Button(
-                    onClick = onRequestPermission,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text("Grant Permission")
-                }
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                IconButton(onClick = onClose) {
-                    Icon(
-                        imageVector = Icons.Default.Close,
-                        contentDescription = "Close",
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
                 }
             }
         }

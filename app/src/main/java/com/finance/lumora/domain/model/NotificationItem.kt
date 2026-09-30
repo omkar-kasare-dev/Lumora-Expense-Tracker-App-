@@ -24,15 +24,3 @@ data class NotificationItem(
     val actionUrl: String? = null
 )
 
-
-/*
-data class NotificationItem(
-    val id: String,
-    val title: String,
-    val message: String,
-    val timestampMillis: Long,
-    val isRead: Boolean = false,
-    val type: NotificationType
-)
-
- */
