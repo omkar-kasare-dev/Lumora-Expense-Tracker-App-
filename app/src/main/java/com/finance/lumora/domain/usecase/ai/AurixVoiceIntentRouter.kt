@@ -17,21 +17,23 @@ class AurixVoiceIntentRouter @Inject constructor() {
         if (isTransactionRequest(text)) {
             return AurixVoiceIntent.ADD_TRANSACTION
         }
-
+/*
         if (isFinancialQuery(text)) {
             return AurixVoiceIntent.FINANCIAL_QUERY
         }
 
         return AurixVoiceIntent.FINANCIAL_QUERY
 
-/*
+ */
+
+
         return if (isTransactionRequest(text)) {  // move this check first, unchanged
             AurixVoiceIntent.ADD_TRANSACTION
         } else {
             AurixVoiceIntent.FINANCIAL_QUERY  // changed default
         }
 
- */
+
 
     }
 
