@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -28,19 +29,17 @@ import java.io.File
 /**
  * Pure camera engine: preview feed + capture logic only.
  *
- * Deliberately has no UI chrome of its own (no flash button, no
- * status badges, no viewfinder overlay, no capture button) - all
- * of that previously duplicated what ReceiptCameraScreen, the
- * screen that wraps this composable, already provides. Rendering
- * both caused two overlapping flash buttons (only one of which was
- * actually wired to ImageCapture) and two overlapping capture
- * buttons. flashMode is now a parameter controlled by the caller,
- * not internal state.
+ * isTorchEnabled controls the physical, continuous flashlight via
+ * Camera.cameraControl.enableTorch(...) - NOT ImageCapture.flashMode,
+ * which only fires a brief flash at the instant of capture and has
+ * no visible effect while just toggling the button or framing the
+ * shot. A torch is what actually lights the scene while aiming at
+ * a receipt, which is what the flash button is expected to do here.
  */
 @Composable
 fun ReceiptCamera(
     lifecycleOwner: LifecycleOwner,
-    flashMode: Int,
+    isTorchEnabled: Boolean,
     onImageCaptured: (Uri) -> Unit,
     onError: (Exception) -> Unit,
     onCaptureReady: (capture: () -> Unit) -> Unit,
@@ -60,14 +59,20 @@ fun ReceiptCamera(
     val imageCapture = remember {
         ImageCapture.Builder()
             .setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY)
-            .setFlashMode(flashMode)
             .build()
     }
 
-    // Reacts to the caller changing flashMode - this is now the
-    // single place flash actually gets applied to the camera.
-    LaunchedEffect(flashMode) {
-        imageCapture.flashMode = flashMode
+    // Holds the bound Camera once CameraX finishes binding, so the
+    // torch effect below has something to act on.
+    val cameraState = remember {
+        mutableStateOf<androidx.camera.core.Camera?>(null)
+    }
+
+    // Applies the torch to the real camera hardware whenever the
+    // caller toggles isTorchEnabled, or as soon as binding completes
+    // while already toggled on.
+    LaunchedEffect(isTorchEnabled, cameraState.value) {
+        cameraState.value?.cameraControl?.enableTorch(isTorchEnabled)
     }
 
     val triggerCapture = remember {
@@ -129,12 +134,14 @@ fun ReceiptCamera(
 
                 cameraProvider.unbindAll()
 
-                cameraProvider.bindToLifecycle(
+                val camera = cameraProvider.bindToLifecycle(
                     lifecycleOwner,
                     CameraSelector.DEFAULT_BACK_CAMERA,
                     preview,
                     imageCapture
                 )
+
+                cameraState.value = camera
 
             } catch (exception: Exception) {
                 onError(exception)
@@ -150,55 +157,3 @@ fun ReceiptCamera(
         )
     }
 }
-/*
-class ReceiptCameraController(
-    private val imageCapture: ImageCapture,
-    private val context: android.content.Context,
-    private val onImageCaptured: (Uri) -> Unit,
-    private val onError: (Exception) -> Unit
-) {
-
-    fun capture() {
-
-        val outputFile = File(
-            context.cacheDir,
-            "receipt_${System.currentTimeMillis()}.jpg"
-        )
-
-        val outputOptions =
-            ImageCapture.OutputFileOptions.Builder(
-                outputFile
-            ).build()
-
-        imageCapture.takePicture(
-            outputOptions,
-            ContextCompat.getMainExecutor(context),
-            object : ImageCapture.OnImageSavedCallback {
-
-                override fun onImageSaved(
-                    outputFileResults:
-                    ImageCapture.OutputFileResults
-                ) {
-
-                    val uri = outputFileResults.savedUri
-                        ?: FileProvider
-                            .getUriForFile(
-                                context,
-                                "${context.packageName}.fileprovider",
-                                outputFile
-                            )
-
-                    onImageCaptured(uri)
-                }
-
-                override fun onError(
-                    exception: ImageCaptureException
-                ) {
-                    onError(exception)
-                }
-            }
-        )
-    }
-}
-
- */

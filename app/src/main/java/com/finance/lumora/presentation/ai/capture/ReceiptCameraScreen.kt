@@ -101,11 +101,7 @@ fun ReceiptCameraScreen(
                 // Live Camera Stream
                 ReceiptCamera(
                     lifecycleOwner = lifecycleOwner,
-                    flashMode = if (isFlashEnabled) {
-                        ImageCapture.FLASH_MODE_ON
-                    } else {
-                        ImageCapture.FLASH_MODE_OFF
-                    },
+                    isTorchEnabled = isFlashEnabled,
                     onImageCaptured = { imageUri ->
                         isCapturing = false
                         onImageCaptured(imageUri)
