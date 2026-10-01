@@ -32,6 +32,7 @@ import com.finance.lumora.presentation.transaction.screen.TransactionScreen
 import androidx.compose.ui.platform.LocalContext
 import com.finance.lumora.core.util.SupportContact
 import com.finance.lumora.core.util.contactSupport
+import com.finance.lumora.presentation.ai.screen.AurixDrawerHost
 import com.finance.lumora.presentation.splash.screen.SplashScreen
 
 @Composable
@@ -322,8 +323,18 @@ fun LumoraNavGraph(
 
         //--------------------------------------------------
         // AURIX -
+        /*
         composable(route = Screen.Aurix.route) {
             AurixScreen(
+                onBackClick = {
+                    navController.popBackStack()
+                }
+            )
+        }
+
+         */
+        composable(route = Screen.Aurix.route) {
+            AurixDrawerHost(
                 onBackClick = {
                     navController.popBackStack()
                 }

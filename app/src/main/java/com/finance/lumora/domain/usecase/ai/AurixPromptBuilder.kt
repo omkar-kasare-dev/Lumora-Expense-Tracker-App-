@@ -10,7 +10,7 @@ import javax.inject.Inject
 
 
 class AurixPromptBuilder @Inject constructor() {
-
+/* Main Invoke
     operator fun invoke(
         question: String,
         financeContext: FinanceContext,
@@ -27,10 +27,68 @@ class AurixPromptBuilder @Inject constructor() {
             appendConversationHistory(
                 conversationHistory
             )
-
+/*
             appendFinancialContext(
                 financeContext
             )
+
+ */
+
+            if (financeContext != null) {
+                appendFinancialContext(
+                    financeContext
+                )
+            }
+
+            if (expenseTrendInsight != null) {
+                appendExpenseTrendInsight(
+                    expenseTrendInsight
+                )
+            }
+
+            if (budgetInsight != null) {
+                appendBudgetInsight(
+                    budgetInsight
+                )
+            }
+
+            if (spendingConcentrationInsight != null) {
+                appendSpendingConcentrationInsight(
+                    spendingConcentrationInsight
+                )
+            }
+
+            appendCurrentQuestion(
+                question
+            )
+
+        }.trim()
+    }
+
+    */
+
+    operator fun invoke(
+        question: String,
+        financeContext: FinanceContext?,
+        conversationHistory: List<ChatMessage>,
+        expenseTrendInsight: ExpenseTrendInsight?,
+        budgetInsight: BudgetInsight?,
+        spendingConcentrationInsight: SpendingConcentrationInsight?
+    ): String {
+
+        return buildString {
+
+            appendSystemInstructions()
+
+            appendConversationHistory(
+                conversationHistory
+            )
+
+            if (financeContext != null) {
+                appendFinancialContext(
+                    financeContext
+                )
+            }
 
             if (expenseTrendInsight != null) {
                 appendExpenseTrendInsight(
