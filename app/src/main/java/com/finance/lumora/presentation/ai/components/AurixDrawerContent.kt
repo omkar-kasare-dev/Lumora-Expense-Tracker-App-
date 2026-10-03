@@ -19,7 +19,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.AutoAwesome
 import androidx.compose.material.icons.outlined.ChatBubbleOutline
 import androidx.compose.material.icons.outlined.Download
 import androidx.compose.material.icons.outlined.HelpOutline
@@ -36,10 +35,6 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -59,6 +54,10 @@ private val DividerColor = Color.White.copy(alpha = 0.08f)
 
 @Composable
 fun AurixDrawerContent(
+    smartInsightsEnabled: Boolean,
+    autoContextEnabled: Boolean,
+    onSmartInsightsToggle: (Boolean) -> Unit,
+    onAutoContextToggle: (Boolean) -> Unit,
     onNewChatClick: () -> Unit,
     onHistoryClick: () -> Unit,
     onExportChatClick: () -> Unit,
@@ -67,9 +66,6 @@ fun AurixDrawerContent(
     onAboutClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    var smartSuggestionsEnabled by remember { mutableStateOf(true) }
-    var autoContextEnabled by remember { mutableStateOf(true) }
-
     ModalDrawerSheet(
         modifier = modifier
             .width(310.dp)
@@ -83,9 +79,6 @@ fun AurixDrawerContent(
                 .fillMaxHeight()
                 .padding(horizontal = 20.dp, vertical = 24.dp)
         ) {
-            // ---------------------------------------------------------
-            // Header Section: Copilot Profile Info
-            // ---------------------------------------------------------
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
@@ -107,7 +100,7 @@ fun AurixDrawerContent(
                 Column {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Text(
-                            text = "Aurix Assistant",
+                            text = "Aurix AI",
                             style = MaterialTheme.typography.titleMedium.copy(
                                 fontWeight = FontWeight.SemiBold,
                                 fontSize = 16.sp,
@@ -132,8 +125,10 @@ fun AurixDrawerContent(
                         )
                     }
 
+                    // FIX: "Gemini Pro Financial Model" named a product
+                    // that isn't what Aurix actually uses.
                     Text(
-                        text = "Gemini Pro Financial Model",
+                        text = "Powered by Google Gemini",
                         style = MaterialTheme.typography.bodySmall.copy(fontSize = 12.sp),
                         color = TextSecondary
                     )
@@ -144,9 +139,6 @@ fun AurixDrawerContent(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // ---------------------------------------------------------
-            // Scrollable Menu Options
-            // ---------------------------------------------------------
             Column(
                 modifier = Modifier
                     .weight(1f)
@@ -163,14 +155,16 @@ fun AurixDrawerContent(
 
                 DrawerMenuItem(
                     icon = Icons.Outlined.History,
+                    // FIX: removed the fake "12 saved" badge - there is
+                    // no persisted multi-session history yet, only the
+                    // current session's messages.
                     label = "Conversation History",
-                    badgeText = "12 saved",
                     onClick = onHistoryClick
                 )
 
                 DrawerMenuItem(
                     icon = Icons.Outlined.Download,
-                    label = "Export Financial Summary",
+                    label = "Export Conversation",
                     onClick = onExportChatClick
                 )
 
@@ -183,17 +177,17 @@ fun AurixDrawerContent(
                 DrawerToggleMenuItem(
                     icon = Icons.Outlined.Psychology,
                     label = "Smart Insights",
-                    subtitle = "Proactive spending suggestions",
-                    isChecked = smartSuggestionsEnabled,
-                    onCheckedChange = { smartSuggestionsEnabled = it }
+                    subtitle = "Proactive suggestions on the welcome screen",
+                    isChecked = smartInsightsEnabled,
+                    onCheckedChange = onSmartInsightsToggle
                 )
 
                 DrawerToggleMenuItem(
                     icon = Icons.Outlined.Tune,
                     label = "Auto Financial Context",
-                    subtitle = "Include monthly budget in queries",
+                    subtitle = "Let Aurix see your transactions and budget",
                     isChecked = autoContextEnabled,
-                    onCheckedChange = { autoContextEnabled = it }
+                    onCheckedChange = onAutoContextToggle
                 )
 
                 DrawerMenuItem(
@@ -221,14 +215,11 @@ fun AurixDrawerContent(
                 )
             }
 
-            // ---------------------------------------------------------
-            // Minimal Footer
-            // ---------------------------------------------------------
             HorizontalDivider(color = DividerColor, thickness = 1.dp)
             Spacer(modifier = Modifier.height(14.dp))
 
             Text(
-                text = "Lumora AI Copilot • Offline First",
+                text = "Lumora AI Copilot • ",
                 style = MaterialTheme.typography.labelSmall.copy(
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Normal
@@ -257,7 +248,6 @@ private fun DrawerSectionHeader(title: String) {
 private fun DrawerMenuItem(
     icon: ImageVector,
     label: String,
-    badgeText: String? = null,
     onClick: () -> Unit
 ) {
     Row(
@@ -286,21 +276,6 @@ private fun DrawerMenuItem(
             color = TextPrimary,
             modifier = Modifier.weight(1f)
         )
-
-        if (badgeText != null) {
-            Text(
-                text = badgeText,
-                style = MaterialTheme.typography.labelSmall.copy(
-                    fontSize = 11.sp,
-                    fontWeight = FontWeight.Medium
-                ),
-                color = TextSecondary,
-                modifier = Modifier
-                    .clip(RoundedCornerShape(6.dp))
-                    .background(Color.White.copy(alpha = 0.08f))
-                    .padding(horizontal = 8.dp, vertical = 3.dp)
-            )
-        }
     }
 }
 
@@ -354,8 +329,7 @@ private fun DrawerToggleMenuItem(
                 uncheckedThumbColor = TextMuted,
                 uncheckedTrackColor = Color.White.copy(alpha = 0.1f),
                 uncheckedBorderColor = Color.Transparent
-            ),
-           // modifier = Modifier.size(scale = 0.75f, height = 24.dp)
+            )
         )
     }
 }

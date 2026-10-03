@@ -1,45 +1,34 @@
 package com.finance.lumora.presentation.ai.screen
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-
-private val AurixNavDark = Color(0xFF0F2640)
-private val AurixSurfaceDark = Color(0xFF133253)
+import com.finance.lumora.presentation.ai.theme.AurixTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AurixAboutScreen(onBackClick: () -> Unit) {
     Scaffold(
-        containerColor = AurixNavDark,
+        containerColor = AurixTheme.NavDark,
         topBar = {
             TopAppBar(
-                title = {
-                    Text(
-                        text = "About AI",
-                        color = Color.White,
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.SemiBold
-                    )
-                },
+                title = { Text("About Aurix AI", style = AurixTheme.Typography.titleLarge) },
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
                         Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Back",
-                            tint = Color.White
+                            tint = AurixTheme.TextPrimary,
+                            modifier = Modifier.size(AurixTheme.IconSizeMedium)
                         )
                     }
                 },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = AurixNavDark)
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = AurixTheme.NavDark)
             )
         }
     ) { padding ->
@@ -47,37 +36,35 @@ fun AurixAboutScreen(onBackClick: () -> Unit) {
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
-                .padding(20.dp),
+                .padding(AurixTheme.ScreenPadding),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Spacer(Modifier.height(12.dp))
             Text(
-                text = "Aurix",
-                color = Color.White,
-                style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.Bold
+                "Aurix AI",
+                style = AurixTheme.Typography.titleLarge
             )
-            Spacer(Modifier.height(16.dp))
+            Spacer(Modifier.height(8.dp))
             Surface(
-                shape = RoundedCornerShape(14.dp),
-                color = AurixSurfaceDark,
+                shape = AurixTheme.ContainerShape,
+                color = AurixTheme.SurfaceDark,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Column(modifier = Modifier.padding(16.dp)) {
+                Column(modifier = Modifier.padding(AurixTheme.CardPadding)) {
                     Text(
-                        text = "Aurix is Lumora's AI finance assistant, powered by Google Gemini via Firebase AI Logic. " +
+                        "Aurix is Lumora's AI finance assistant, powered by Google Gemini via Firebase AI Logic. " +
                                 "It can draft transactions from a receipt photo or your voice, and answer questions about " +
                                 "your spending using the transaction history stored on your device.",
-                        color = Color.White.copy(alpha = 0.85f),
-                        style = MaterialTheme.typography.bodyMedium
+                        style = AurixTheme.Typography.bodyMedium
                     )
                     Spacer(Modifier.height(12.dp))
+                    HorizontalDivider(color = AurixTheme.DividerColor)
+                    Spacer(Modifier.height(12.dp))
                     Text(
-                        text = "When Auto Financial Context is on, Aurix sends a summary of your relevant transactions and " +
+                        "When Auto Financial Context is on, Aurix sends a summary of your relevant transactions and " +
                                 "budget to Gemini to answer your question. Receipt text and voice transcripts are sent " +
                                 "to Gemini only when you use those features. See the Privacy Policy for full details.",
-                        color = Color.White.copy(alpha = 0.55f),
-                        style = MaterialTheme.typography.bodySmall
+                        style = AurixTheme.Typography.bodySmall
                     )
                 }
             }

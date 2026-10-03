@@ -62,9 +62,7 @@ class AskAurixUseCase @Inject constructor(
 
  */
 
-
-
-import com.finance.lumora.data.local.prefs.AurixPreferences
+import com.finance.lumora.data.datastore.AurixPreferences
 import com.finance.lumora.domain.model.ai.ChatMessage
 import com.finance.lumora.domain.repository.GeminiService
 import kotlinx.coroutines.flow.first

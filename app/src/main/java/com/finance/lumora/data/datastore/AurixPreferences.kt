@@ -1,18 +1,13 @@
-package com.finance.lumora.data.local.prefs
+package com.finance.lumora.data.datastore
 
 import android.content.Context
-import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
-import com.finance.lumora.data.datastore.dataStore
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
-private object AurixPreferenceKeys {
-    val SMART_INSIGHTS_ENABLED = booleanPreferencesKey("aurix_smart_insights_enabled")
-    val AUTO_CONTEXT_ENABLED = booleanPreferencesKey("aurix_auto_context_enabled")
-}
+
 
 class AurixPreferences @Inject constructor(
     @ApplicationContext private val context: Context
